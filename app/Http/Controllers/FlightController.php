@@ -47,14 +47,13 @@ class FlightController extends Controller
 
     public function search_flight(Request $request)
     {
-        // dd($request->all());
         $departureDate = Carbon::parse($request->departureDate)->format('Y-m-d');
         $returnDate    = $request->has('returnDate') ? Carbon::parse($request->returnDate)->format('Y-m-d') : null;
 
         $token = $this->get_token();
 
         $travelers = "";
-        for ($i = 1; $i <= request()->adult; $i++) {
+        for ($i = 1; $i <= request()->adults; $i++) {
             $travelers .= '
                 {
                     "id": "' . $i . '",
@@ -62,7 +61,7 @@ class FlightController extends Controller
                     "fareOptions": [
                         "STANDARD"
                     ]
-                }' . (($i != request()->adult) ? ',' : '') . '
+                }' . (($i != request()->adults) ? ',' : '') . '
             ';
         }
 
@@ -78,7 +77,7 @@ class FlightController extends Controller
             }
         ';
 
-        if (request()->is_two_way == 1) {
+        if (isset($returnDate)) {
             $orign_location .= ',
                 {
                     "id": "2",
@@ -113,28 +112,7 @@ class FlightController extends Controller
                 ],
                 "sources": [
                     "GDS"
-                ],
-                "searchCriteria": {
-                    "maxFlightOffers": 2,
-                    "flightFilters": {
-                        "cabinRestrictions": [
-                            {
-                                "cabin": "BUSINESS",
-                                "coverage": "MOST_SEGMENTS",
-                                "originDestinationIds": [
-                                    "1"
-                                ]
-                            }
-                        ],
-                        "carrierRestrictions": {
-                            "excludedCarrierCodes": [
-                                "AA",
-                                "TP",
-                                "AZ"
-                            ]
-                        }
-                    }
-                }
+                ]
             }',
             CURLOPT_HTTPHEADER     => [
                 'Content-Type: application/json',
@@ -142,15 +120,38 @@ class FlightController extends Controller
                 'Authorization: Bearer ' . $token . '',
             ],
         ]);
+
+        // ,
+        // "searchCriteria": {
+        //     "maxFlightOffers": 2,
+        //     "flightFilters": {
+        //         "cabinRestrictions": [
+        //             {
+        //                 "cabin": "BUSINESS",
+        //                 "coverage": "MOST_SEGMENTS",
+        //                 "originDestinationIds": [
+        //                     "1"
+        //                 ]
+        //             }
+        //         ],
+        //         "carrierRestrictions": {
+        //             "excludedCarrierCodes": [
+        //                 "AA",
+        //                 "TP",
+        //                 "AZ"
+        //             ]
+        //         }
+        //     }
+        // }
+
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         $response = curl_exec($curl);
 
         curl_close($curl);
-        // dd($response);
-        dd(json_decode($response));
 
-        return json_decode($response)->data;
+        $flights = json_decode($response)->data;
+        return view('flights.flight-results',compact('flights'));
     }
 
     public function search_city()

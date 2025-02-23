@@ -9,7 +9,7 @@
 
 <body>
     <h1>الرحلات المتاحة</h1>
-
+    @dd($flights)
     @if(count($flights) > 0)
     <ul>
         @foreach($flights as $flight)
