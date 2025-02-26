@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FlightController extends Controller
 {
@@ -51,7 +52,7 @@ class FlightController extends Controller
         $returnDate    = $request->has('returnDate') ? Carbon::parse($request->returnDate)->format('Y-m-d') : null;
 
         $token = $this->get_token();
-
+        // dd($token);
         $travelers = "";
         for ($i = 1; $i <= request()->adults; $i++) {
             $travelers .= '
@@ -91,6 +92,8 @@ class FlightController extends Controller
             ';
         }
 
+        $cabinClass = strtoupper($request->input('cabin', 'ECONOMY'));
+
         $curl = curl_init();
 
         curl_setopt_array($curl, [
@@ -112,7 +115,18 @@ class FlightController extends Controller
                 ],
                 "sources": [
                     "GDS"
-                ]
+                ],
+                "searchCriteria": {
+                    "flightFilters": {
+                        "cabinRestrictions": [
+                            {
+                                "cabin": "' . $cabinClass . '",
+                                "coverage": "MOST_SEGMENTS",
+                                "originDestinationIds": ["1", "2"]
+                            }
+                        ]
+                    }
+                }
             }',
             CURLOPT_HTTPHEADER     => [
                 'Content-Type: application/json',
@@ -150,8 +164,72 @@ class FlightController extends Controller
 
         curl_close($curl);
 
-        $flights = json_decode($response)->data;
-        return view('flights.flight-results',compact('flights'));
+        // $flightOffers = json_decode($response)->data;
+        // return view('flights.flight-results', compact('flightOffers'));
+
+        if (! $response) {
+            dd("خطأ: لم يتم استلام أي استجابة من API");
+        }
+
+        $responseData = json_decode($response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            dd("خطأ في تحويل JSON: " . json_last_error_msg());
+        }
+
+        if (! isset($responseData['data'])) {
+            dd("خطأ: لم يتم العثور على data", $responseData);
+        }
+        dd($request->all());
+        $flightsArray = json_decode($response, true)['data'] ?? [];
+        dd($flightsArray);
+        $flightData = [
+            'originCityName'      => $request->input('origin_city'),
+            'originCity'          => $request->input('origin_city_name'),
+            'destinationCityName' => $request->input('destination_city'),
+            'destinationCity'     => $request->input('destination_city_name'),
+            'departureDate'       => $departureDate,
+            'returnDate'          => $returnDate,
+            'adults'              => $request->input('adults'),
+            'cabin'               => $cabinClass,
+        ];
+
+// تحويل المصفوفة إلى Collection
+        $flightsCollection = collect($flightsArray);
+
+        $flightsCollection = $flightsCollection->map(function ($flightOffer) {
+            // رحلة الذهاب
+            $outboundStops                      = count($flightOffer['itineraries'][0]['segments']) - 1;
+            $flightOffer['outbound_stops_text'] = $outboundStops == 0 ? "0" : "$outboundStops";
+
+            // رحلة العودة (إن وجدت)
+            $inboundText = "";
+            if (isset($flightOffer['itineraries'][1])) {
+                $inboundStops                      = count($flightOffer['itineraries'][1]['segments']) - 1;
+                $flightOffer['inbound_stops_text'] = $inboundStops == 0 ? "0" : "$inboundStops";
+            }
+
+            // dd($flightOffer['itineraries'][1]);
+
+            return $flightOffer;
+        });
+        dd($flightData);
+
+                           // إعداد الترقيم اليدوي
+        $perPage     = 20; // عدد الرحلات لكل صفحة
+        $currentPage = request()->get('page', 1);
+        $pagedData   = $flightsCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        $flightOffers = new LengthAwarePaginator(
+            $pagedData,                  // البيانات المصفاة
+            $flightsCollection->count(), // إجمالي عدد الرحلات
+            $perPage,                    // عدد الرحلات لكل صفحة
+            $currentPage,                // الصفحة الحالية
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return view('flights.flight-results', compact('flightOffers', 'flightData'));
+
     }
 
     public function search_city()
@@ -182,6 +260,45 @@ class FlightController extends Controller
 
         $airports = json_decode($response);
         return $airports;
+    }
+
+    public function search_airlines()
+    {
+        $token = $this->get_token();
+
+        // استقبال الأكواد من الطلب كمصفوفة
+        $airlineCodes = explode(',', request()->query('airlineCodes'));
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL            => 'https://test.api.amadeus.com/v1/reference-data/airlines?airlineCodes=' . implode(',', $airlineCodes),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => '',
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => 'GET',
+            CURLOPT_HTTPHEADER     => [
+                'Authorization: Bearer ' . $token,
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $airlines = json_decode($response, true);
+
+        // تحويل البيانات إلى مصفوفة `كود الشركة => اسمها`
+        $airlineNames = [];
+        if (! empty($airlines['data'])) {
+            foreach ($airlines['data'] as $airline) {
+                $airlineNames[$airline['iataCode']] = $airline['businessName'] ?? $airline['commonName'] ?? 'غير معروف';
+            }
+        }
+
+        return response()->json($airlineNames);
     }
 
 }

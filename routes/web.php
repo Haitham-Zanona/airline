@@ -20,6 +20,7 @@ Route::group([], function () {
     Route::post('/get_token', [FlightController::class, 'get_token']);
     Route::match(['get', 'post'], '/search_flight', [FlightController::class, 'search_flight'])->name('flight.search');
     Route::match(['get', 'post'], '/search_city', [FlightController::class, 'search_city'])->name('search_city');
+    Route::get('/search-airlines', [FlightController::class, 'search_airlines'])->name('search_airlines');
 
 });
 

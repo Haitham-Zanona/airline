@@ -14,6 +14,10 @@
                 z-index: 1000;
             }
 
+            label {
+                font-size: 14px;
+            }
+
             #result1 p,
             #result2 p {
                 cursor: pointer;
@@ -54,7 +58,7 @@
                 border-radius: 10px;
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
                 width: 40%;
-                height: 45%;
+                height: 50%;
 
             }
         </style>
@@ -67,51 +71,73 @@
 
         <div class="search-form">
 
-            <h2 class="mb-4">البحث عن الرحلات الجوية</h2>
+
             <form action="{{ route('flight.search') }}" method="POST">
                 @csrf
 
                 <div class="my-3" style="display: flex;">
                     <div style="width: 50%;">
-                        <input type="text" id="search1" placeholder="أدخل اسم الدولة..." autocomplete="off"
+                        <label for="origin_city" class="d-block font-weight-bold">From City/Airport</label>
+                        <input type="text" id="search1" placeholder="Enter City Name" autocomplete="off"
                             style="width: 90%;">
                         <input type="hidden" name="origin_city" value="">
+                        <input type="hidden" name="origin_city_name" id="origin_city_name">
                         <div id="result1" style="width: 90%;"></div>
-                    </div>
+                    </div><!-- originCity -->
+
                     <div style="width: 50%;">
-                        <input type="text" id="search2" placeholder="أدخل اسم الدولة..." autocomplete="off"
+                        <label for="destination_city" class="d-block font-weight-bold">To City/Airport</label>
+                        <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off"
                             style="width: 90%;">
                         <input type="hidden" name="destination_city" value="">
+
+                        <input type="hidden" name="destination_city_name" id="destination_city_name">
                         <div id="result2" style="width: 90%;"></div>
-                    </div>
+                    </div><!-- destination_city -->
                 </div>
-                <div class="my-3">
-                    <label>Trip Type:</label>
-                    <label for="oneWay">One-way</label>
+                <div class="my-2">
+                    <label class="font-weight-bold">Trip Type:</label>
+                    <label class="font-weight-bold" for="oneWay">One-way</label>
                     <input type="radio" id="oneWay" name="tripType" value="oneWay" checked>
 
-                    <label for="roundTrip">Round-trip</label>
+                    <label class="font-weight-bold" for="roundTrip">Round-trip</label>
                     <input type="radio" id="roundTrip" name="tripType" value="roundTrip">
                 </div>
-                <div class="row my-3">
+                <div class="row my-2">
                     <div class="col-md-6">
                         <div>
-                            <label for="departureDate">Departure Date:</label>
-                            <input type="date" id="departureDate" name="departureDate" required>
+                            <label for="departureDate" class="d-block font-weight-bold">Departure Date</label>
+                            <input style="width: 90%;" type="date" id="departureDate" name="departureDate" required>
                         </div>
                     </div><!-- col-md-6 -->
                     <div class="col-md-6">
                         <div id="returnDateContainer" style="display:none;">
-                            <label for="returnDate">Return Date:</label>
-                            <input type="date" id="returnDate" name="returnDate">
+                            <label for="returnDate" class="d-block font-weight-bold">Return Date</label>
+                            <input style="width: 90%;" type="date" id="returnDate" name="returnDate">
+                        </div>
+                    </div><!-- col-md-6 -->
+                </div><!-- row -->
+                <div class="row my-3">
+                    <div class="col-md-6">
+                        <div class="">
+                            <label for="adults" class="d-block font-weight-bold">Adults</label>
+                            <input type="number" id="adults" name="adults" value="1" min="1" required>
+                        </div>
+                    </div><!-- col-md-6 -->
+                    <div class="col-md-6">
+                        <div class="">
+                            <label for="cabin" class="d-block font-weight-bold">Class of travel</label>
+                            <select name="cabin">
+                                <option value="ECONOMY">Economy</option>
+                                <option value="PREMIUM_ECONOMY">Premium Economy</option>
+                                <option value="BUSINESS">Business</option>
+                                <option value="FIRST">First Class</option>
+                            </select>
                         </div>
                     </div><!-- col-md-6 -->
                 </div><!-- row -->
 
-                <div class="my-3">
-                    <label for="adults">Adults:</label>
-                    <input type="number" id="adults" name="adults" value="1" min="1" required>
-                </div>
+
 
                 <div class="mt-4">
                     <button type="submit">Search Flights</button>
@@ -303,14 +329,18 @@
                             $("#search1").val($(this).text())
                             $("#result1").empty()
                             var code = $(this).attr('data-city-code');
+                            var cityName = $(this).text();
                             $("[name='origin_city']").val(code);
+                            $("#origin_city_name").val(cityName);
                           })
                           $('body').on('click','#result2 p',function () {
                             $("#search2").val($(this).text())
                             $("#result2").empty()
                             var code = $(this).attr('data-city-code');
                             var code = $(this).attr('data-city-code');
+                            var cityName = $(this).text();
                             $("[name='destination_city']").val(code);
+                            $("#destination_city_name").val(cityName);
                           })
                           $(document).click(function(event) {
                             if (!$(event.target).closest("#result1").length) {
