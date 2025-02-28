@@ -150,6 +150,54 @@
                 font-size: 18px;
                 color: gray;
             }
+
+            .filter-section {
+                background: #fff;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .filter-header {
+                font-weight: bold;
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .filter-content {
+                display: none;
+                margin-top: 10px;
+            }
+
+            .slider-container {
+                padding: 10px 0;
+            }
+
+            .ui-slider {
+                position: relative;
+                text-align: left;
+            }
+
+            .ui-slider-handle {
+                width: 16px;
+                height: 16px;
+                background: #007bff;
+                border-radius: 50%;
+                position: absolute;
+                cursor: pointer;
+            }
+
+            .checkbox-group {
+                list-style: none;
+                padding: 0;
+            }
+
+            .checkbox-group li {
+                margin-bottom: 5px;
+            }
         </style>
     </x-slot>
 
@@ -217,7 +265,54 @@
     </div>
     <div class="row" style="">
         <div class="col-md-3">
+            <div class="filter-section">
+                <div class="filter-header" data-toggle="collapse" data-target="#stops-filter">Stops <span>▼</span></div>
+                <div class="filter-content collapse show" id="stops-filter">
+                    <button class="btn btn-primary filter-stop" data-value="direct">Direct $576.60</button>
+                    <button class="btn btn-primary filter-stop" data-value="1stop">1 Stop $625.30</button>
+                </div>
+            </div>
 
+            <div class="filter-section">
+                <div class="filter-header" data-toggle="collapse" data-target="#flight-time-filter">Flight Time
+                    <span>▼</span>
+                </div>
+                <div class="filter-content collapse show" id="flight-time-filter">
+                    <p>Outbound Flight</p>
+                    <div class="slider-container">
+                        <div id="outbound-slider"></div>
+                    </div>
+                    <p>Inbound Flight</p>
+                    <div class="slider-container">
+                        <div id="inbound-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-header" data-toggle="collapse" data-target="#flight-price-filter">Flight Price
+                    <span>▼</span>
+                </div>
+                <div class="filter-content collapse show" id="flight-price-filter">
+                    <p id="price-range">$576.6 - $813.01</p>
+                    <div class="slider-container">
+                        <div id="price-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-header" data-toggle="collapse" data-target="#airline-filter">Preferred Airline
+                    <span>▼</span>
+                </div>
+                <div class="filter-content collapse show" id="airline-filter">
+                    <ul class="checkbox-group">
+                        <li><input type="checkbox" class="filter-airline" value="JetBlue"> JetBlue $576.60</li>
+                        <li><input type="checkbox" class="filter-airline" value="American Airlines"> American Airlines
+                            $621.98</li>
+                    </ul>
+                </div>
+            </div>
         </div><!-- col-md-3 -->
         <div class="col-md-9">
             <div class="limited-offer d-flex align-items-center m-2">
@@ -577,6 +672,50 @@
                     });
                 }
             });
+
+            $(".filter-header").click(function () {
+            $(this).next(".filter-content").slideToggle();
+            $(this).find("span").text($(this).next(".filter-content").is(":visible") ? "▼" : "▲");
+            });
+
+            // فلترة الرحلات بناءً على عدد التوقفات
+            $(".filter-stop").click(function () {
+            let selectedStop = $(this).data("value");
+            console.log("تم اختيار عدد التوقفات:", selectedStop);
+            // هنا يمكنك استدعاء وظيفة لجلب البيانات بناءً على الفلتر المحدد
+            });
+
+            // فلترة السعر
+            $("#price-slider").slider({
+            range: true,
+            min: 500,
+            max: 900,
+            values: [576.6, 813.01],
+            slide: function (event, ui) {
+            $("#price-range").text("$" + ui.values[0] + " - $" + ui.values[1]);
+            console.log("تم تعديل نطاق السعر:", ui.values);
+            }
+            });
+
+            // فلترة وقت الرحلة
+            $("#outbound-slider, #inbound-slider").slider({
+            range: true,
+            min: 0,
+            max: 24,
+            values: [0, 24],
+            slide: function (event, ui) {
+            console.log("تم تعديل وقت الرحلة:", ui.values);
+            }
+            });
+
+            // فلترة شركات الطيران
+            $(".filter-airline").change(function () {
+            let selectedAirlines = $(".filter-airline:checked").map(function () {
+            return $(this).val();
+            }).get();
+            console.log("شركات الطيران المحددة:", selectedAirlines);
+            });
+
         </script>
     </x-slot>
 </x-front-layout>

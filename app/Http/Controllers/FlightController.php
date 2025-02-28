@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Rinvex\Country\CountryLoader;
 
 class FlightController extends Controller
 {
@@ -14,8 +15,8 @@ class FlightController extends Controller
         return view('index');
     }
 
-    public $client_id     = '3JoLZTH90MfQWAf04VVo8tgRi4Ke8sH3';
-    public $client_secret = 'lDoYhnuI3vZPXy6f';
+    public $client_id     = 'pMnIJxm6ArkXSDvI4FhSs8NhBw660Qte';
+    public $client_secret = 'SVDZHMGGHWvLcGuK';
 
     public function get_token()
     {
@@ -158,6 +159,7 @@ class FlightController extends Controller
         //     }
         // }
 
+        //لازم نشيل هدول السطرين
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         $response = curl_exec($curl);
@@ -180,9 +182,9 @@ class FlightController extends Controller
         if (! isset($responseData['data'])) {
             dd("خطأ: لم يتم العثور على data", $responseData);
         }
-        dd($request->all());
+        // dd($request->all());
         $flightsArray = json_decode($response, true)['data'] ?? [];
-        dd($flightsArray);
+        // dd($flightsArray);
         $flightData = [
             'originCityName'      => $request->input('origin_city'),
             'originCity'          => $request->input('origin_city_name'),
@@ -213,7 +215,7 @@ class FlightController extends Controller
 
             return $flightOffer;
         });
-        dd($flightData);
+        // dd($flightData);
 
                            // إعداد الترقيم اليدوي
         $perPage     = 20; // عدد الرحلات لكل صفحة
@@ -299,6 +301,32 @@ class FlightController extends Controller
         }
 
         return response()->json($airlineNames);
+    }
+
+    public function getCountries()
+    {
+        // جلب قائمة الدول
+        $countries = CountryLoader::countries();
+
+        // استخراج أسماء الدول فقط
+        return collect($countries)->map(function ($country) {
+            return $country['name'] ?? 'Unknown';
+        })->values()->toArray();
+    }
+
+    public function passengers()
+    {
+        return view('flights.passengers');
+    }
+    public function payment()
+    {
+        $countries = $this->getCountries();
+
+        return view('flights.payment', compact('countries'));
+    }
+    public function confirm()
+    {
+        return view('flights.confirm');
     }
 
 }

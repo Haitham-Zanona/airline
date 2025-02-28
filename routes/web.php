@@ -34,6 +34,6 @@ Route::group([], function () {
 
 Route::get('/flights/passengers', [FlightController::class, 'passengers'])->name('flights.payment');
 Route::get('/flights/payment', [FlightController::class, 'payment'])->name('flights.payment');
-Route::get('/process-confirm', [FlightController::class, 'confirm'])->name('process.confirm');
+Route::get('/flights/confirm', [FlightController::class, 'confirm'])->name('process.confirm');
 
 // Route::post('/process-payment', [FlightController::class, 'processPayment'])->name('process.payment');
