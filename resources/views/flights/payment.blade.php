@@ -252,6 +252,66 @@
             font-size: 12px;
             margin-left: 10px;
         }
+
+        .container-button {
+            position: relative;
+            display: inline-block;
+        }
+
+        .details {
+            display: none;
+            background: gray;
+            padding: 10px;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 200px;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .details button.close-details {
+            background: red;
+            color: white;
+            border: none;
+            padding: 3px 7px;
+            cursor: pointer;
+            float: right;
+            font-size: 14px;
+        }
+
+        .toggle-details {
+            padding: 10px 15px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-content {
+            padding: 10px 15px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .content {
+            display: none;
+            background: gray;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+        }
     </style>
 
 
@@ -528,13 +588,17 @@
                         <span>taxes and fees included</span>
                     </div>
                     <div class="price-right p-4" style="color: #fff; background-color: #000;">
-                        <div class="price-amount" style="">
-                            <span class="font-weight-bold">Amount $641.60</span>
-                            <span class="d-block" style="text-align: right;"><a href="javascript:void(0);"
-                                    class="popup-trigger">(popup-price-det)</a>
-                                <div class="tooltip-box">This is a pop-up message!</div>
-                            </span>
-                        </div><!-- price-amount -->
+                        {{-- <div class="container-button">
+                            <button class="toggle-details" type="button">Pay</button>
+                            <div class="details">
+                                <button class="close-details">×</button>
+                                <p>هذه بعض التفاصيل حول العنصر.</p>
+                            </div>
+                        </div> --}}
+                        <button type="button" class="toggle-content">عرض التفاصيل</button>
+                        <span class="content" style="display: none; margin-left: 10px; color: blue;">
+                            هذا هو المحتوى المخفي ✨
+                        </span>
                     </div>
                 </div><!-- price -->
 
@@ -561,7 +625,8 @@
                 </div><!-- polices-review -->
                 <div class="terms">
                     <label class="terms-condition-container" style="font-size: 16px;">
-                        <input type="checkbox" class="terms-checkbox" id="TermsAndConditionsAccepted">
+                        <input type="checkbox" class="terms-checkbox" name="check-payment"
+                            id="TermsAndConditionsAccepted">
                         <span class="checkmark"></span>
                         &nbsp; By clicking on <span>"Pay Now"</span>,
                         I accept the
@@ -634,6 +699,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
     <script>
         $(document).ready(function(){
+            // $(".toggle-details").click(function (event) {
+            // event.preventDefault(); // يمنع إعادة تحميل الصفحة عند الضغط على الزر
+            // $(this).next(".details").fadeToggle(200);
+            // });
+
+            // $(".close-details").click(function (event) {
+            // event.preventDefault();
+            // $(this).parent(".details").fadeOut(200);
+            // });
+
+            // // إغلاق التفاصيل عند النقر خارجها
+            // $(document).click(function (event) {
+            // if (!$(event.target).closest(".container-button").length) {
+            // $(".details").fadeOut(200);
+            // }
+            // });
+
+            $(".toggle-content").click(function () {
+            $(this).next(".content").fadeToggle(200);
+            });
             function updateProgress(currentStep) {
                 $(".step").each(function (index) {
                     if (index + 1 < currentStep) {
@@ -648,113 +733,13 @@
 
             updateProgress(3); // ✅ ضبط الخطوة الثالثة كـ "active" والخطوتين الأولى والثانية كـ "completed"
 
-    $('form').on('submit', function(event) {
-        let isValid = true;
+        //    $("button").click(function(event) {
+        //     // console.log('clicked');
+        //     event.preventDefault();
+        //         $('payment_details').toggle();
+        //     });
 
-        $('.form-control').each(function() {
-            if ($(this).val().trim() === '') {
-                $(this).addClass('is-invalid');
-                isValid = false;
-            } else {
-                $(this).removeClass('is-invalid');
-            }
-        });
 
-        // تحقق من صحة رقم البطاقة (يجب أن يكون 16 رقمًا)
-        let cardNumber = $('input[placeholder="Enter card number"]').val().trim();
-        if (!/^[0-9]{16}$/.test(cardNumber)) {
-            $('input[placeholder="Enter card number"]').addClass('is-invalid');
-            isValid = false;
-        }
-
-        // تحقق من صحة CVV (يجب أن يكون 3 أو 4 أرقام)
-        let cvv = $('input[placeholder="CVV / CCV"]').val().trim();
-        if (!/^[0-9]{3,4}$/.test(cvv)) {
-            $('input[placeholder="CVV / CCV"]').addClass('is-invalid');
-            isValid = false;
-        }
-
-        // منع الإرسال إذا كان هناك خطأ
-        if (!isValid) {
-            event.preventDefault();
-            alert('يرجى ملء جميع الحقول المطلوبة بشكل صحيح!');
-        }
-    });
-
-    // التحقق من الإدخال عند الإرسال
-    $("#billingForm").submit(function(e) {
-        let isValid = true;
-
-        // التحقق من الحقول المطلوبة
-        $(".validate-input").each(function() {
-            if ($(this).val().trim() === "") {
-                $(this).addClass("is-invalid");
-                isValid = false;
-            } else {
-                $(this).removeClass("is-invalid");
-            }
-        });
-
-        // تحقق من صحة رقم البطاقة (يجب أن يكون 16 رقمًا)
-        let cardNumber = $('input[placeholder="Enter card number"]').val().trim();
-        if (!/^[0-9]{16}$/.test(cardNumber)) {
-            $('input[placeholder="Enter card number"]').addClass('is-invalid');
-            isValid = false;
-        }
-
-        // تحقق من صحة CVV (يجب أن يكون 3 أو 4 أرقام)
-        let cvv = $('input[placeholder="CVV / CCV"]').val().trim();
-        if (!/^[0-9]{3,4}$/.test(cvv)) {
-            $('input[placeholder="CVV / CCV"]').addClass('is-invalid');
-            isValid = false;
-        }
-
-        // منع الإرسال إذا كان هناك خطأ
-        if (!isValid) {
-            e.preventDefault();
-            alert("يرجى ملء جميع الحقول المطلوبة بشكل صحيح!");
-        }
-        });
-
-        // إزالة التنبيه عند الكتابة
-        $(".validate-input, .form-control").on("input", function() {
-            $(this).removeClass("is-invalid");
-        });
-
-        $("#country").select2({
-            placeholder: "Select Country",
-            allowClear: true
-        });
-
-        // التحقق من الإدخال عند الإرسال
-        $("#billingForm").submit(function (e) {
-            let isValid = true;
-
-            if ($("#country").val() === "") {
-                alert("Please select a country!");
-                isValid = false;
-            }
-
-            if (!isValid) {
-                e.preventDefault();
-            }
-        });
-
-        $("form").on("submit", function(e) {
-            if (!$("#TermsAndConditionsAccepted").is(":checked")) {
-                $(".error-message").removeClass("d-none");
-                e.preventDefault(); // منع الإرسال إذا لم يتم التحديد
-            } else {
-                $(".error-message").addClass("d-none");
-            }
-        });
-
-        // إخفاء الخطأ عند النقر على الـ checkbox
-        $("#TermsAndConditionsAccepted").on("change", function() {
-            if ($(this).is(":checked")) {
-                $(".error-message").addClass("d-none");
-            }
-        });
 
     });
     </script>

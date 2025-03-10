@@ -123,16 +123,18 @@
             font-size: 15px;
         }
 
-        /* ✅ التصميم الأساسي للحاوية */
+
         .flight-details-container {
             width: 100%;
             max-width: 350px;
-            /* أو يمكن تغييره حسب الحاجة */
+
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 15px;
             transition: all 0.3s ease-in-out;
+            position: sticky;
+            top: 0;
         }
 
         .flight-details {
@@ -154,23 +156,7 @@
 
 
 
-        /* ✅ تنسيق العنصر عندما يصبح ثابتًا عند التمرير */
-        .fixed-details {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 25%;
-            /* يناسب col-md-3 */
-            max-width: 350px;
-            /* يضمن عدم اتساعه أكثر من اللازم */
-            background: white;
-            z-index: 1000;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease-in-out;
-            border-radius: 8px 8px 0 0;
-            /* شكل أنيق عند التثبيت */
-        }
+
 
         /* ✅ عند العودة لأعلى، يعود العنصر إلى مكانه الطبيعي */
         .original-position {
@@ -261,6 +247,27 @@
         .flight-details-container p {
             font-size: 14px;
             color: #555;
+        }
+
+        .filter-section {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-header {
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-content {
+            display: none;
+            margin-top: 10px;
         }
     </style>
 
@@ -447,7 +454,17 @@
 
             </div><!-- col-md-9 -->
             <div class="col-md-3">
-                <div class="flight-details-container" id="flight-box">
+
+
+                <div class="filter-section">
+                    <div class="filter-header" data-toggle="collapse" data-target="#stops-filter">Stops <span>▼</span>
+                    </div>
+                    <div class="filter-content collapse show" id="stops-filter">
+                        <button class="btn btn-primary filter-stop" data-value="direct">Direct $576.60</button>
+                        <button class="btn btn-primary filter-stop" data-value="1stop">1 Stop $625.30</button>
+                    </div>
+                </div>
+                <div class="flight-details-container">
                     <!-- ✅ قسم تفاصيل الرحلة -->
                     <div class="section">
                         <div class="toggle-section">
@@ -498,46 +515,6 @@
 
     <script>
         $(document).ready(function () {
-            var flightBox = $("#flight-box"); // العنصر الذي سيتم تثبيته
-            var originalOffset = flightBox.offset().top; // حفظ موقعه الأصلي
-            var footer = $("footer"); // تحديد الفوتر حتى لو كان في الـ layout
-            var flightHeight = flightBox.outerHeight(); // حساب ارتفاع العنصر
-            var marginBottom = 20; // هامش لمنع التداخل مع الفوتر
-
-            $(window).scroll(function () {
-            var scrollTop = $(window).scrollTop(); // موقع التمرير الحالي
-            var footerOffset = footer.offset().top; // موقع الفوتر في الصفحة
-            var windowHeight = $(window).height(); // ارتفاع النافذة
-
-            if (scrollTop >= originalOffset) {
-            if (scrollTop + flightHeight + marginBottom < footerOffset) {
-                flightBox.addClass("fixed-details").removeClass("bottom-stop"); } else {
-                flightBox.removeClass("fixed-details").addClass("bottom-stop"); } } else { flightBox.removeClass("fixed-details bottom-stop"); } }); // ✅ فتح وإغلاق الأقسام عند النقر على العنوان $(".section-header").click(function () {
-                $(this).next(".section-content").slideToggle(); // فتح وإغلاق القائمة $(this).find(".arrow").toggleClass("rotate");
-                // تدوير السهم });
-
-            // ✅ التحقق من الإدخالات عند إرسال الفورم
-            $("#passengerForm").submit(function (event) {
-                let isValid = true;
-
-                $(".required").each(function () {
-                    let errorText = $(this).next(); // العنصر الذي يحتوي على رسالة الخطأ
-                    if (!$(this).val().trim()) {
-                        $(this).addClass("is-invalid");
-                        errorText.show();
-                        isValid = false;
-                    } else {
-                        $(this).removeClass("is-invalid");
-                        errorText.hide();
-                    }
-                });
-
-                if (!isValid) {
-                    event.preventDefault(); // منع إرسال الفورم إذا كان هناك خطأ
-                } else {
-                    updateProgress(3); // تحديث شريط التقدم للخطوة التالية
-                }
-            });
 
             // ✅ تحديث شريط التقدم بناءً على المرحلة الحالية
             function updateProgress(currentStep) {
@@ -553,6 +530,16 @@
             }
 
             updateProgress(2); // ضبط الخطوة الحالية
+
+            $(".filter-header").click(function () {
+                $(this).next(".filter-content").slideToggle();
+                $(this).find("span").text($(this).next(".filter-content").is(":visible") ? "▼" : "▲");
+                });
+            $(".filter-stop").click(function () {
+                let selectedStop = $(this).data("value");
+                console.log("تم اختيار عدد التوقفات:", selectedStop);
+                // هنا يمكنك استدعاء وظيفة لجلب البيانات بناءً على الفلتر المحدد
+            });
         });
 
 

@@ -14,6 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('/indext', function () {
+//     return view('indext');
+// });
+Route::get('/indexs', function () {
+    return view('indexs');
+});
+Route::get('/newflight', function () {
+    return view('flights.new-flight');
+});
+Route::get('/newpassenger', function () {
+    return view('flights.new-passengers');
+});
+
 Route::group([], function () {
     Route::get('/', [FlightController::class, 'index']);
 
@@ -35,5 +48,7 @@ Route::group([], function () {
 Route::get('/flights/passengers', [FlightController::class, 'passengers'])->name('flights.payment');
 Route::get('/flights/payment', [FlightController::class, 'payment'])->name('flights.payment');
 Route::get('/flights/confirm', [FlightController::class, 'confirm'])->name('process.confirm');
+
+Route::get('/send-mail', [FlightController::class, 'sendMail']);
 
 // Route::post('/process-payment', [FlightController::class, 'processPayment'])->name('process.payment');

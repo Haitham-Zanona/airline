@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع حجز رحلات طيران</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* Header styles */
+        header {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .navbar-toggler {
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .navbar-toggler-icon {
+            height: 24px;
+        }
+
+        @media (max-width: 767.98px) {
+            .nav-link {
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .nav-item:last-child .nav-link {
+                border-bottom: none;
+            }
+        }
+
+        .logo {
+            color: #4444ff;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .nav-link {
+            color: #333;
+            transition: color 0.3s;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #4444ff;
+        }
+
+        .contact-info {
+            color: #4444ff;
+        }
+
+        .flight-result-search .col-md-2 label {
+            padding-left: 10px;
+        }
+
+        .search-container {
+            background-color: #f1f1f1;
+            padding: 20px 0;
+        }
+
+        .search-option {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .radio-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .search-form {
+            /* display: flex; */
+            /* gap: 5px; */
+            flex-wrap: wrap;
+        }
+
+        .search-form .form-control {
+            border-radius: 4px;
+        }
+
+        .search-button {
+            background-color: #6c3eff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+        }
+
+        .filter-section {
+            margin-top: 30px;
+        }
+
+        .filter-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .filter-option {
+            margin-bottom: 10px;
+        }
+
+        .pricing-tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pricing-tab {
+            padding: 10px;
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .pricing-tab.active {
+            border-bottom: 3px solid #6c3eff;
+            color: #6c3eff;
+        }
+
+        .pricing-price {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .flight-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .flight-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .airline-logo {
+            width: 30px;
+            height: 30px;
+            background-color: #e0e6ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .flight-details {
+            background-color: #f6f7ff;
+            padding: 15px;
+        }
+
+        .flight-time {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .flight-date {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .flight-airport {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .flight-duration {
+            text-align: center;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .flight-price {
+            font-weight: bold;
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-button {
+            background-color: #6c3eff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .refund-status {
+            font-size: 12px;
+            margin: 10px 0;
+        }
+
+        .non-refundable {
+            color: #ff5050;
+        }
+
+        .partially-refundable {
+            color: #ffa500;
+        }
+
+        .fully-refundable {
+            color: #55aa55;
+        }
+
+        .flight-footer {
+            padding: 10px 15px;
+            /* border-top: 1px solid #eee; */
+            font-size: 12px;
+            color: #666;
+        }
+
+        .flight-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+
+        .flight-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .flight-tab.active {
+            border-bottom: 2px solid #6c3eff;
+            color: #6c3eff;
+        }
+
+        .time-slider-container {
+            padding: 10px 0;
+        }
+
+        .time-slider {
+            height: 5px;
+            background-color: #ddd;
+            position: relative;
+            margin: 5px 0 20px 0;
+        }
+
+        .time-slider-handle {
+            width: 12px;
+            height: 12px;
+            background-color: #6c3eff;
+            border-radius: 50%;
+            position: absolute;
+            top: -4px;
+        }
+
+        .time-slider-range {
+            height: 5px;
+            background-color: #6c3eff;
+            position: absolute;
+        }
+
+        .time-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .show-more-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            background-color: white;
+            color: #6c3eff;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    {{-- <header class="py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3 col-6">
+                    <div class="logo">LOGO</div>
+                </div>
+                <div class="col-md-6 mt-3 mt-md-0 order-md-2 order-3">
+                    <ul class="nav justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact us</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3 col-6 text-end order-md-3 order-2">
+                    <div class="contact-info d-flex align-items-center">
+                        <img src="{{ asset('assets/images/phone-call.png') }}" width="40px" height="40px" alt="">
+                        <div class="text-start mx-2">
+                            <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
+                            <span class="fw-bold"><a href="tel:+1-111-111-1111"
+                                    style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header> --}}
+
+    <header class="py-3">
+        <div class="container">
+            <!-- Desktop View -->
+            <div class="row align-items-center d-none d-md-flex">
+                <div class="col-md-3">
+                    <div class="logo">LOGO</div>
+                </div>
+                <div class="col-md-6">
+                    <ul class="nav justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Blog</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3 text-end">
+                    <div class="contact-info d-flex align-items-center justify-content-end">
+                        <img src="{{ asset('assets/images/phone-call.png') }}" width="40px" height="40px" alt="">
+                        <div class="text-start mx-2">
+                            <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
+                            <span class="fw-bold"><a href="tel:+1-111-111-1111"
+                                    style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile View -->
+            <div class="d-md-none">
+                <div class="d-flex justify-content-between align-items-center">
+                    <!-- Logo on Left -->
+                    <div class="logo">LOGO</div>
+
+                    <!-- Menu Button on Right -->
+                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon d-flex align-items-center justify-content-center">
+                            <i class="fas fa-bars"></i>
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Collapsible Content -->
+                <div class="collapse mt-3" id="navbarMobile">
+                    <div class="bg-light p-3 rounded">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">About us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Contact us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Services</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Blog</a>
+                            </li>
+                        </ul>
+
+                        <!-- Contact Info in Menu -->
+                        <div class="contact-info-mobile mt-3 pt-3 border-top">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ asset('assets/images/phone-call.png') }}" width="30px" height="30px"
+                                    alt="">
+                                <div class="text-start mx-2">
+                                    <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
+                                    <span class="fw-bold"><a href="tel:+1-111-111-1111"
+                                            style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-container">
+        <div class="container">
+            <div class="radio-container">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tripType" id="oneWay" checked>
+                    <label class="form-check-label" for="oneWay">ONE WAY</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tripType" id="roundTrip">
+                    <label class="form-check-label" for="roundTrip">ROUND WAY</label>
+                </div>
+            </div>
+
+            <form action="{{ route('flight.search') }}" method="POST" class="search-form">
+                @csrf
+                <div class="row flight-result-search">
+                    <div class="col-md-2">
+                        <label><i class="fas fa-plane-departure me-1"></i> From</label>
+                        <select class="form-select">
+                            <option>Germany</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label><i class="fas fa-plane-arrival me-1"></i> To</label>
+                        <select class="form-select">
+                            <option>Australia</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label><i class="far fa-calendar-alt me-1"></i> Departure</label>
+                        <select class="form-select">
+                            <option>01 JUN 2023</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label><i class="far fa-calendar-alt me-1"></i> Return</label>
+                        <select class="form-select">
+                            <option>10 JUN 2023</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label><i class="fas fa-user me-1"></i> Class</label>
+                        <select class="form-select">
+                            <option>Economy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="px-2"><i class="fas fa-users me-1"></i> Pax</label>
+                        <select class="form-select">
+                            <option>02</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button class="search-button w-100">Modify search</button>
+                    </div>
+                </div><!-- row -->
+            </form>
+
+        </div>
+    </section>
+
+    <!-- Filter and Results Section -->
+    <section class="container filter-section">
+        <div class="row">
+            <!-- Filters Column -->
+            <div class="col-md-3">
+                <div class="filter-card">
+                    <div class="filter-title">Filter By</div>
+
+                    <!-- Stop Filter -->
+                    <div class="mb-4">
+                        <div class="filter-subtitle mb-2">Stop</div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="nonstop">
+                                <label class="form-check-label" for="nonstop">Nonstop(23)</label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="1stop">
+                                <label class="form-check-label" for="1stop">1 Stop (4)</label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="2stops">
+                                <label class="form-check-label" for="2stops">2+ Stops (2)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Airlines Filter -->
+                    <div class="mb-4">
+                        <div class="filter-subtitle mb-2">Airlines</div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="abcTech">
+                                <label class="form-check-label" for="abcTech">ABC Air Technologies</label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="abcAir">
+                                <label class="form-check-label" for="abcAir">ABC Airlines</label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="xyzAir">
+                                <label class="form-check-label" for="xyzAir">XYZ Airways</label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="bopLink">
+                                <label class="form-check-label" for="bopLink">BOP Links</label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="edfExpress">
+                                <label class="form-check-label" for="edfExpress">EDF Express</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Departure Time Filter -->
+                    <div class="mb-4">
+                        <div class="filter-subtitle mb-2">Departure Time</div>
+                        <div class="time-slider-container">
+                            <div class="time-labels">
+                                <span>Mon 5:00 AM</span>
+                                <span>Tue 12:00 AM</span>
+                            </div>
+                            <div class="time-slider">
+                                <div class="time-slider-range" style="left: 25%; width: 30%;"></div>
+                                <div class="time-slider-handle" style="left: 25%;"></div>
+                                <div class="time-slider-handle" style="left: 55%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Arrival Time Filter -->
+                    <div class="mb-4">
+                        <div class="filter-subtitle mb-2">Arrival Time</div>
+                        <div class="time-slider-container">
+                            <div class="time-labels">
+                                <span>Mon 5:00 AM</span>
+                                <span>Tue 12:00 AM</span>
+                            </div>
+                            <div class="time-slider">
+                                <div class="time-slider-range" style="left: 25%; width: 30%;"></div>
+                                <div class="time-slider-handle" style="left: 25%;"></div>
+                                <div class="time-slider-handle" style="left: 55%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Departure Airports Filter -->
+                    <div class="mb-4">
+                        <div class="filter-subtitle mb-2">Departure Airports</div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="lcyLondon">
+                                <label class="form-check-label" for="lcyLondon">LCY, London (11)</label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="lhrLondon">
+                                <label class="form-check-label" for="lhrLondon">LHR, London (19)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Arrival Airports Filter -->
+                    <div class="mb-4">
+                        <div class="filter-subtitle mb-2">Arrival Airports</div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="nboNairobi">
+                                <label class="form-check-label" for="nboNairobi">NBO, Nairobi (32)</label>
+                            </div>
+                        </div>
+                        <div class="filter-option">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="wilNairobi">
+                                <label class="form-check-label" for="wilNairobi">WIL, Nairobi (21)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-outline-secondary">Reset</button>
+                        <button class="btn btn-primary">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Column -->
+            <div class="col-md-9">
+                <!-- Pricing Tabs -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="m-0">Pricing table</h6>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="pricing-tabs">
+                            <div class="pricing-tab active">
+                                <div>Recommended</div>
+                                {{-- <div class="pricing-price">$500 · 10h 20m</div> --}}
+                            </div>
+                            <div class="pricing-tab">
+                                <div>Fastest</div>
+                                {{-- <div class="pricing-price">$500 · 10h 20m</div> --}}
+                            </div>
+                            <div class="pricing-tab">
+                                <div>Cheapest</div>
+                                {{-- <div class="pricing-price">$500 · 10h 20m</div> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flight Card -->
+                <div class="flight-card">
+                    <div class="flight-header">
+                        <div class="d-flex align-items-center">
+                            <div class="airline-logo">
+                                <i class="fas fa-plane text-primary"></i>
+                            </div>
+                            <div>ABC Airline</div>
+                        </div>
+                        <div>Travel Class: <span class="fw-bold">Economy</span></div>
+                    </div>
+                    <div class="row" style="box-sizing: border-box;">
+                        <div class="col-md-9" style="padding: 0 15px 0 25px;">
+                            <div class="flight-details" style="border-bottom: 1px solid #eee;">
+                                <div class="row">
+                                    <!-- Departure Details -->
+                                    <div class="col-3">
+                                        <div class="flight-time">14.50</div>
+                                        <div class="flight-date">Sun, 29 Jan 2023</div>
+                                        <div class="flight-airport">Moi Intl, Mombasa</div>
+                                        <div class="flight-airport">Kenya</div>
+                                    </div>
+
+                                    <!-- Flight Duration -->
+                                    <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                                        <div class="flight-duration">9hr 50min</div>
+                                        <div class="w-100 border-top mt-2 mb-2"></div>
+                                        <div class="flight-duration">Non-refundable</div>
+                                    </div>
+
+                                    <!-- Arrival Details -->
+                                    <div class="col-3 text-end">
+                                        <div class="flight-time">14.50</div>
+                                        <div class="flight-date">Sun, 29 Jan 2023</div>
+                                        <div class="flight-airport">JFK Terminal, Nairobi</div>
+                                        <div class="flight-airport">Kenya</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Another flight segment (for round trip or connection) -->
+                            <div class="flight-details">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="flight-time">14.50</div>
+                                        <div class="flight-date">Sun, 29 Jan 2023</div>
+                                        <div class="flight-airport">Moi Intl, Mombasa</div>
+                                        <div class="flight-airport">Kenya</div>
+                                    </div>
+                                    <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                                        <div class="flight-duration">9hr 50min</div>
+                                        <div class="w-100 border-top mt-2 mb-2"></div>
+                                    </div>
+                                    <div class="col-3 text-end">
+                                        <div class="flight-time">14.50</div>
+                                        <div class="flight-date">Sun, 29 Jan 2023</div>
+                                        <div class="flight-airport">JFK Terminal, Nairobi</div>
+                                        <div class="flight-airport">Kenya</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- col-md-9 -->
+
+                        <div class="col-md-3 d-flex justify-content-center">
+
+                            <!-- Price and Book Button -->
+                            <div class="p-3 d-flex text-center justify-content-center align-items-center">
+                                <div class="me-3">
+                                    <div class="flight-price">$18,500</div>
+                                    <button class="book-button px-5 py-3">Book Now</button>
+                                </div>
+                            </div>
+                        </div><!-- col-md-3 -->
+                    </div><!-- row -->
+
+                    <!-- Seats Remaining and Refund Status -->
+                    <div class="p-3 d-flex justify-content-between">
+                        <div style="padding: 10px 15px;">100 seats remaining</div>
+                        <!-- Flight Footer -->
+                        <div class="flight-footer d-flex justify-content-start">
+                            <div class="me-4">
+                                <i class="fas fa-ticket-alt me-1"></i> Separate tickets booked together for cheaper
+                                price
+                            </div>
+                            <div class="me-4">
+                                <i class="fas fa-plane-arrival me-1"></i> Change of Terminal
+                            </div>
+                            <div class="me-4">
+                                <i class="fas fa-exchange-alt me-1"></i> Self Transfer
+                            </div>
+                            <div>
+                                <i class="fas fa-suitcase-rolling me-1"></i> 7kg
+                            </div>
+                        </div>
+                        {{-- <div class="non-refundable">Non-refundable</div>
+                        <div class="text-primary">View flight details</div> --}}
+                    </div>
+
+
+
+
+                </div>
+
+                {{--
+                <!-- Flight Information Tabs -->
+                <div class="flight-tabs mb-4">
+                    <div class="flight-tab active">Flight Information</div>
+                    <div class="flight-tab">Fare Detail</div>
+                    <div class="flight-tab">Baggage Rules</div>
+                    <div class="flight-tab">Cancellation Rules</div>
+                </div> --}}
+
+                <!-- Show More Button -->
+                <button class="show-more-btn">Show more</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+
+</html>

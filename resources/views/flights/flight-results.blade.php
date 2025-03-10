@@ -42,7 +42,7 @@
 
             }
 
-            .row {
+            .card .row {
                 width: 100%;
                 display: flex;
                 align-items: center;
@@ -198,12 +198,56 @@
             .checkbox-group li {
                 margin-bottom: 5px;
             }
+
+            .support {
+                text-align: center;
+                margin-top: 20px;
+                padding: 15px 2px 10px;
+                background-color: #fff;
+                border: 2px solid #000000;
+                border-radius: 3px;
+            }
+
+            .support h1 {
+                font-weight: 700;
+                font-size: 22px;
+                color: #000;
+                margin-top: 0;
+                margin-bottom: 20px !important;
+            }
+
+            .support ul {
+                border-top: 2px solid #000000;
+                margin: 0;
+                padding: 8px 21px;
+                list-style: none;
+            }
+
+            .support ul li {
+                font-size: 18px;
+                line-height: 23px;
+                color: #333;
+                padding: 8px 15px;
+                text-align: left;
+                position: relative;
+            }
+
+            .support ul li span {
+                display: inline-block;
+                padding-left: 30px;
+            }
+
+            .support ul li img {
+                position: absolute;
+                top: 0;
+                left: -15px;
+            }
         </style>
     </x-slot>
 
 
-    {{-- @dd($flightOffers[0]['itineraries'][0]['segments']) --}}
-    {{-- @dd($flightOffers) --}}
+    {{-- @dd($flightOffers[1]['travelerPricings'][0]['fareDetailsBySegment'][0]['amenities']) --}}
+    @dd($flightOffers)
     {{-- @php
 
     جمع جميع أكواد شركات الطيران الموجودة في الرحلات
@@ -263,8 +307,8 @@
             <button type="button" class="btn btn-danger p-3" onclick="window.location.href='/';">Modify Search</button>
         </div>
     </div>
-    <div class="row" style="">
-        <div class="col-md-3">
+    <div class="row">
+        {{-- <div class="col-md-3">
             <div class="filter-section">
                 <div class="filter-header" data-toggle="collapse" data-target="#stops-filter">Stops <span>▼</span></div>
                 <div class="filter-content collapse show" id="stops-filter">
@@ -272,6 +316,7 @@
                     <button class="btn btn-primary filter-stop" data-value="1stop">1 Stop $625.30</button>
                 </div>
             </div>
+
 
             <div class="filter-section">
                 <div class="filter-header" data-toggle="collapse" data-target="#flight-time-filter">Flight Time
@@ -313,8 +358,20 @@
                     </ul>
                 </div>
             </div>
-        </div><!-- col-md-3 -->
-        <div class="col-md-9">
+            <div class="support mx-1">
+                <h1>Why book with us?</h1>
+                <ul>
+                    <li class="mx-1"><img src="{{ asset('assets/images/icon-support.png') }}" width="55px"
+                            alt=""><span>Live 24/7
+                            Support</span>
+                    </li>
+                    <li class="mx-1 my-4"><img src="{{ asset('assets/images/icon-voucher.png') }}" width="55px"
+                            alt=""><span>Big Savings + Great Coupon Codes</span></li>
+                </ul>
+            </div><!-- support -->
+        </div><!-- col-md-3 --> --}}
+
+        <div class="col-md-12">
             <div class="limited-offer d-flex align-items-center m-2">
                 <div class="svg-icon-clock d-inline-block">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
@@ -376,7 +433,9 @@
             </div><!-- limited-offer -->
 
 
-            @foreach($flightOffers as $flight)
+
+
+            @forelse ($flightOffers as $flight)
             <div class="card">
                 <div class="row">
 
@@ -392,9 +451,9 @@
                                         $flight['itineraries'][0]['segments'][0]['departure']['iataCode']
                                         }}</span>
                                     <?php
-                                                                    $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'];
-                                                                    $datetime = \Carbon\Carbon::parse($departureTime);
-                                                                ?>
+                                                                                        $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'];
+                                                                                        $datetime = \Carbon\Carbon::parse($departureTime);
+                                                                                    ?>
                                     <strong class="time me-2 mr-1" style="font-size: 18px; font-weight: bold;">{{
                                         $datetime->format('H:i')
                                         }}</strong>
@@ -422,9 +481,9 @@
                                 <span class="mr-3">{{ $flight['itineraries'][1]['segments'][0]['departure']['iataCode']
                                     }}</span>
                                 <?php
-                                    $arrivalTime = $flight['itineraries'][0]['segments'][0]['arrival']['at'];
-                                    $datetime = \Carbon\Carbon::parse($arrivalTime);
-                                ?>
+                                                        $arrivalTime = $flight['itineraries'][0]['segments'][0]['arrival']['at'];
+                                                        $datetime = \Carbon\Carbon::parse($arrivalTime);
+                                                    ?>
                                 <strong class="time me-2 mr-1" style="font-size: 18px">{{ $datetime->format('H:i')
                                     }}</strong>
                                 <span class="date" style="font-size: 14px;">{{ $datetime->translatedFormat('D d M')
@@ -442,9 +501,9 @@
                                     <span class="mr-3">{{
                                         $flight['itineraries'][1]['segments'][0]['departure']['iataCode'] }}</span>
                                     <?php
-                                        $departureTime = $flight['itineraries'][1]['segments'][0]['departure']['at'];
-                                        $datetime = \Carbon\Carbon::parse($departureTime);
-                                    ?>
+                                                                                        $departureTime = $flight['itineraries'][1]['segments'][0]['departure']['at'];
+                                                                                        $datetime = \Carbon\Carbon::parse($departureTime);
+                                                                                    ?>
                                     <strong class="time me-2 mr-1" style="font-size: 18px">{{ $datetime->format('H:i')
                                         }}</strong>
                                     <span class="date" style="font-size: 14px;">{{ $datetime->translatedFormat('D d M')
@@ -472,15 +531,17 @@
                                 <span class="mr-3">{{
                                     $flight['itineraries'][1]['segments'][0]['arrival']['iataCode'] }}</span>
                                 <?php
-                                    $arrivalTime = $flight['itineraries'][1]['segments'][0]['arrival']['at'];
-                                    $datetime = \Carbon\Carbon::parse($arrivalTime);
-                                ?>
+                                                                                    $arrivalTime = $flight['itineraries'][1]['segments'][0]['arrival']['at'];
+                                                                                    $datetime = \Carbon\Carbon::parse($arrivalTime);
+                                                                                ?>
                                 <strong class="time me-2 mr-1" style="font-size: 18px">{{ $datetime->format('H:i')
                                     }}</strong>
                                 <span class="date" style="font-size: 14px;">{{ $datetime->translatedFormat('D d M')
                                     }}</span>
                             </div>
                         </div>
+
+
 
                     </div><!-- col-md-9 -->
 
@@ -506,8 +567,9 @@
                             <img src="{{ asset('assets/images/outbound.png') }}" width="20px" height="20px" class="mr-3"
                                 alt="">
                             <h5 style="font-size: 14px;">Outbound Flight
-                                |{{ $flightData['originCity'] }}| <span style="color:#ffc107;"> TO
-                                </span> |{{ $flightData['destinationCity'] }}|</h5>
+                                {{ trim(explode(",", $flightData['originCity'])[0]) }} <span style="color:#ffc107;">
+                                    TO
+                                </span> {{ trim(explode(",", string: $flightData['destinationCity'])[0]) }}</h5>
                         </div><!-- details-header -->
 
                         <div class="row g-0 m-0 p-0">
@@ -523,9 +585,9 @@
                             <div class="col-md-3">
 
                                 <?php
-                                    $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'];
-                                    $datetime = \Carbon\Carbon::parse($departureTime);
-                                ?>
+                                                        $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'];
+                                                        $datetime = \Carbon\Carbon::parse($departureTime);
+                                                    ?>
                                 <span class="time me-2 mr-1 d-block" style="font-size: 14px">
                                     {{ $datetime->translatedFormat('D d M Y H:i') }}
                                 </span>
@@ -545,9 +607,9 @@
                             <div class="col-md-3">
                                 <div class="arrival-info">
                                     <?php
-                                        $departureTime = $flight['itineraries'][0]['segments'][0]['arrival']['at'];
-                                        $datetime = \Carbon\Carbon::parse($departureTime);
-                                    ?>
+                                                            $departureTime = $flight['itineraries'][0]['segments'][0]['arrival']['at'];
+                                                            $datetime = \Carbon\Carbon::parse($departureTime);
+                                                        ?>
                                     <span class="time me-2 mr-1 d-block" style="font-size: 14px">
                                         {{ $datetime->translatedFormat('D d M Y H:i') }}
                                     </span>
@@ -568,7 +630,8 @@
                                 alt="">
                             <h5 style="font-size: 14px;">Inbound Flight |{{
                                 $flight['itineraries'][0]['segments'][0]['departure']['iataCode'] }}| <span
-                                    style="color:#ffc107;"> TO
+                                    style="color:#ffc107;">
+                                    TO
                                 </span> |{{
                                 $flight['itineraries'][1]['segments'][0]['departure']['iataCode'] }}|</h5>
                         </div><!-- details-header -->
@@ -586,9 +649,9 @@
                             <div class="col-md-3">
 
                                 <?php
-                                    $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'];
-                                    $datetime = \Carbon\Carbon::parse($departureTime);
-                                ?>
+                                                        $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'];
+                                                        $datetime = \Carbon\Carbon::parse($departureTime);
+                                                    ?>
                                 <span class="time me-2 mr-1 d-block" style="font-size: 14px">
                                     {{ $datetime->translatedFormat('D d M Y H:i') }}
                                 </span>
@@ -609,9 +672,68 @@
                             <div class="col-md-3">
                                 <div class="arrival-info">
                                     <?php
-                                        $departureTime = $flight['itineraries'][1]['segments'][0]['arrival']['at'];
-                                        $datetime = \Carbon\Carbon::parse($departureTime);
-                                    ?>
+                                                            $departureTime = $flight['itineraries'][1]['segments'][0]['arrival']['at'];
+                                                            $datetime = \Carbon\Carbon::parse($departureTime);
+                                                        ?>
+                                    <span class="time me-2 mr-1 d-block" style="font-size: 14px">
+                                        {{ $datetime->translatedFormat('D d M Y H:i') }}
+                                    </span>
+                                    <span style="d-block; font-size: 12px;">{{
+                                        $flight['itineraries'][1]['segments'][0]['departure']['iataCode']
+                                        }}</span>
+                                </div><!-- arrival-info -->
+                                <div class="font-weight-bold"
+                                    style="text-align: right; color: #143ca1; font-size: 14px;">
+                                    <span>Actual Time : {{ $flight['itineraries'][1]['segments'][0]['duration']}}</span>
+                                </div>
+                            </div><!-- col-md-3 -->
+
+                        </div><!-- row -->
+
+                        <div class="stop-des my-3 text-center"><b>Stopover</b><img
+                                src="{{ asset('assets/images/icon-radio-button.png') }}" width="16" height="16"
+                                class="mx-1" alt="">
+                        </div><!-- stop-des -->
+
+                        <div class="row g-0 m-0 p-0">
+                            <div class="col-md-2 px-3" style="text-align: left;">
+                                <span class="d-block font-weight-bold" style="color: #003877; font-size: 18px;">{{
+                                    $flight['itineraries'][0]['segments'][0]['carrierCode']
+                                    }}</span>
+                                <span class="d-block" style="font-size: 13px;">{{
+                                    $flight['itineraries'][0]['segments'][0]['number'] }}</span>
+                                <span class="d-block" style="font-size: 13px;">{{ $flightData['cabin'] }}</span>
+                            </div><!-- col-md-2 -->
+
+                            <div class="col-md-3">
+
+                                <?php
+                                                        $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'];
+                                                        $datetime = \Carbon\Carbon::parse($departureTime);
+                                                    ?>
+                                <span class="time me-2 mr-1 d-block" style="font-size: 14px">
+                                    {{ $datetime->translatedFormat('D d M Y H:i') }}
+                                </span>
+
+                                <span class="d-block" style="font-size: 12px;">{{
+                                    $flight['itineraries'][0]['segments'][0]['departure']['iataCode'] }}</span>
+                                <span class="d-block" style="font-size: 14px;">Terminal {{
+                                    $flight['itineraries'][0]['segments'][0]['departure']['terminal']
+                                    }}</span>
+                            </div><!-- col-md-3 -->
+
+                            <div class="col-md-4">
+                                <div class="flight-divider">
+                                    <span class="plane-icon">✈</span>
+                                </div>
+                            </div><!-- col-md-3 -->
+
+                            <div class="col-md-3">
+                                <div class="arrival-info">
+                                    <?php
+                                                            $departureTime = $flight['itineraries'][1]['segments'][0]['arrival']['at'];
+                                                            $datetime = \Carbon\Carbon::parse($departureTime);
+                                                        ?>
                                     <span class="time me-2 mr-1 d-block" style="font-size: 14px">
                                         {{ $datetime->translatedFormat('D d M Y H:i') }}
                                     </span>
@@ -632,7 +754,11 @@
 
 
             </div><!-- card -->
-            @endforeach
+            @empty
+            <div class="alert alert-warning">No flights found<button type="button" class="btn btn-warning p-3 m-2"
+                    onclick="window.location.href='/';">Search Again</button></div>
+            @endforelse
+
         </div><!-- col-md-9 -->
 
     </div>
@@ -671,51 +797,51 @@
                         }
                     });
                 }
-            });
+
 
             $(".filter-header").click(function () {
-            $(this).next(".filter-content").slideToggle();
-            $(this).find("span").text($(this).next(".filter-content").is(":visible") ? "▼" : "▲");
+                $(this).next(".filter-content").slideToggle();
+                $(this).find("span").text($(this).next(".filter-content").is(":visible") ? "▼" : "▲");
             });
 
             // فلترة الرحلات بناءً على عدد التوقفات
             $(".filter-stop").click(function () {
-            let selectedStop = $(this).data("value");
-            console.log("تم اختيار عدد التوقفات:", selectedStop);
+                let selectedStop = $(this).data("value");
+                console.log("تم اختيار عدد التوقفات:", selectedStop);
             // هنا يمكنك استدعاء وظيفة لجلب البيانات بناءً على الفلتر المحدد
             });
 
             // فلترة السعر
             $("#price-slider").slider({
-            range: true,
-            min: 500,
-            max: 900,
-            values: [576.6, 813.01],
-            slide: function (event, ui) {
-            $("#price-range").text("$" + ui.values[0] + " - $" + ui.values[1]);
-            console.log("تم تعديل نطاق السعر:", ui.values);
-            }
+                range: true,
+                min: 500,
+                max: 900,
+                values: [576.6, 813.01],
+                slide: function (event, ui) {
+                $("#price-range").text("$" + ui.values[0] + " - $" + ui.values[1]);
+                console.log("تم تعديل نطاق السعر:", ui.values);
+                }
             });
 
             // فلترة وقت الرحلة
             $("#outbound-slider, #inbound-slider").slider({
-            range: true,
-            min: 0,
-            max: 24,
-            values: [0, 24],
-            slide: function (event, ui) {
-            console.log("تم تعديل وقت الرحلة:", ui.values);
-            }
+                range: true,
+                min: 0,
+                max: 24,
+                values: [0, 24],
+                slide: function (event, ui) {
+                console.log("تم تعديل وقت الرحلة:", ui.values);
+                }
             });
 
             // فلترة شركات الطيران
             $(".filter-airline").change(function () {
-            let selectedAirlines = $(".filter-airline:checked").map(function () {
-            return $(this).val();
-            }).get();
-            console.log("شركات الطيران المحددة:", selectedAirlines);
+                let selectedAirlines = $(".filter-airline:checked").map(function () {
+                return $(this).val();
+                }).get();
+                console.log("شركات الطيران المحددة:", selectedAirlines);
             });
-
+        });
         </script>
     </x-slot>
 </x-front-layout>

@@ -2,9 +2,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\MyTestMail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Mail;
 use Rinvex\Country\CountryLoader;
 
 class FlightController extends Controller
@@ -12,7 +14,7 @@ class FlightController extends Controller
     public function index()
     {
 
-        return view('index');
+        return view('indext');
     }
 
     public $client_id     = 'pMnIJxm6ArkXSDvI4FhSs8NhBw660Qte';
@@ -327,6 +329,18 @@ class FlightController extends Controller
     public function confirm()
     {
         return view('flights.confirm');
+    }
+
+    public function sendMail()
+    {
+        $details = [
+            'name'    => 'أحمد',
+            'message' => 'هذا هو محتوى البريد التجريبي من Laravel.',
+        ];
+
+        Mail::to('recipient@example.com')->send(new MyTestMail($details));
+
+        return "The email sent successfuly!";
     }
 
 }

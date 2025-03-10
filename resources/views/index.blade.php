@@ -291,7 +291,8 @@
                                 if (response.data.length > 0) {
                                     $("#result1").show(); // إظهار القائمة عند وجود نتائج
                                     response.data.forEach(element => {
-                                        $("#result1").append(`<p data-city-code="${element.address.cityCode}">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
+                                        $("#result1").append(`<p data-city-code="${element.address.cityCode}" style="color: #143ca1;" onmouseover="this.style.backgroundColor='#143ca1'; this.style.color='#fff';"
+       onmouseout="this.style.backgroundColor='transparent'; this.style.color='#143ca1';">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
                                     });
                                 } else {
                                     $("#result1").hide(); // إخفاء القائمة عند عدم وجود نتائج
@@ -315,7 +316,8 @@
                                     if (response.data.length > 0) {
                                         $("#result2").show(); // إظهار القائمة عند وجود نتائج
                                         response.data.forEach(element => {
-                                        $("#result2").append(`<p data-city-code="${element.address.cityCode}">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);});
+                                        $("#result2").append(`<p data-city-code="${element.address.cityCode}" style="color: #143ca1;" onmouseover="this.style.backgroundColor='#143ca1'; this.style.color='#fff';"
+       onmouseout="this.style.backgroundColor='transparent'; this.style.color='#143ca1';">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);});
                                     } else {
                                         $("#result2").hide(); // إخفاء القائمة عند عدم وجود نتائج
                                     }
