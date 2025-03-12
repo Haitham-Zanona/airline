@@ -9,6 +9,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+
     <!-- Custom CSS -->
     <style>
         :root {
@@ -58,7 +63,7 @@
         }
 
         .flight-route {
-            display: flex;
+            /* display: flex; */
             align-items: center;
             font-size: 18px;
             font-weight: 600;
@@ -83,7 +88,7 @@
         .airline-logo {
             width: 30px;
             height: 30px;
-            margin-right: 10px;
+            /* margin-right: 10px; */
             background-color: #e0e0e0;
             border-radius: 50%;
         }
@@ -118,6 +123,7 @@
         .fare-summary {
             background-color: #fff;
             border-radius: 8px;
+            color: #2a26d9;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             position: sticky;
@@ -128,8 +134,10 @@
             font-weight: 600;
             margin-bottom: 10px;
             display: flex;
+            padding-top: 5px;
             align-items: center;
             justify-content: space-between;
+            border-top: 1px solid #bdb3b3;
         }
 
         .fare-details {
@@ -306,14 +314,15 @@
         .booking-title {
             font-size: 18px;
             font-weight: 600;
-            color: var(--primary-color);
+            color: #000;
         }
 
         .booking-steps {
             display: flex;
-            gap: 15px;
+            /* gap: 15px; */
             font-size: 14px;
             color: #666;
+            font-weight: 500;
         }
 
         .booking-step.active {
@@ -329,11 +338,11 @@
         <div class="booking-header">
             <div class="booking-title">Complete your booking</div>
             <div class="booking-steps">
-                <span class="booking-step active">Flight Summary</span>
-                <span class="booking-step">Important Guidelines</span>
-                <span class="booking-step">Contact Details</span>
-                <span class="booking-step">Passengers</span>
-                <span class="booking-step">Cancellation Policy</span>
+                <span class="booking-step">Flight Summary</span><span style="margin: 0 5px;">•</span><span
+                    class="booking-step">Important Guidelines</span><span style="margin: 0 5px;">•</span><span
+                    class="booking-step">Contact Details</span><span style="margin: 0 5px;">•</span><span
+                    class="booking-step">Passengers</span>
+                {{-- <span style="margin: 0 5px;">•</span><span class="booking-step">Cancellation Policy</span> --}}
             </div>
         </div>
 
@@ -341,23 +350,29 @@
             <div class="col-md-8">
                 <div class="booking-container">
                     <h3 class="section-title">Enter your booking details</h3>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="mx-4"><img src="{{ asset('assets/images/airplane-pass.webp') }}" width="100"
+                                height="100" alt="">
+                        </div>
+                        <div class="flight-route m-0">
+                            <span>Nairobi (NBI)</span>
+                            <span class="flight-icon mx-2">
+                                <i class="fas fa-plane"></i>
+                            </span>
+                            <span>Mombasa (MBO)</span>
+                            <div class="flight-date">
+                                Saturday 20th JAN - Mon 22nd - 2nd 20th JI
+                            </div>
+                        </div>
 
-                    <div class="flight-route">
-                        <span>Nairobi (NBI)</span>
-                        <span class="flight-icon mx-2">
-                            <i class="fas fa-plane"></i>
-                        </span>
-                        <span>Mombasa (MBO)</span>
+
                     </div>
-
-                    <div class="flight-date mb-4">
-                        Saturday 20th JAN - Mon 22nd - 2nd 20th JI
-                    </div>
-
                     <h5 class="mb-3">Flight Summary</h5>
 
                     <div class="airline-info mb-3">
-                        <div class="airline-logo"></div>
+                        <div class="airline-logo text-center d-flex align-items-center justify-content-center"><i
+                                class="fas fa-plane"></i>
+                        </div>
                         <div class="ms-2">ABC Airline</div>
                         <div class="ms-auto">Travel Class: Economy</div>
                     </div>
@@ -411,149 +426,152 @@
                 <!-- Contact Details Section -->
                 <div class="form-section">
                     <h5 class="form-section-title">Contact Details (Booking details will be sent to)</h5>
-                    <form id="contactForm">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="countryCode" class="form-label">Mobile Number</label>
-                                <select class="form-select" id="countryCode" required>
-                                    <option value="">Country Code</option>
-                                    <option value="+1">United States (+1)</option>
-                                    <option value="+44">United Kingdom (+44)</option>
-                                    <option value="+254">Kenya (+254)</option>
-                                </select>
-                                <div class="invalid-feedback">Please select a country code.</div>
+                    <form action="{{ route('flight.search') }}" method="POST">
+                        @csrf
+                        <div id="contactForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">Mobile Number</label>
+                                    <input type="tel" id="phone" name="phone" class="form-control">
+                                    <div class="invalid-feedback">Please enter a valid mobile number.</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Email" required>
+                                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                                </div>
                             </div>
-                            <div class="col-md-8 mb-3">
-                                <label for="mobileNumber" class="form-label">&nbsp;</label>
-                                <input type="tel" class="form-control" id="mobileNumber" placeholder="Mobile number"
-                                    required>
-                                <div class="invalid-feedback">Please enter a valid mobile number.</div>
+
+                        </div>
+
+
+                        <!-- Passengers Details Section -->
+                        <div class="form-section">
+                            <h5 class="form-section-title">Passengers Details</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">Primary Passenger</h6>
+                                <div>
+                                    <select class="form-select form-select-sm">
+                                        <option>Adult (Over 12 years)</option>
+                                        <option>Child (2-12 years)</option>
+                                        <option>Infant (Under 2)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="passenger-note mb-4">
+                                <i class="fas fa-info-circle me-2 text-primary"></i>
+                                Use all given names and surnames exactly as they appear in your passport/ID to avoid
+                                boarding
+                                conflicts later.
+                            </div>
+
+                            <div id="passengerForm">
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="firstName" class="form-label">First and Middle Name</label>
+                                        <input type="text" class="form-control" id="firstName"
+                                            placeholder="e.g. John Doe" required>
+                                        <div class="invalid-feedback">Please enter your first and middle name.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="surname" class="form-label">Surname</label>
+                                        <input type="text" class="form-control" id="surname" placeholder="e.g. Smith"
+                                            required>
+                                        <div class="invalid-feedback">Please enter your surname.</div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4 mb-3 mb-md-0">
+                                        <label class="form-label" for="nationality">Select Nationality:</label>
+                                        <select name="country" class="form-control" required>
+                                            <option value="">Select Nationality</option>
+                                            @foreach($countries as $code => $name)
+                                            <option value="{{ $code }}">
+                                                <span class="flag-icon flag-icon-{{ strtolower($code) }}"></span> {{
+                                                $name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="invalid-feedback">Please select your nationality.</div>
+                                    </div>
+                                    <div class="col-md-4 mb-3 mb-md-0">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select class="form-select" id="gender" required>
+                                            <option value="">Select</option>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select your gender.</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="dob" class="form-label">Date of birth</label>
+                                        <input type="date" class="form-control" id="dob" required>
+                                        <div class="invalid-feedback">Please enter your date of birth.</div>
+                                    </div>
+                                </div>
+
+                                {{-- <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="passportNumber" class="form-label">Passport Number</label>
+                                        <input type="text" class="form-control" id="passportNumber"
+                                            placeholder="Passport Number" required>
+                                        <div class="invalid-feedback">Please enter your passport number.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="passportExpiry" class="form-label">Passport expiration date</label>
+                                        <input type="date" class="form-control" id="passportExpiry" required>
+                                        <div class="invalid-feedback">Please enter your passport expiration date.</div>
+                                    </div>
+                                </div> --}}
+
+                                {{-- <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="noExpiration">
+                                        <label class="form-check-label" for="noExpiration">
+                                            No expiration
+                                        </label>
+                                    </div>
+                                </div> --}}
+
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-outline-primary" id="addPassenger">
+                                        <i class="fas fa-plus me-2"></i> Add passenger
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Email" required>
-                            <div class="invalid-feedback">Please enter a valid email address.</div>
+
+                        <!-- Cancellation Policy Section -->
+                        {{-- <div class="collapsible-section">
+                            <div class="collapsible-header" data-bs-toggle="collapse"
+                                data-bs-target="#cancellationContent">
+                                <h5 class="mb-0">Cancellation/Refund Policy</h5>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div id="cancellationContent" class="collapse collapsible-content">
+                                <p>At AirClick, we understand that plans can change unexpectedly. We strive to provide a
+                                    flexible and reasonable policy for flight bookings. Please review the following for
+                                    details:
+                                </p>
+                                <ol>
+                                    <li>Cancellation Procedures: Cancellations can be made through our website by
+                                        logging into
+                                        your account or by contacting our customer support team.</li>
+                                    <li>Cancellation charges will be applied based on how close to the date of travel
+                                        you're
+                                        making the cancellation and the fare type you booked.</li>
+                                </ol>
+                                <button class="btn btn-link p-0">Read more</button>
+                            </div>
+                        </div> --}}
+
+                        <div class="d-flex justify-content-between my-4">
+                            <button class="btn btn-outline-secondary">Cancel</button>
+                            <button class="btn btn-primary" id="proceedToPayment">Proceed to Payment</button>
                         </div>
                     </form>
-                </div>
-
-                <!-- Passengers Details Section -->
-                <div class="form-section">
-                    <h5 class="form-section-title">Passengers Details</h5>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="mb-0">Primary Passenger</h6>
-                        <div>
-                            <select class="form-select form-select-sm">
-                                <option>Adult (Over 12 years)</option>
-                                <option>Child (2-12 years)</option>
-                                <option>Infant (Under 2)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="passenger-note mb-4">
-                        <i class="fas fa-info-circle me-2 text-primary"></i>
-                        Use all given names and surnames exactly as they appear in your passport/ID to avoid boarding
-                        conflicts later.
-                    </div>
-
-                    <form id="passengerForm">
-                        <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="firstName" class="form-label">First and Middle Name</label>
-                                <input type="text" class="form-control" id="firstName" placeholder="e.g. John Doe"
-                                    required>
-                                <div class="invalid-feedback">Please enter your first and middle name.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="surname" class="form-label">Surname</label>
-                                <input type="text" class="form-control" id="surname" placeholder="e.g. Smith" required>
-                                <div class="invalid-feedback">Please enter your surname.</div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4 mb-3 mb-md-0">
-                                <label for="nationality" class="form-label">Nationality</label>
-                                <select class="form-select" id="nationality" required>
-                                    <option value="">Select</option>
-                                    <option value="KE">Kenyan</option>
-                                    <option value="US">American</option>
-                                    <option value="GB">British</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your nationality.</div>
-                            </div>
-                            <div class="col-md-4 mb-3 mb-md-0">
-                                <label for="gender" class="form-label">Gender</label>
-                                <select class="form-select" id="gender" required>
-                                    <option value="">Select</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your gender.</div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="dob" class="form-label">Date of birth</label>
-                                <input type="date" class="form-control" id="dob" required>
-                                <div class="invalid-feedback">Please enter your date of birth.</div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="passportNumber" class="form-label">Passport Number</label>
-                                <input type="text" class="form-control" id="passportNumber"
-                                    placeholder="Passport Number" required>
-                                <div class="invalid-feedback">Please enter your passport number.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="passportExpiry" class="form-label">Passport expiration date</label>
-                                <input type="date" class="form-control" id="passportExpiry" required>
-                                <div class="invalid-feedback">Please enter your passport expiration date.</div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="noExpiration">
-                                <label class="form-check-label" for="noExpiration">
-                                    No expiration
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="text-end">
-                            <button type="button" class="btn btn-outline-primary" id="addPassenger">
-                                <i class="fas fa-plus me-2"></i> Add passenger
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Cancellation Policy Section -->
-                <div class="collapsible-section">
-                    <div class="collapsible-header" data-bs-toggle="collapse" data-bs-target="#cancellationContent">
-                        <h5 class="mb-0">Cancellation/Refund Policy</h5>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div id="cancellationContent" class="collapse collapsible-content">
-                        <p>At AirClick, we understand that plans can change unexpectedly. We strive to provide a
-                            flexible and reasonable policy for flight bookings. Please review the following for details:
-                        </p>
-                        <ol>
-                            <li>Cancellation Procedures: Cancellations can be made through our website by logging into
-                                your account or by contacting our customer support team.</li>
-                            <li>Cancellation charges will be applied based on how close to the date of travel you're
-                                making the cancellation and the fare type you booked.</li>
-                        </ol>
-                        <button class="btn btn-link p-0">Read more</button>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-between my-4">
-                    <button class="btn btn-outline-secondary">Cancel</button>
-                    <button class="btn btn-primary" id="proceedToPayment">Proceed to Payment</button>
                 </div>
             </div>
 
@@ -603,6 +621,9 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -718,6 +739,20 @@
 
         // Make the titles look clickable with pointer cursor
         $('.fare-summary .fare-title').css('cursor', 'pointer');
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+        var input = document.querySelector("#phone");
+        var iti = window.intlTelInput(input, {
+        separateDialCode: true,
+        preferredCountries: ["us", "gb", "fr", "in"],
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+        });
+
+        document.querySelector("form").addEventListener("submit", function () {
+        var fullNumber = iti.getNumber();
+        document.querySelector("#phone").value = fullNumber;
+        });
         });
     </script>
 </body>

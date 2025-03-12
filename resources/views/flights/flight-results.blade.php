@@ -361,11 +361,11 @@
             <div class="support mx-1">
                 <h1>Why book with us?</h1>
                 <ul>
-                    <li class="mx-1"><img src="{{ asset('assets/images/icon-support.png') }}" width="55px"
+                    <li class="mx-1"><img src="{{ asset('assets/images/icon-support.webp') }}" width="55px"
                             alt=""><span>Live 24/7
                             Support</span>
                     </li>
-                    <li class="mx-1 my-4"><img src="{{ asset('assets/images/icon-voucher.png') }}" width="55px"
+                    <li class="mx-1 my-4"><img src="{{ asset('assets/images/icon-voucher.webp') }}" width="55px"
                             alt=""><span>Big Savings + Great Coupon Codes</span></li>
                 </ul>
             </div><!-- support -->
@@ -564,8 +564,8 @@
                     <div class="col-md-12 p-0">
                         <div class="details-header"
                             style="background-color: #1165a2; color: #fff; padding: 8px 10px; display: flex;">
-                            <img src="{{ asset('assets/images/outbound.png') }}" width="20px" height="20px" class="mr-3"
-                                alt="">
+                            <img src="{{ asset('assets/images/outbound.webp') }}" width="20px" height="20px"
+                                class="mr-3" alt="">
                             <h5 style="font-size: 14px;">Outbound Flight
                                 {{ trim(explode(",", $flightData['originCity'])[0]) }} <span style="color:#ffc107;">
                                     TO
@@ -626,7 +626,7 @@
 
                         <div class="details-header"
                             style="background-color: #1165a2; color: #fff; padding: 8px 10px; display: flex;">
-                            <img src="{{ asset('assets/images/inbound.png') }}" width="20px" height="20px" class="mr-3"
+                            <img src="{{ asset('assets/images/inbound.webp') }}" width="20px" height="20px" class="mr-3"
                                 alt="">
                             <h5 style="font-size: 14px;">Inbound Flight |{{
                                 $flight['itineraries'][0]['segments'][0]['departure']['iataCode'] }}| <span
@@ -691,7 +691,7 @@
                         </div><!-- row -->
 
                         <div class="stop-des my-3 text-center"><b>Stopover</b><img
-                                src="{{ asset('assets/images/icon-radio-button.png') }}" width="16" height="16"
+                                src="{{ asset('assets/images/icon-radio-button.webp') }}" width="16" height="16"
                                 class="mx-1" alt="">
                         </div><!-- stop-des -->
 

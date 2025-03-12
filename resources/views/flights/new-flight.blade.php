@@ -128,7 +128,7 @@
         .pricing-tabs {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
 
@@ -306,41 +306,8 @@
 </head>
 
 <body>
-    <!-- Header -->
-    {{-- <header class="py-3">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-3 col-6">
-                    <div class="logo">LOGO</div>
-                </div>
-                <div class="col-md-6 mt-3 mt-md-0 order-md-2 order-3">
-                    <ul class="nav justify-content-center">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact us</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-3 col-6 text-end order-md-3 order-2">
-                    <div class="contact-info d-flex align-items-center">
-                        <img src="{{ asset('assets/images/phone-call.png') }}" width="40px" height="40px" alt="">
-                        <div class="text-start mx-2">
-                            <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
-                            <span class="fw-bold"><a href="tel:+1-111-111-1111"
-                                    style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header> --}}
 
+    <!-- Header -->
     <header class="py-3">
         <div class="container">
             <!-- Desktop View -->
@@ -359,17 +326,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Contact us</a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" href="#">Services</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Blog</a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
                 <div class="col-md-3 text-end">
                     <div class="contact-info d-flex align-items-center justify-content-end">
-                        <img src="{{ asset('assets/images/phone-call.png') }}" width="40px" height="40px" alt="">
+                        <img src="{{ asset('assets/images/phone-call.webp') }}" width="40px" height="40px" alt="">
                         <div class="text-start mx-2">
                             <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
                             <span class="fw-bold"><a href="tel:+1-111-111-1111"
@@ -409,18 +376,18 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Contact us</a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link" href="#">Services</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Blog</a>
-                            </li>
+                            </li> --}}
                         </ul>
 
                         <!-- Contact Info in Menu -->
                         <div class="contact-info-mobile mt-3 pt-3 border-top">
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/images/phone-call.png') }}" width="30px" height="30px"
+                                <img src="{{ asset('assets/images/phone-call.webp') }}" width="30px" height="30px"
                                     alt="">
                                 <div class="text-start mx-2">
                                     <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
@@ -454,40 +421,108 @@
                 @csrf
                 <div class="row flight-result-search">
                     <div class="col-md-2">
-                        <label><i class="fas fa-plane-departure me-1"></i> From</label>
-                        <select class="form-select">
-                            <option>Germany</option>
-                        </select>
+                        <label for="origin_city"><i class="fas fa-plane-departure me-1"></i> From</label>
+                        <input type="text" id="search1" class="form-select" placeholder="Enter City Name"
+                            autocomplete="off">
+                        <input type="hidden" name="origin_city" value="">
+                        <input type="hidden" name="origin_city_name" id="origin_city_name">
+                        <div id="result1" style="width: 90%;"></div>
                     </div>
                     <div class="col-md-2">
-                        <label><i class="fas fa-plane-arrival me-1"></i> To</label>
-                        <select class="form-select">
-                            <option>Australia</option>
-                        </select>
+                        <label for="destination_city"><i class="fas fa-plane-arrival me-1"></i> To</label>
+                        <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off"
+                            class="form-select">
+                        <input type="hidden" name="destination_city" value="">
+
+                        <input type="hidden" name="destination_city_name" id="destination_city_name">
+                        <div id="result2" style="width: 90%;"></div>
                     </div>
                     <div class="col-md-2">
-                        <label><i class="far fa-calendar-alt me-1"></i> Departure</label>
-                        <select class="form-select">
-                            <option>01 JUN 2023</option>
-                        </select>
+                        <label for="departureDate"><i class="far fa-calendar-alt me-1"></i> Departure</label>
+                        <input type="date" id="departureDate" name="departureDate" class="form-control">
                     </div>
                     <div class="col-md-2">
-                        <label><i class="far fa-calendar-alt me-1"></i> Return</label>
-                        <select class="form-select">
-                            <option>10 JUN 2023</option>
-                        </select>
+                        <label for="returnDate"><i class="far fa-calendar-alt me-1"></i> Return</label>
+                        <input type="date" id="returnDate" name="returnDate" class="form-control">
                     </div>
                     <div class="col-md-2">
                         <label><i class="fas fa-user me-1"></i> Class</label>
-                        <select class="form-select">
-                            <option>Economy</option>
+                        <select id="cabin" name="cabin" class="form-select">
+                            <option value="ECONOMY">Economy</option>
+                            <option value="PREMIUM_ECONOMY">Premium Economy</option>
+                            <option value="BUSINESS">Business</option>
+                            <option value="FIRST">First Class</option>
                         </select>
                     </div>
                     <div class="col-md-1">
-                        <label class="px-2"><i class="fas fa-users me-1"></i> Pax</label>
-                        <select class="form-select">
-                            <option>02</option>
-                        </select>
+                        <label for="travelers" class="px-2"><i class="fas fa-users me-1"></i> Pax</label>
+                        <div class="dropdown">
+                            <button
+                                class="form-control d-flex justify-content-between align-items-center dropdown-toggle"
+                                type="button" id="travelersDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span id="totalTravelers">1</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-menu p-3" style="width: 300px;">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label mb-0">Adults</label>
+                                        <div class="d-flex align-items-center">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
+                                                data-type="adults" data-action="decrease">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <span class="mx-3" id="adultsCount">1</span>
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
+                                                data-type="adults" data-action="increase">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="adults" id="adultsInput" value="1">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label mb-0">Children</label>
+                                        <div class="d-flex align-items-center">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
+                                                data-type="children" data-action="decrease">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <span class="mx-3" id="childrenCount">0</span>
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
+                                                data-type="children" data-action="increase">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="children" id="childrenInput" value="0">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label mb-0">Infants</label>
+                                        <div class="d-flex align-items-center">
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
+                                                data-type="infants" data-action="decrease">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <span class="mx-3" id="infantsCount">0</span>
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
+                                                data-type="infants" data-action="increase">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="infants" id="infantsInput" value="0">
+                                </div>
+                            </div><!-- dropdown-menu -->
+                        </div><!-- dropdown -->
                     </div>
                     <div class="col-md-1 d-flex align-items-end">
                         <button class="search-button w-100">Modify search</button>
@@ -646,7 +681,7 @@
                         <h6 class="m-0">Pricing table</h6>
                         <i class="fas fa-chevron-down"></i>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-2 pb-0">
                         <div class="pricing-tabs">
                             <div class="pricing-tab active">
                                 <div>Recommended</div>
@@ -690,7 +725,11 @@
                                     <!-- Flight Duration -->
                                     <div class="col-6 d-flex flex-column justify-content-center align-items-center">
                                         <div class="flight-duration">9hr 50min</div>
-                                        <div class="w-100 border-top mt-2 mb-2"></div>
+                                        <div class="position-relative w-100 my-2">
+                                            <div class="border-top w-100"></div>
+                                            <i
+                                                class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
+                                        </div>
                                         <div class="flight-duration">Non-refundable</div>
                                     </div>
 
@@ -715,7 +754,11 @@
                                     </div>
                                     <div class="col-6 d-flex flex-column justify-content-center align-items-center">
                                         <div class="flight-duration">9hr 50min</div>
-                                        <div class="w-100 border-top mt-2 mb-2"></div>
+                                        <div class="position-relative w-100 my-2">
+                                            <div class="border-top w-100"></div>
+                                            <i
+                                                class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
+                                        </div>
                                     </div>
                                     <div class="col-3 text-end">
                                         <div class="flight-time">14.50</div>

@@ -17,14 +17,28 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/indext', function () {
 //     return view('indext');
 // });
+
+Route::get('/flights/passengers', [FlightController::class, 'passengers'])->name('flights.passengers');
+Route::get('/flights/payment', [FlightController::class, 'payment'])->name('flights.payment');
+Route::get('/flights/confirm', [FlightController::class, 'confirm'])->name('process.confirm');
+
 Route::get('/indexs', function () {
     return view('indexs');
+});
+Route::get('/terms&conditions', function () {
+    return view('terms&conditions');
+});
+Route::get('/privacy_policy', function () {
+    return view('privacy_policy');
 });
 Route::get('/newflight', function () {
     return view('flights.new-flight');
 });
-Route::get('/newpassenger', function () {
-    return view('flights.new-passengers');
+// Route::get('/newpassenger', function () {
+//     return view('flights.new-passengers');
+// });
+Route::get('/newpayment', function () {
+    return view('flights.new-payment');
 });
 
 Route::group([], function () {
@@ -44,10 +58,6 @@ Route::group([], function () {
 // Route::get('/flight-offers', [FlightController::class, 'search'])->name('flight.offers');
 // Route::post('/flight-pricing', [FlightController::class, 'getPricing']);
 // Route::get('/flight-search', [FlightController::class, 'searchFlightOffers'])->name('flight.search');
-
-Route::get('/flights/passengers', [FlightController::class, 'passengers'])->name('flights.payment');
-Route::get('/flights/payment', [FlightController::class, 'payment'])->name('flights.payment');
-Route::get('/flights/confirm', [FlightController::class, 'confirm'])->name('process.confirm');
 
 Route::get('/send-mail', [FlightController::class, 'sendMail']);
 

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
+use Monarobase\CountryList\CountryList;
 use Rinvex\Country\CountryLoader;
 
 class FlightController extends Controller
@@ -316,9 +317,18 @@ class FlightController extends Controller
         })->values()->toArray();
     }
 
-    public function passengers()
+    public function passengers(Request $request)
     {
-        return view('flights.passengers');
+
+        $countries = (new CountryList())->getList('en');
+        // dd($countries);
+        // $countries = CountryList::getList('en');
+        // $request->validate([
+        //     'phone' => ['required', 'phone:AUTO,SA,EG,US,AE'],
+        // ]);
+
+        return view('flights.new-passengers', compact('countries'));
+
     }
     public function payment()
     {

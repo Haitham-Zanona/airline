@@ -195,27 +195,27 @@
             <h2 class="text-center my-4">Our Partners</h2>
             <div class="row mx-auto justify-content-center align-items-center mb-3">
                 <div class="col-md-2 w-auto">
-                    <img src="{{ asset('assets/images/Trustpilot.png') }}" alt="Air Canada" height="100px" width="100px"
+                    <img src="{{ asset('assets/images/Trustpilot.webp') }}" alt="Air Canada" height="100px"
+                        width="100px" class="img-fluid">
+                </div>
+                <div class="col-md-2 w-auto">
+                    <img src="{{ asset('assets/images/visa.webp') }}" alt="American Airlines" height="100px"
+                        width="100px" class="img-fluid">
+                </div>
+                <div class="col-md-2 w-auto">
+                    <img src="{{ asset('assets/images/mastercard.webp') }}" alt="Delta Airlines" height="100px"
+                        width="100px" class="img-fluid">
+                </div>
+                <div class="col-md-2 w-auto">
+                    <img src="{{ asset('assets/images/American Express.webp') }}" alt="Emirates" height="100px"
+                        width="100px" class="img-fluid">
+                </div>
+                <div class="col-md-2 w-auto">
+                    <img src="{{ asset('assets/images/Discover.webp') }}" alt="Emirates" height="100px" width="100px"
                         class="img-fluid">
                 </div>
                 <div class="col-md-2 w-auto">
-                    <img src="{{ asset('assets/images/visa.png') }}" alt="American Airlines" height="100px"
-                        width="100px" class="img-fluid">
-                </div>
-                <div class="col-md-2 w-auto">
-                    <img src="{{ asset('assets/images/mastercard.png') }}" alt="Delta Airlines" height="100px"
-                        width="100px" class="img-fluid">
-                </div>
-                <div class="col-md-2 w-auto">
-                    <img src="{{ asset('assets/images/American Express.png') }}" alt="Emirates" height="100px"
-                        width="100px" class="img-fluid">
-                </div>
-                <div class="col-md-2 w-auto">
-                    <img src="{{ asset('assets/images/Discover.png') }}" alt="Emirates" height="100px" width="100px"
-                        class="img-fluid">
-                </div>
-                <div class="col-md-2 w-auto">
-                    <img src="{{ asset('assets/images/Paypal.png') }}" alt="Emirates" height="100px" width="100px"
+                    <img src="{{ asset('assets/images/Paypal.webp') }}" alt="Emirates" height="100px" width="100px"
                         class="img-fluid">
                 </div>
             </div><!-- row -->

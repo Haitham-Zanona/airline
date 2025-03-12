@@ -52,8 +52,8 @@
         #result2 {
             position: absolute;
             width: 20%;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 1px solid #ccc;
+            background-color: rgba(255, 255, 255, 0.5);
+            /* border: 1px solid #ccc; */
             border-radius: 5px;
             max-height: 250px;
             overflow-y: auto;
@@ -84,7 +84,7 @@
         /* Hero section */
         .hero {
             position: relative;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url('assets/images/hero-background.png');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url('assets/images/hero-background.webp');
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -104,7 +104,7 @@
         .search-form .form-select {
             background-color: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
+            color: #4444ff;
         }
 
         .search-btn {
@@ -315,7 +315,7 @@
                     </div>
                     <div class="col-md-3 col-6 text-end order-md-3 order-2">
                         <div class="contact-info d-flex align-items-center">
-                            <img src="{{ asset('assets/images/phone-call.png') }}" width="40px" height="40px" alt="">
+                            <img src="{{ asset('assets/images/phone-call.webp') }}" width="40px" height="40px" alt="">
                             <div class="text-start mx-2">
                                 <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
                                 <span class="fw-bold"><a href="tel:+1-111-111-1111"
@@ -345,7 +345,7 @@
                                     autocomplete="off">
                                 <input type="hidden" name="origin_city" value="">
                                 <input type="hidden" name="origin_city_name" id="origin_city_name">
-                                <div id="result1" style="width: 90%;"></div>
+                                <div id="result1" style="width: 60%;"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="destination_city" class="form-label"><i
@@ -356,7 +356,7 @@
                                 <input type="hidden" name="destination_city" value="">
 
                                 <input type="hidden" name="destination_city_name" id="destination_city_name">
-                                <div id="result2" style="width: 90%;"></div>
+                                <div id="result2" style="width: 60%;"></div>
 
                             </div>
                         </div>
@@ -448,9 +448,10 @@
                                             </div>
                                             <input type="hidden" name="infants" id="infantsInput" value="0">
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    </div><!-- dropdown-menu -->
+                                </div><!-- dropdown -->
+                            </div><!-- col-md-6 -->
+
                             <div class="col-md-6">
                                 <label for="class" class="form-label"><i class="fas fa-ticket-alt me-2"></i>
                                     Class</label>
@@ -595,14 +596,14 @@
     <section class="features py-5">
         <div class="container">
             <div class="d-flex text-center align-items-center justify-content-center mb-3">
-                <span class="pb-2 mx-5"><img src="{{ asset('assets/images/indian_flag.png') }}" style="display: inline;"
-                        alt=""></span>
+                <span class="pb-2 mx-5"><img src="{{ asset('assets/images/indian_flag.webp') }}"
+                        style="display: inline;" alt=""></span>
                 <h2 class="text-center d-inline-block fs-1">Discover Why Choose <span class="text-accent">Us</span>
                     for
                     Your Flight
                     Booking?</h2>
-                <span class="pb-2 mx-5"><img src="{{ asset('assets/images/indian_flag.png') }}" style="display: inline;"
-                        alt=""></span>
+                <span class="pb-2 mx-5"><img src="{{ asset('assets/images/indian_flag.webp') }}"
+                        style="display: inline;" alt=""></span>
             </div>
             <p class="text-center text-muted mb-5">Hassle-free Flight Booking with Us.</p>
             <div class="row">
@@ -650,7 +651,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="place-card card h-100 shadow-sm">
-                        <img src="{{ asset('assets/images/maldives.jpeg') }}" alt="Maldives"
+                        <img src="{{ asset('assets/images/maldives.webp') }}" alt="Maldives"
                             class="place-img card-img-top">
                         <div class="card-body">
                             <h3 class="h5 card-title">Stay among the atolls in <span class="text-accent">Maldives</span>
@@ -663,7 +664,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="place-card card h-100 shadow-sm">
-                        <img src="{{ asset('assets/images/morocco.jpeg') }}" alt="Morocco"
+                        <img src="{{ asset('assets/images/morocco.webp') }}" alt="Morocco"
                             class="place-img card-img-top">
                         <div class="card-body">
                             <h3 class="h5 card-title">Experience the Ourika Valley in <span
@@ -676,7 +677,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="place-card card h-100 shadow-sm">
-                        <img src="{{ asset('assets/images/mongolia.jpeg') }}" alt="Mongolia"
+                        <img src="{{ asset('assets/images/mongolia.webp') }}" alt="Mongolia"
                             class="place-img card-img-top">
                         <div class="card-body">
                             <h3 class="h5 card-title">Live traditionally in <span class="text-accent">Mongolia</span>
@@ -907,11 +908,22 @@
                 <!-- Contact Column -->
                 <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="{{ asset('assets/images/phone-call-purple.png') }}" width="30px" height="30px" alt="">
+                        <img src="{{ asset('assets/images/phone-call-purple.webp') }}" width="30px" height="30px"
+                            alt="">
                         <span class="mx-2">+1-111-111-1111</span>
                     </div>
                     <div class="d-flex align-items-center mb-3">
-                        <img src="{{ asset('assets/images/email.png') }}" width="30px" height="30px" alt="">
+                        {{-- <img src="{{ asset('assets/images/email.webp') }}" width="30px" height="30px" alt=""> --}}
+                        <svg fill="#7042c1" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg"
+                            style="width: 30px; height: 30px;">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path
+                                    d="M1920 428.266v1189.54l-464.16-580.146-88.203 70.585 468.679 585.904H83.684l468.679-585.904-88.202-70.585L0 1617.805V428.265l959.944 832.441L1920 428.266ZM1919.932 226v52.627l-959.943 832.44L.045 278.628V226h1919.887Z"
+                                    fill-rule="evenodd"></path>
+                            </g>
+                        </svg>
                         <span class="mx-2">email@gmail.com</span>
                     </div>
                     <h5 class="mb-3">Follow Us</h5>
@@ -1031,7 +1043,218 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Custom JavaScript -->
+
     <script>
+        // ===== الكود الأساسي (البحث عن المدن واختيار نوع الرحلة) =====
+    $(document).ready(function() {
+        $("#result1, #result2").hide();
+
+        $("#search1").on("input", function() {
+            let query = $(this).val();
+
+            if (query.length > 2) {
+                $.ajax({
+                    url: "{{route('search_city')}}",
+                    method: "GET",
+                    data: { q: query },
+                    success: function(response) {
+                        $("#result1").empty();
+                        if (response.data.length > 0) {
+                            $("#result1").show();
+                            response.data.forEach(element => {
+                                $("#result1").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;" onmouseover="this.style.backgroundColor='#fff'; this.style.color='#4444ff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
+                            });
+                        } else {
+                            $("#result1").hide();
+                        }
+                    }
+                });
+            } else {
+                $("#result1").hide();
+            }
+        });
+
+        $("#search2").on("input", function() {
+            let query = $(this).val();
+            if (query.length > 2) {
+                $.ajax({
+                    url: "{{route('search_city')}}",
+                    method: "GET",
+                    data: { q: query },
+                    success: function(response) {
+                        $("#result2").empty();
+                        if (response.data.length > 0) {
+                            $("#result2").show();
+                            response.data.forEach(element => {
+                                $("#result2").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;" onmouseover="this.style.backgroundColor='#fff'; this.style.color='#4444ff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
+                            });
+                        } else {
+                            $("#result2").hide();
+                        }
+                    }
+                });
+            } else {
+                $("#result2").hide();
+            }
+        });
+
+        $('body').on('click','#result1 p',function () {
+            $("#search1").val($(this).text())
+            $("#result1").empty()
+            var code = $(this).attr('data-city-code');
+            var cityName = $(this).text();
+            $("[name='origin_city']").val(code);
+            $("#origin_city_name").val(cityName);
+        })
+
+        $('body').on('click','#result2 p',function () {
+            $("#search2").val($(this).text())
+            $("#result2").empty()
+            var code = $(this).attr('data-city-code');
+            var cityName = $(this).text();
+            $("[name='destination_city']").val(code);
+            $("#destination_city_name").val(cityName);
+        })
+
+        $(document).click(function(event) {
+            if (!$(event.target).closest("#result1").length) {
+                $("#result1").empty();
+            }
+            if (!$(event.target).closest("#result2").length) {
+                $("#result2").empty();
+            }
+        });
+
+        $('input[name="tripType"]').change(function() {
+            var tripType = $('input[name="tripType"]:checked').val();
+            var returnDateContainer = $('#returnDateContainer');
+
+            if (tripType === 'roundTrip') {
+                returnDateContainer.show();
+            } else {
+                returnDateContainer.hide();
+            }
+        });
+
+        $('input[name="tripType"]:checked').trigger('change');
+    });
+
+    // ===== وظائف المسافرين =====
+    function setupTravelersDropdown() {
+    // تهيئة القائمة المنسدلة
+    updateTravelersText();
+
+    // معالجة فتح وإغلاق القائمة المنسدلة يدوياً (إذا لم يتم استخدام Bootstrap)
+    const dropdownToggle = document.getElementById('travelersDropdown');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    if (dropdownToggle && dropdownMenu) {
+    // إزالة السمة التي قد تتداخل مع الكود الخاص بنا
+    dropdownToggle.removeAttribute('data-bs-toggle');
+
+    dropdownToggle.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropdownMenu.classList.toggle('show');
+    });
+
+    // إضافة مستمعي الأحداث لأزرار المسافرين
+    const travelerBtns = document.querySelectorAll('.traveler-btn');
+    travelerBtns.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const type = this.getAttribute('data-type');
+    const action = this.getAttribute('data-action');
+
+    if (action === 'increase') {
+    increaseCount(type);
+    } else if (action === 'decrease') {
+    decreaseCount(type);
+    }
+    });
+    });
+
+    // إغلاق القائمة المنسدلة عند النقر خارجها
+    document.addEventListener('click', function(e) {
+    if (!dropdownMenu.contains(e.target) && e.target !== dropdownToggle) {
+    dropdownMenu.classList.remove('show');
+    }
+    });
+
+    // منع إغلاق القائمة المنسدلة عند النقر داخلها
+    dropdownMenu.addEventListener('click', function(e) {
+    e.stopPropagation();
+    });
+    }
+    }
+
+    // زيادة عدد المسافرين
+    function increaseCount(type) {
+    const countElement = document.getElementById(type + 'Count');
+    const inputElement = document.getElementById(type + 'Input');
+
+    if (countElement && inputElement) {
+    let count = parseInt(countElement.textContent);
+
+    // تطبيق القيود
+    if (type === 'adults' && count >= 9) return;
+    if ((type === 'children' || type === 'infants') && count >= 8) return;
+
+    const adultsCount = document.getElementById('adultsCount');
+    if (type === 'infants' && adultsCount && count >= parseInt(adultsCount.textContent)) return;
+
+    count++;
+    countElement.textContent = count;
+    inputElement.value = count;
+    updateTravelersText();
+    }
+    }
+
+    // تقليل عدد المسافرين
+    function decreaseCount(type) {
+    const countElement = document.getElementById(type + 'Count');
+    const inputElement = document.getElementById(type + 'Input');
+
+    if (countElement && inputElement) {
+    let count = parseInt(countElement.textContent);
+
+    // تطبيق القيود
+    if (type === 'adults' && count <= 1) return; if ((type==='children' || type==='infants' ) && count <=0) return; count--;
+        countElement.textContent=count; inputElement.value=count; // إذا كان عدد الرضع أكثر من البالغين، قم بتقليل عدد الرضع
+        if (type==='adults' ) { const infantsCount=document.getElementById('infantsCount'); const
+        infantsInput=document.getElementById('infantsInput'); if (infantsCount && infantsInput) { const
+        infantsValue=parseInt(infantsCount.textContent); if (infantsValue> count) {
+        infantsCount.textContent = count;
+        infantsInput.value = count;
+        }
+        }
+        }
+
+        updateTravelersText();
+        }
+        }
+
+        // تحديث نص المسافرين
+        function updateTravelersText() {
+        const adultsElement = document.getElementById('adultsCount');
+        const childrenElement = document.getElementById('childrenCount');
+        const infantsElement = document.getElementById('infantsCount');
+        const totalElement = document.getElementById('totalTravelers');
+
+        if (adultsElement && childrenElement && infantsElement && totalElement) {
+        const adults = parseInt(adultsElement.textContent);
+        const children = parseInt(childrenElement.textContent);
+        const infants = parseInt(infantsElement.textContent);
+        const total = adults + children + infants;
+
+        totalElement.textContent = total === 1 ? '1 Traveler' : total + ' Travelers';
+        }
+        }
+    </script>
+
+    {{-- <script>
         $(document).ready(function() {
         $("#result1, #result2").hide();
 
@@ -1220,7 +1443,7 @@
         //     total === 1 ? '1 Traveler' : total + ' Travelers';
         //     }
         });
-    </script>
+    </script> --}}
 
 </body>
 
