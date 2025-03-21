@@ -32,20 +32,53 @@
             max-width: 1200px;
         }
 
-        .navbar {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* Header styles */
+        header {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .navbar-toggler {
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .navbar-toggler-icon {
+            height: 24px;
+        }
+
+        @media (max-width: 767.98px) {
+            .nav-link {
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .nav-item:last-child .nav-link {
+                border-bottom: none;
+            }
         }
 
         .logo {
-            color: var(--primary-color);
+            color: #4444ff;
             font-weight: bold;
             font-size: 24px;
         }
 
-        .phone-number {
-            color: var(--primary-color);
-            font-weight: bold;
+        .nav-link {
+            color: #333;
+            transition: color 0.3s;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #4444ff;
+        }
+
+        .contact-info {
+            color: #4444ff;
         }
 
         .booking-container {
@@ -54,6 +87,19 @@
             padding: 30px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .flight-summary-toggle {
+            border: none;
+            background-color: transparent;
+            width: 100%;
+            text-align: left;
+            padding: 15px 0;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e9ecef;
         }
 
         .section-title {
@@ -123,39 +169,63 @@
         .fare-summary {
             background-color: #fff;
             border-radius: 8px;
-            color: #2a26d9;
-            padding: 20px;
+            color: #000;
+            /* padding: 20px; */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
         }
 
-        .fare-title {
-            font-weight: 600;
-            margin-bottom: 10px;
+        .fare-section {
+            margin-bottom: 20px;
+        }
+
+        .fare-section-title {
+            font-weight: bold;
             display: flex;
-            padding-top: 5px;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+            padding-top: 5px;
             border-top: 1px solid #bdb3b3;
         }
 
-        .fare-details {
+        .fare-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .fare-total {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .fare-section-content {
+            margin-top: 10px;
+            padding-left: 10px;
+        }
+
+        .fare-header {
+            background-color: #6742c9;
+        }
+
+        .fare-section-details {
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
             font-size: 14px;
         }
 
-        .total-amount {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 15px;
-            margin-top: 15px;
-            border-top: 1px solid var(--border-color);
-            font-weight: bold;
-            font-size: 16px;
-        }
+
 
         .collapsible-section {
             border: 1px solid var(--border-color);
@@ -190,7 +260,7 @@
         .form-section-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-top: 15px;
         }
 
         .passenger-info {
@@ -332,16 +402,100 @@
     </style>
 </head>
 
+<header class="py-3">
+    <div class="container">
+        <!-- Desktop View -->
+        <div class="row align-items-center d-none d-md-flex">
+            <div class="col-md-3">
+                <div class="logo">LOGO</div>
+            </div>
+            <div class="col-md-6">
+                <ul class="nav justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact us</a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-md-3 text-end">
+                <div class="contact-info d-flex align-items-center justify-content-end">
+                    <img src="{{ asset('assets/images/phone-call.webp') }}" width="40px" height="40px" alt="">
+                    <div class="text-start mx-2">
+                        <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
+                        <span class="fw-bold"><a href="tel:+1-111-111-1111"
+                                style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile View -->
+        <div class="d-md-none">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Logo on Left -->
+                <div class="logo">LOGO</div>
+
+                <!-- Menu Button on Right -->
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon d-flex align-items-center justify-content-center">
+                        <i class="fas fa-bars"></i>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Collapsible Content -->
+            <div class="collapse mt-3" id="navbarMobile">
+                <div class="bg-light p-3 rounded">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact us</a>
+                        </li>
+
+                    </ul>
+
+                    <!-- Contact Info in Menu -->
+                    <div class="contact-info-mobile mt-3 pt-3 border-top">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ asset('assets/images/phone-call.webp') }}" width="30px" height="30px" alt="">
+                            <div class="text-start mx-2">
+                                <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
+                                <span class="fw-bold"><a href="tel:+1-111-111-1111"
+                                        style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
 <body>
     <div class="container py-4">
         <!-- Modified top header - replaced pills with text elements -->
         <div class="booking-header">
             <div class="booking-title">Complete your booking</div>
-            <div class="booking-steps">
-                <span class="booking-step">Flight Summary</span><span style="margin: 0 5px;">•</span><span
-                    class="booking-step">Important Guidelines</span><span style="margin: 0 5px;">•</span><span
-                    class="booking-step">Contact Details</span><span style="margin: 0 5px;">•</span><span
-                    class="booking-step">Passengers</span>
+            <div class="booking-steps active">
+                <span class="booking-step active">Flight Summary</span><span style="margin: 0 5px;">•</span><span
+                    class="booking-step active">Important Guidelines</span><span style="margin: 0 5px;">•</span><span
+                    class="booking-step active">Contact Details</span><span style="margin: 0 5px;">•</span><span
+                    class="booking-step active">Passengers</span>
                 {{-- <span style="margin: 0 5px;">•</span><span class="booking-step">Cancellation Policy</span> --}}
             </div>
         </div>
@@ -367,42 +521,48 @@
 
 
                     </div>
-                    <h5 class="mb-3">Flight Summary</h5>
+                    <button class="flight-summary-toggle" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flightSummary">
+                        Flight Summary
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="flightSummary" class="collapse show">
 
-                    <div class="airline-info mb-3">
-                        <div class="airline-logo text-center d-flex align-items-center justify-content-center"><i
-                                class="fas fa-plane"></i>
-                        </div>
-                        <div class="ms-2">ABC Airline</div>
-                        <div class="ms-auto">Travel Class: Economy</div>
-                    </div>
-
-                    <div class="flight-details mb-4">
-                        <div class="flight-segment">
-                            <div class="departure">
-                                <div class="airport-code">NBI</div>
-                                <div class="airport-time">14:30</div>
-                                <div class="airport-date">Saturday, Jan 20</div>
-                                <div class="airport-name">Jomo Kenyatta International</div>
-                                <div class="airport-terminal">Terminal A Gate 35</div>
+                        <div class="airline-info mb-3">
+                            <div class="airline-logo text-center d-flex align-items-center justify-content-center"><i
+                                    class="fas fa-plane"></i>
                             </div>
+                            <div class="ms-2">ABC Airline</div>
+                            <div class="ms-auto">Travel Class: Economy</div>
+                        </div><!-- airline-info -->
 
-                            <div class="flight-duration text-center">
-                                <div>9hr 50min</div>
-                                <div><i class="fas fa-plane"></i></div>
-                                <div>Non-Stop</div>
-                            </div>
+                        <div class="flight-details mb-4">
+                            <div class="flight-segment">
+                                <div class="departure">
+                                    <div class="airport-code">NBI</div>
+                                    <div class="airport-time">14:30</div>
+                                    <div class="airport-date">Saturday, Jan 20</div>
+                                    <div class="airport-name">Jomo Kenyatta International</div>
+                                    <div class="airport-terminal">Terminal A Gate 35</div>
+                                </div>
 
-                            <div class="arrival text-end">
-                                <div class="airport-code">MBO</div>
-                                <div class="airport-time">18:20</div>
-                                <div class="airport-date">Saturday, Jan 20</div>
-                                <div class="airport-name">Mombasa International</div>
-                                <div class="airport-terminal">Terminal B Gate 24</div>
+                                <div class="flight-duration text-center">
+                                    <div>9hr 50min</div>
+                                    <div><i class="fas fa-plane"></i></div>
+                                    <div>Non-Stop</div>
+                                </div>
+
+                                <div class="arrival text-end">
+                                    <div class="airport-code">MBO</div>
+                                    <div class="airport-time">18:20</div>
+                                    <div class="airport-date">Saturday, Jan 20</div>
+                                    <div class="airport-name">Mombasa International</div>
+                                    <div class="airport-terminal">Terminal B Gate 24</div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </div><!-- flight-details -->
+                    </div><!-- collapse show -->
+                </div><!-- booking-container -->
 
                 <!-- Important Guidelines Section -->
                 <div class="collapsible-section">
@@ -424,12 +584,14 @@
                 </div>
 
                 <!-- Contact Details Section -->
+
                 <div class="form-section">
-                    <h5 class="form-section-title">Contact Details (Booking details will be sent to)</h5>
+
                     <form action="{{ route('flight.search') }}" method="POST">
                         @csrf
+                        <h5 class="form-section-title">Contact Details (Booking details will be sent to)</h5>
                         <div id="contactForm">
-                            <div class="row">
+                            <div class="row px-2">
                                 <div class="col-md-6 mb-3">
                                     <label for="phone" class="form-label">Mobile Number</label>
                                     <input type="tel" id="phone" name="phone" class="form-control">
@@ -446,8 +608,9 @@
 
 
                         <!-- Passengers Details Section -->
-                        <div class="form-section">
-                            <h5 class="form-section-title">Passengers Details</h5>
+                        <h5 class="form-section-title">Passengers Details</h5>
+                        <div class="form-section py-1">
+
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h6 class="mb-0">Primary Passenger</h6>
                                 <div>
@@ -469,16 +632,34 @@
                             <div id="passengerForm">
                                 <div class="row mb-3">
                                     <div class="col-md-6 mb-3 mb-md-0">
-                                        <label for="firstName" class="form-label">First and Middle Name</label>
-                                        <input type="text" class="form-control" id="firstName"
-                                            placeholder="e.g. John Doe" required>
-                                        <div class="invalid-feedback">Please enter your first and middle name.</div>
+                                        <label for="title" class="form-label">Title</label>
+                                        <select class="form-control form-select" id="title" name="title" required>
+                                            <option value="" disabled selected>Select Title</option>
+                                            <option value="mr">Mr.</option>
+                                            <option value="ms">Ms.</option>
+                                            <option value="mrs">Mrs.</option>
+                                            <option value="miss">Miss</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="surname" class="form-label">Surname</label>
-                                        <input type="text" class="form-control" id="surname" placeholder="e.g. Smith"
+                                        <label for="firstName" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" placeholder="e.g. Smith"
                                             required>
-                                        <div class="invalid-feedback">Please enter your surname.</div>
+                                        <div class="invalid-feedback">Please enter your First Name.</div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="middleName" class="form-label">Middle Name</label>
+                                        <input type="text" class="form-control" id="middleName" placeholder="e.g. Doe"
+                                            required>
+                                        <div class="invalid-feedback">Please enter your middle name.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lastName" class="form-label">last Name</label>
+                                        <input type="text" class="form-control" id="lastName" placeholder="e.g. Smith"
+                                            required>
+                                        <div class="invalid-feedback">Please enter your Last Name.</div>
                                     </div>
                                 </div>
 
@@ -575,42 +756,59 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="fare-summary">
-                    <h5 class="mb-4">Fare Summary</h5>
+                    <div class="fare-header m">
+                        <h5 class="p-3 m-0 text-light">Fare Summary</h5>
+                    </div><!-- fare-header -->
 
-                    <div class="fare-title">
-                        <span>Base fare</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="fare-details">
-                        <span>Adult (1) × $107</span>
-                        <span>$107</span>
-                    </div>
-
-                    <div class="fare-title mt-3">
-                        <span>Taxes, Fee and Surcharges</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="fare-details">
-                        <span>Airline Taxes and Surcharges</span>
-                        <span>$22</span>
-                    </div>
-                    <div class="fare-details">
-                        <span>Service Fee</span>
-                        <span>$10</span>
+                    <div class="fare-section px-3 mt-1">
+                        <div class="fare-section-title" data-bs-toggle="collapse" data-bs-target="#baseFare">
+                            <span>Base fare</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div id="baseFare" class="collapse show fare-section-content">
+                            <div class="fare-item">
+                                <span>Adult(1) (1 × $110)</span>
+                                <span>$110</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="fare-title mt-3">
-                        <span>Other Services</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="fare-details">
-                        <span>Booking Fee</span>
-                        <span>$0</span>
+                    <div class="fare-section px-3 mt-1">
+                        <div class="fare-section-title" data-bs-toggle="collapse" data-bs-target="#taxes">
+                            <span>Taxes, Fee and Surcharges</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div id="taxes" class="collapse show fare-section-content">
+                            <div class="fare-item">
+                                <span>Airline Taxes and Surcharges</span>
+                                <span>$7.3</span>
+                            </div>
+                            <div class="fare-item">
+                                <span>Service Fee</span>
+                                <span>$6</span>
+                            </div>
+                            <div class="fare-item text-end">
+                                <span>$23</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="total-amount">
+                    <div class="fare-section px-3 mt-1">
+                        <div class="fare-section-title" data-bs-toggle="collapse" data-bs-target="#services">
+                            <span>Other Services</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div id="services" class="collapse show fare-section-content">
+                            <div class="fare-item">
+                                <span>Charity</span>
+                                <span>$5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fare-total fare-item px-3 mt-1 pb-3">
                         <span>Total Amount</span>
                         <span>$139</span>
                     </div>
@@ -710,36 +908,36 @@
         alert('Add another passenger functionality would be added here.');
         });
 
-        // NEW CODE: Handle fare summary section toggles
-        // Add unique IDs to each fare detail content section
-        $('.fare-summary .fare-details').each(function(index) {
-        $(this).attr('id', 'fareDetails' + index);
-        });
+        // // NEW CODE: Handle fare summary section toggles
+        // // Add unique IDs to each fare detail content section
+        // $('.fare-summary .fare-details').each(function(index) {
+        // $(this).attr('id', 'fareDetails' + index);
+        // });
 
-        // Group fare details that belong together
-        const baseFareDetails = $('.fare-summary .fare-details').eq(0);
-        const taxesFeeDetails = $('.fare-summary .fare-details').eq(1).add($('.fare-summary .fare-details').eq(2));
-        const otherServicesDetails = $('.fare-summary .fare-details').eq(3);
+        // // Group fare details that belong together
+        // const baseFareDetails = $('.fare-summary .fare-details').eq(0);
+        // const taxesFeeDetails = $('.fare-summary .fare-details').eq(1).add($('.fare-summary .fare-details').eq(2));
+        // const otherServicesDetails = $('.fare-summary .fare-details').eq(3);
 
-        // Set up click handlers for each section
-        $('.fare-summary .fare-title').eq(0).on('click', function() {
-        baseFareDetails.slideToggle();
-        $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-        });
+        // // Set up click handlers for each section
+        // $('.fare-summary .fare-title').eq(0).on('click', function() {
+        // baseFareDetails.slideToggle();
+        // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+        // });
 
-        $('.fare-summary .fare-title').eq(1).on('click', function() {
-        taxesFeeDetails.slideToggle();
-        $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-        });
+        // $('.fare-summary .fare-title').eq(1).on('click', function() {
+        // taxesFeeDetails.slideToggle();
+        // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+        // });
 
-        $('.fare-summary .fare-title').eq(2).on('click', function() {
-        otherServicesDetails.slideToggle();
-        $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-        });
+        // $('.fare-summary .fare-title').eq(2).on('click', function() {
+        // otherServicesDetails.slideToggle();
+        // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+        // });
 
-        // Make the titles look clickable with pointer cursor
-        $('.fare-summary .fare-title').css('cursor', 'pointer');
-        });
+        // // Make the titles look clickable with pointer cursor
+        // $('.fare-summary .fare-title').css('cursor', 'pointer');
+         });
 
         document.addEventListener("DOMContentLoaded", function () {
         var input = document.querySelector("#phone");

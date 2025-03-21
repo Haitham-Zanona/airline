@@ -247,7 +247,8 @@
 
 
     {{-- @dd($flightOffers[1]['travelerPricings'][0]['fareDetailsBySegment'][0]['amenities']) --}}
-    @dd($flightOffers)
+
+    {{-- @dd($flightOffers) --}}
     {{-- @php
 
     جمع جميع أكواد شركات الطيران الموجودة في الرحلات
@@ -515,7 +516,8 @@
                             <div class="col-md-2 d-flex flex-column align-items-center">
                                 <div class="position-relative d-flex flex-column align-items-center">
                                     <span class="stop-text text-warning font-weight-bold">
-                                        {{ $flight['inbound_stops_text'] }} stop
+                                        {{-- {{ $flight['inbound_stops_text'] }} stop --}}
+                                        {{-- {{ $flight['departure_airport_info']['name'] }} --}}
                                     </span>
                                     <div class="stop-line">
                                         <span class="stop-circle"></span>

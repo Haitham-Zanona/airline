@@ -1,536 +1,619 @@
-<x-front-layout>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #6742c9;
+            --light-gray: #f8f9fa;
+            --border-color: #e0e0e0;
+        }
+
         body {
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
         }
 
-        .progress-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #15406a;
-            padding: 15px;
-            color: white;
+        .container {
+            max-width: 1200px;
+        }
+
+        .logo {
+            color: #4B45FF;
             font-weight: bold;
-            position: relative;
-            max-width: 100%;
-            overflow-x: hidden;
+            font-size: 24px;
         }
 
-        .progress-container .step {
-            position: relative;
-            text-align: center;
-            flex-grow: 1;
+        .navbar {
+            padding: 15px 0;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
-        /* ✅ إصلاح الخطوط بين الخطوات */
-        .progress-container .step::before {
-            content: '';
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #4CD964;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .success-icon i {
+            color: white;
+            font-size: 30px;
+        }
+
+        .success-message {
+            color: #4CD964;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .reference-no {
+            background-color: #F0F0FF;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .booking-info {
+            padding: 20px;
+        }
+
+        .flight-summary {
+            position: relative;
+        }
+
+        .flight-summary-header {
+            padding: 15px;
+            font-weight: 600;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .flight-details {
+            padding: 20px;
+            position: relative;
+        }
+
+        .flight-path {
+            position: relative;
+            padding: 10px 0;
+        }
+
+        .flight-path:before {
+            content: "";
             position: absolute;
             top: 50%;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background-color: #28a745 !important;
-            transform: translateY(-50%);
-            z-index: -1;
+            left: 70px;
+            right: 70px;
+            height: 1px;
+            background: #ddd;
         }
 
-        .progress-container .step:first-child::before {
-            width: 50%;
+        .flight-path:after {
+            content: "✈";
+            position: absolute;
+            top: 50%;
             left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 0 10px;
+            color: #999;
         }
 
-        .progress-container .step:last-child::before {
-            width: 50%;
-        }
-
-        .progress-container .circle {
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-            border-radius: 50%;
-            background-color: #28a745 !important;
-            color: white !important;
-            display: inline-block;
+        .airport-code {
             font-weight: bold;
+            font-size: 22px;
         }
 
-        /* ✅ ألوان الخطوات */
-        .progress-container .active .circle {
-            background-color: #f0ad4e;
-            color: white;
-        }
-
-        .progress-container .completed .circle {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .progress-container .step.completed::before {
-            background-color: #28a745 !important;
-        }
-
-        .passenger-details {
-            padding: 15px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-head {
-            background-color: #ffffff;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .table-head td {
-            padding: 8px;
-            border-bottom: 2px solid black;
-        }
-
-        table td {
-            padding: 8px;
-            border-bottom: 1px solid #ccc;
-            text-align: left;
-        }
-
-        table tr:nth-child(even) {
-            background-color: #f2f2f2;
-            /* ✅ صفوف متناوبة بلون رمادي فاتح */
-        }
-
-        .print-btn {
-            display: flex;
-            width: 220px;
-            /* تعديل الحجم حسب الحاجة */
-            height: 50px;
-            border: none;
-            border-radius: 8px;
-            overflow: hidden;
-            /* background-color: #0d3c72; */
-            /* اللون الأزرق الداكن */
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-            /* إضافة ظل */
-            transition: box-shadow 0.3s ease-in-out, transform 0.2s;
-        }
-
-        .print-btn:hover {
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-            /* زيادة الظل عند التمرير */
-            transform: translateY(-2px);
-            /* رفع بسيط عند التحويم */
-        }
-
-        .print-btn .icon {
-            background-color: #0d3c72;
-            width: 30%;
-            display: flex;
-            border-radius: 8px 0 0 8px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .print-btn .icon i {
-            font-size: 18px;
-            color: white;
-        }
-
-        .print-btn .text {
-            background-color: white;
-            color: #0d3c72;
-            width: 70%;
-            display: flex;
-            align-items: center;
-            border-radius: 0 8px 8px 0;
-            justify-content: center;
-            font-weight: bold;
+        .airport-time {
             font-size: 16px;
         }
 
-        .pass-personal-info label {
-            color: #000;
-            font-size: 17px;
-            position: relative;
-            width: 17%;
-            font-weight: 700;
+        .airport-location {
+            font-size: 14px;
+            color: #666;
         }
 
-        .pass-personal-info label::after {
-            content: ':';
-            position: absolute;
-            right: 10%;
+        .baggage-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .pass-personal-info span {
-            font-size: 15px;
-            color: #000;
+        .baggage-item {
+            text-align: center;
+        }
+
+        .baggage-item p {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .baggage-item strong {
+            font-size: 16px;
+        }
+
+        .passengers-details {
+            padding: 20px;
+        }
+
+        .passenger-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .passenger-table th,
+        .passenger-table td {
+            padding: 12px;
+        }
+
+        .passenger-table thead th {
+            background-color: #F0F0FF;
             font-weight: 600;
         }
+
+        .passenger-table tbody tr:nth-child(even) {
+            background-color: #F8F8FF;
+        }
+
+        .payment-summary {
+            background-color: #4B45FF;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .payment-summary .total {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .visa-card {
+            background-color: #F0F0FF;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .visa-logo {
+            background-color: #1A1F71;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .card-payment {
+            position: sticky;
+            top: 0;
+        }
+
+        .footer {
+            background-color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+
+        .footer-logo {
+            color: #4B45FF;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h5 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .footer-links ul li a:hover {
+            color: #4B45FF;
+        }
+
+        .contact-info {
+            margin-bottom: 20px;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: #4B45FF;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #f8f9fa;
+            color: #666;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+        }
+
+        .social-links a:hover {
+            background-color: #4B45FF;
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 20px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .payment-methods img {
+            height: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .flight-path:before {
+                left: 40px;
+                right: 40px;
+            }
+
+            .baggage-info {
+                flex-direction: column;
+            }
+
+            .baggage-item {
+                margin-bottom: 10px;
+            }
+        }
     </style>
+</head>
 
-
-
-
-    <div class="progress-container">
-        <div class="step completed">
-            <span class="circle">1</span>
-            <p>SEARCH RESULT</p>
-        </div>
-        <div class="step completed">
-            <span class="circle">2</span>
-            <p>PASSENGER</p>
-        </div>
-        <div class="step active">
-            <span class="circle">3</span>
-            <p>PAYMENT</p>
-        </div>
-        <div class="step">
-            <span class="circle">4</span>
-            <p>CONFIRM</p>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-9 d-flex align-items-center">
-            <div class="mx-2 d-inline-block pl-4">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                    width="40" height="40" viewBox="0 0 256 256" xml:space="preserve">
-
-                    <defs>
-                    </defs>
-                    <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
-                        transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
-                        <circle cx="45" cy="45" r="45"
-                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(1,179,114); fill-rule: nonzero; opacity: 1;"
-                            transform="  matrix(1 0 0 1 0 0) " />
-                        <path
-                            d="M 38.478 64.5 c -0.01 0 -0.02 0 -0.029 0 c -1.3 -0.009 -2.533 -0.579 -3.381 -1.563 L 21.59 47.284 c -1.622 -1.883 -1.41 -4.725 0.474 -6.347 c 1.884 -1.621 4.725 -1.409 6.347 0.474 l 10.112 11.744 L 61.629 27.02 c 1.645 -1.862 4.489 -2.037 6.352 -0.391 c 1.862 1.646 2.037 4.49 0.391 6.352 l -26.521 30 C 40.995 63.947 39.767 64.5 38.478 64.5 z"
-                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
-                            transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                    </g>
-                </svg>
-            </div>
-            <div class="my-3 d-inline-block" style="color: #41479b;">
-                <h4 class="m-0 p-0">Your Booking Successfully Completed.</h4>
-                <p class="m-0">Congratulations! your Booking has been Confirmed. Thank you</p>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <button class="print-btn p-0">
-                <div class="icon p-4">
-                    <i class="fas fa-print" style="color: #fff;"></i> <!-- أيقونة الطباعة -->
-                </div>
-                <div class="text p-4">Print A Copy</div>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand logo" href="#">LOGO</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
             </button>
-        </div><!-- col-md-3 -->
-    </div><!-- row -->
-
-    <div class="row px-3">
-        <div class="col-md-7 pl-4">
-            <h2 class="passenger-name" style="font-size: 24px;">Mr Haitham Mohamed abdel majed Abo Zanona</h2>
-            <div class="pass-personal-info"><label for="">Phone No.</label><span>0592235375</span></div>
-            <div class="pass-personal-info"><label for="">Email Id</label><span>hythamzanona@gmail.com</span></div>
-            <div class="pass-personal-info"><label for="">Destination</label><span>Miami Miami Intl. Arpt. United
-                    States(MIA)</span></div>
-            <div class="pass-personal-info"><label for="">Booking Date</label><span>28 Feb 2025 11:02:18</span></div>
-        </div><!-- col-md-7 -->
-        <div class="col-md-5">
-            <div class="book-date px-2 d-flex justify-content-between">
-                <div class="book-time p-3">
-                    <p class="m-0 mb-1">Booking Date & Time:</p>
-                    <span>28 Feb 2025 11:02:18</span>
-                </div><!-- book-time -->
-                <div class="book-ref px-5 py-3" style="background-color: #daf0e8; border-radius: 8px;">
-                    <p class="m-0 mb-1">Your booking reference no.:</p>
-                    <span style="color:#01b372; font-size: 19px;">FDB88651</span>
-                </div><!-- book-ref -->
-            </div><!-- book-date -->
-            <div></div>
-        </div><!-- col-md-5 -->
-    </div><!-- row -->
-    <hr class="my-4">
-    <form id="passengerForm" novalidate>
-        <div class="row px-3">
-            <div class="col-md-9">
-                <div>
-                    <div>
-                        <h3>Selected Flight</h3>
-                    </div>
-                    <div class="text-white py-1 px-2 " style="background-color: #1165a2;">
-                        <div class="outbound-flight d-flex justify-content-between">
-                            <div class="outbound-flight">
-                                <img src="" alt="alter" class="d-inline-block">
-                                <h5 class="m-0 d-inline-block">Outbound Flight</h5>
-                            </div>
-                            <p class="m-0 text-right ">Non stop</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="passenger-details-title p-2" style="background-color: #1165a2; color: #fff;">
-
-                    <h2 class="m-0 d-inline-block" style="font-size: 20px;"><span><svg
-                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                <path fill-rule="evenodd"
-                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                            </svg></span> Passenger Details</h2>
-                </div><!-- important-note -->
-                <div class="Passenger-details mb-4">
-                    <table>
-                        <tbody>
-                            <tr class="table-head">
-                                <td>Sr.</td>
-                                <td>Title</td>
-                                <td>First Name</td>
-                                <td>Date of Birth</td>
-                            </tr><!-- table-head -->
-                            <tr>
-                                <td>1</td>
-                                <td>Mr</td>
-                                <td>hytham Mohamed Abo zanona</td>
-                                <td>24-09-1999</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div><!-- Passenger-details -->
-                <div class="important-terms p-3">
-                    <h4 style="font-size: 18px;">Important Terms & Conditions</h4>
-                    <div class="terms-conditions" style="font-size: 13px; font-weight: 400;">
-                        1. All Tickets are Non-refundable, Non-changeable and Non-transferable unless otherwise
-                        specified.
-                        <br>
-                        <br>
-                        2. Passengers must ensure that all names are correct as per their passports and that the travel
-                        itinerary is
-                        correct. Changes may not be permissible after the tickets are issued and a payment for a new
-                        ticket may be charged.
-                        <br>
-                        <br>
-                        <sapn>3.</sapn> Airfares are guaranteed upon ticketing only. If there would be any issue with
-                        the payment, we will
-                        notify you as soon as possible through email and phone. Otherwise, we will send you the ticket
-                        within 48 hours of
-                        your booking. <br>
-                        <br>
-                        4. Free baggage allowance will be provided to the passenger wherever applicable by the airlines,
-                        varying according
-                        to routes and class of services.
-                        <br>
-                        <br>
-                        5. Passengers must reach airport 3 hours prior in case of international flights and 2 hours
-                        prior in case of
-                        domestic flights. Tickets cannot be refunded or changed due to no-show at the airport (unless
-                        otherwise specified by
-                        airlines).
-                        <br>
-                        <br>
-                        6. Passengers are responsible for all travel documentation including visas. Visas may be
-                        required for the entire
-                        journey both for the destination and/or transit. Visas must be secured before ticket issue.
-                        Tickets cannot be
-                        refunded for failure to obtain a visa.
-                        <br>
-                        <span class="noleft">
-                            6.1. Passport ,Visa &amp; Health Recommendation
-                            <br>
-                            <br>
-                            6.2. Passports must be valid for at least 6 months beyond the period of your stay.
-                            <br>
-                            <br>
-                            6.3. ESTA visa is a mandatory requirement for all USA bound travel including transiting the
-                            USA.
-                            <br>
-                            <br>
-                            6.4. If your flight has a change involving two different airports with the itinerary, it is
-                            your responsibility
-                            to organize the transfer to the right airport and also check the transit visa requirement.
-                            <br>
-                            <br>
-                            6.5. If you have booked code-share flight, terminal change may be there and you may require
-                            transit visa for
-                            changing the terminals. Please check with the embassy or airline directly for checking visa
-                            requirements in case
-                            of terminal change.
-                            <br>
-                            <br>
-                            6.6. Farebuddies is not responsible for the VISA formalities. Please consult the relevant
-                            embassy or consulate
-                            for this information.
-                            <br>
-                            <br>
-                            6.7. Health Recommendation: Recommended inoculations for travel may change at any time. It
-                            is your
-                            responsibility to ensure that you obtain all recommended inoculations, take all recommended
-                            medication and
-                            follow all medical advice in relation to your trip.
-                            <br>
-                            <br>
-                        </span>
-                        7. Insurance / Travel Insurance:- The Company strongly recommends that the Client takes out
-                        adequate travel
-                        insurance. The Client is herewith recommended to read the terms of any insurance to satisfy them
-                        as to the fitness
-                        of cover. The Company will be pleased to quote you for insurance.
-                        <br>
-                        <br>
-
-                        8. Flights/ packages are protected by CAA in case the airline goes out of operation or
-                        bankruptcy. However bookings
-                        made on low cost airlines or charter flights / airlines not under SAFI are not covered by the
-                        airline failure
-                        insurance, therefore agent will not be liable for loss of money in such cases.
-                        <br>
-                        <br>
-                        9. Changes :- If you wish to change any item – other than increasing the number of persons in
-                        your party/ booking –
-                        And providing we can accommodate the change, you will have to pay an amendment Fee of USD 50.00
-                        per booking plus the
-                        airlines/ supplier charges (if any) .From time to time we are required to collect additional
-                        taxes . You will be
-                        informed for any additional taxes prior to ticket issuance/ reissuance. After ticket issuance
-                        most of the airlines
-                        do not allow changes.
-                        <br>
-                        <br>
-                        10. Cancellation
-                        <br>
-                        <span class="noleft">
-                            a. Cancellation before ticket issuance :- Should you or any member of your party be forced
-                            to cancel your flight
-                            or holidays, we must be notified by the person who made the booking and who therefore
-                            responsible for the
-                            payment of cancellation charges.
-                            <br>
-                            <br>
-                            b. Cancellation after ticket issuance: - Cancellation after ticket issuance will result in
-                            loss of 100 % of
-                            total cost of all travel arrangements in most of cases. Please consult with your travel
-                            consultant. Low cost
-                            airlines/Charter flights carry a 100 % cancellation fee in both conditions before or after
-                            ticket issuance.
-                        </span>
-                        <br>
-                        <br>
-
-                        11. South African travel requirements for minors travelling to and from South Africa. New
-                        requirements, introduced
-                        by the South African Department of Home Affairs from 1 June 2015, specify that all minors
-                        (children under 18 years)
-                        are required to produce, in addition to their passport, an Unabridged Birth Certificate which
-                        shows the details of
-                        both parents for all international travel to and from South Africa. Travellers will be asked to
-                        produce the required
-                        documentation at check-in for each flight.
-                        <br>
-                        <br>
-                        12. New passport regulations for Travellers to the U.S.A.The United States of America has made
-                        it mandatory, that
-                        anyone flying to the US for holidays or business under the Visa Waiver Program must hold the
-                        latest Biometric
-                        Passport or a Machine Readable Passport that contains an electronic chip, even if the electronic
-                        visa has been
-                        granted. The biometric passport has a sequence of lines, that can be swiped by the US
-                        Customs/Immigration/Border
-                        Protection officers that will quickly confirm the passport holder's identity and collect other
-                        information about the
-                        holder.VWP visitors arriving in the US without the Biometric Passport would be denied entrance
-                        into the country.
-                        Travellers among the VWP countries are encouraged to check with their passport issuing authority
-                        to be in possession
-                        of a biometric passport. Travellers with an immediate travel plan, who are unable to possess
-                        such a passport, may
-                        apply for a US visa at the respective embassy or consulate.
-                        <br>
-                        <br>
-                        13. If you need further information on above mentioned points regarding
-                        refund/cancellation/special assistance etc.,
-                        please call our customer care number ++1-877-847-4278 or email us on support@fare buddy.com.
-                        <br>
-                        <br>
-                        14. A direct flight in the aviation industry is any flight between two points by an airline with
-                        no change in flight
-                        numbers, which may include a stop at an intermediate point. The stop over may either be to get
-                        new passengers (or
-                        allow some to disembark) or a mere technical stop over (i.e., for refuelling) or due to
-                        operational reasons.
-                        <br>
-                    </div>
-                </div><!-- important-terms -->
-
-
-
-
-
-            </div><!-- col-md-9 -->
-            <div class="col-md-3">
-                <div class="flight-details-container" id="flight-box">
-                    <!-- ✅ قسم تفاصيل الرحلة -->
-                    <div class="section">
-                        <div class="toggle-section">
-                            Flight Details
-                            <span class="arrow-icon">&#9660;</span>
-                        </div>
-                        <div class="section-content">
-                            <p><strong>Return Flight</strong></p>
-                            <p>1 Ticket 1 Adult</p>
-                            <p><strong>jetBlue</strong> (B6-2593)</p>
-                            <p>JFK → MIA (27 Feb 2025, 13:29 → 16:39)</p>
-                            <p><strong>jetBlue</strong> (B6-202)</p>
-                            <p>MIA → JFK (04 Mar 2025, 07:00 → 09:59)</p>
-                        </div>
-                    </div>
-
-                    <!-- ✅ قسم تفاصيل السعر -->
-                    <div class="section">
-                        <div class="toggle-section">
-                            Price Details (USD)
-                            <span class="arrow-icon">&#9660;</span>
-                        </div>
-                        <div class="section-content">
-                            <p>1 X Adult: <strong>$641.60</strong></p>
-                        </div>
-                    </div>
-
-                    <!-- ✅ المجموع -->
-                    <div class="total">
-                        <strong>Total:</strong> $641.60
-                    </div>
-
-                    <!-- ✅ ضمان السعر -->
-                    <div class="price-guarantee">
-                        <i class="check-icon">✔</i> Price Guarantee
-                    </div>
-
-                    <!-- ✅ زر متابعة الحجز -->
-                    <a href="#" class="continue-booking">
-                        Continue Booking →
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact us</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="ms-3 d-none d-lg-block">
+                <div class="text-end">
+                    <small class="d-block text-muted">Contact us 24/7 to unlock the best deals</small>
+                    <a href="tel:+1-111-111-1111" class="text-primary fw-bold">
+                        <i class="fas fa-phone-alt"></i> +1-111-111-1111
                     </a>
                 </div>
             </div>
-        </div><!-- row -->
+        </div>
+    </nav>
 
-    </form>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            function updateProgress(currentStep) {
-                $(".step").each(function (index) {
-                    $(this).addClass("completed").removeClass("active");
-                });
-            }
-            updateProgress(3); // ✅ ضبط الخطوة الثالثة كـ "active" والخطوتين الأولى والثانية كـ "completed"
+    <!-- Booking Confirmation -->
+    <div class="container my-4">
+        <div class="d-flex align-items-center mb-4">
+            <div style="margin-right: 10px;">
+                <img src="{{ asset('assets/images/check-mark.png') }}" width="60px" height="60px" class="mr-1" alt="">
+            </div>
+            <div>
+                <h1 class="success-message mb-0">Your Booking Successfully Complete</h1>
+                <p class="text-muted mb-0">Congratulations! Your Booking has been confirm. Thank you!</p>
+            </div>
+            <div class="ms-auto">
+                <a href="#" class="btn btn-outline-primary me-2">Download Ticket</a>
+                <a href="#" class="btn btn-outline-primary">Share Ticket</a>
+            </div>
+        </div>
 
-        });
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Booking Info -->
+                <div class="card mb-4">
+                    <div class="booking-info">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="fw-bold">Mr. John Doe</h5>
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
+                                        <p class="mb-1 text-muted">Phone No</p>
+                                        <p class="mb-1 text-muted">Email Id</p>
+                                        <p class="mb-1 text-muted">Destination</p>
+                                        <p class="mb-1 text-muted">Booking Date</p>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="mb-1">: 8976788989</p>
+                                        <p class="mb-1">: wxzf@gmail.com</p>
+                                        <p class="mb-1">: Nairobi Mombasa</p>
+                                        <p class="mb-1">: 14 Mar 2025 17: 25: 55</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex justify-content-start align-items-center">
+                                <div class="reference-no text-center">
+                                    <p class="mb-1">Your booking reference no:</p>
+                                    <p class="mb-0 fw-bold">#D88679</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    </script>
+                <!-- Flight Summary -->
+                <div class="card mb-4">
+                    <div class="flight-summary">
+                        <div class="d-flex justify-content-between align-items-center flight-summary-header">
+                            <h5 class="mb-0 fw-bold">Flight Summary</h5>
+                            <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flightDetails">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div id="flightDetails" class="flight-details">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <img src="/api/placeholder/30/30" alt="ABC Airline" class="me-2">
+                                    <span>ABC Airline</span>
+                                </div>
+                                <div class="text-danger">Non-refundable</div>
+                                <div>Travel Class: <strong>Economy</strong></div>
+                            </div>
 
-</x-front-layout>
+                            <div class="flight-path mb-4">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="airport-code">NBI</div>
+                                        <div class="airport-time">14:50</div>
+                                        <div class="airport-location">Sun, 29 Jan 2023</div>
+                                        <div class="airport-location">Moi Intl, Mombasa</div>
+                                        <div class="airport-location">Kenya</div>
+                                        <div class="airport-location">Terminal - 2, Gate - 25</div>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <div class="duration">
+                                            <p>9hr 50min</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 text-end">
+                                        <div class="airport-code">MBO</div>
+                                        <div class="airport-time">14:50</div>
+                                        <div class="airport-location">Sun, 29 Jan 2023</div>
+                                        <div class="airport-location">JFK Terminal, Nairobi,</div>
+                                        <div class="airport-location">Kenya</div>
+                                        <div class="airport-location">Terminal - 2, Gate - 25</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="baggage-info">
+                                <div class="baggage-item">
+                                    <p>Baggage</p>
+                                    <strong>ADULT</strong>
+                                </div>
+                                <div class="baggage-item">
+                                    <p>Check-in</p>
+                                    <strong>23Kgs (1 Piece * 23Kgs)</strong>
+                                </div>
+                                <div class="baggage-item">
+                                    <p>Cabin</p>
+                                    <strong>7Kgs (1 Piece * 7Kgs)</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passengers Details -->
+                <div class="card mb-4">
+                    <div class="passengers-details">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="fas fa-users me-2"></i> Passengers Details
+                            </h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="passenger-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.</th>
+                                        <th>Title</th>
+                                        <th>First Name</th>
+                                        <th>Middle Name</th>
+                                        <th>Last Name</th>
+                                        <th>Gender</th>
+                                        <th>Date of Birth</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Empty table rows as shown in the image -->
+                                    <tr>
+                                        <td colspan="7">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Payment Summary -->
+                <div class="card mb-4 card-payment">
+                    <div class="card-body">
+                        <p class="mb-4" style="color: #605DEC;">All prices are quoted in USD</p>
+                        <h5>PAYMENT</h5>
+
+                        <div class="visa-card mt-3 mb-4">
+                            <div class="d-flex align-items-center">
+                                <div style="padding-right: 15px; border-right: 1px solid #000;">
+                                    <span VISA class=" visa-logo">VISA</span>
+                                </div>
+                                <div style="margin-left: 15px;">
+                                    <p class="mb-1">Base fare</p>
+                                    <p class="mb-0">XXXXXXXXXXXX3820</p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <h5>FARE BREAKUP</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span>Adult x 1</span>
+                                <span>$139</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Total</span>
+                                <span>$139</span>
+                            </div>
+                        </div>
+
+                        <div class="payment-summary mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>Total Amount</span>
+                                <span class="total">$139</span>
+                            </div>
+                            <small>All prices (including taxes& fees) are quoted in USD</small>
+                        </div>
+
+                        <div class="mt-4 text-center d-flex justify-content-start align-items-center px-3">
+                            <div class="me-3">
+                                <img src="{{ asset('assets/images/phone-call.webp') }}" width="50px" height="50px"
+                                    alt="">
+                            </div>
+                            <div>
+                                <p class="m-0 text-start">Need Any Help?</p>
+                                <a href="tel:+" style="text-decoration: none; color: #4B45FF;">Call Now
+                                    <strong>+1-111-111-1111</strong></a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="payment-methods">
+            <img src="/api/placeholder/120/40" alt="IATA">
+            <img src="/api/placeholder/120/40" alt="CLOUDFLARE">
+            <img src="/api/placeholder/120/40" alt="FLEXPAY">
+            <img src="/api/placeholder/120/40" alt="AMAZON PAY">
+            <img src="/api/placeholder/120/40" alt="DIGICERT">
+        </div>
+
+        <div class="text-center text-muted">
+            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
+                laoreet
+                dolore</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-logo mb-4">LOGO</div>
+                    <p>About the website</p>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-links">
+                        <h5>Quick Links</h5>
+                        <ul>
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-links">
+                        <h5>Legal</h5>
+                        <ul>
+                            <li><a href="#">Important Guidelines</a></li>
+                            <li><a href="#">Privacy policy</a></li>
+                            <li><a href="#">Terms of service</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-links">
+                        <h5>Keep in Touch</h5>
+                        <div class="contact-info">
+                            <p class="fw-bold"><i class="fas fa-phone-alt"></i> +1-111-111-1111</p>
+                            <p><i class="fas fa-envelope"></i> email@gmail.com</p>
+                        </div>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2025 Logo incorporated</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</body>
+
+</html>

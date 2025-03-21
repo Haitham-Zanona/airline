@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/flights/passengers', [FlightController::class, 'passengers'])->name('flights.passengers');
 Route::get('/flights/payment', [FlightController::class, 'payment'])->name('flights.payment');
-Route::get('/flights/confirm', [FlightController::class, 'confirm'])->name('process.confirm');
+// Route::get('/flights/confirm', [FlightController::class, 'confirm'])->name('process.confirm');
 
 Route::get('/indexs', function () {
     return view('indexs');
@@ -31,14 +31,20 @@ Route::get('/terms&conditions', function () {
 Route::get('/privacy_policy', function () {
     return view('privacy_policy');
 });
-Route::get('/newflight', function () {
-    return view('flights.new-flight');
+Route::get('/exploreplaces', function () {
+    return view('explore-places');
 });
+// Route::get('/newflight', function () {
+//     return view('flights.new-flight');
+// });
 // Route::get('/newpassenger', function () {
 //     return view('flights.new-passengers');
 // });
 Route::get('/newpayment', function () {
     return view('flights.new-payment');
+});
+Route::get('/newconfirm', function () {
+    return view('flights.confirm');
 });
 
 Route::group([], function () {
