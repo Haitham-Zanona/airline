@@ -128,6 +128,7 @@
         .flight-route p {
             margin: 0;
             color: #555;
+            font-size: 12px;
         }
 
         .route-separator {
@@ -632,11 +633,14 @@
         }
 
         .result-container {
-            background-color: #ffffff;
+            background-image: url('assets/images/no-result.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
+            width: 100%;
             margin: 2rem auto;
         }
 
@@ -693,7 +697,7 @@
 
         .description {
             color: #444;
-            font-size: 1.1rem;
+            font-size: 24px;
             margin-bottom: 2rem;
         }
 
@@ -741,6 +745,7 @@
 </head>
 
 <body>
+    {{-- @dd($flightOffers) --}}
     <!-- Popup -->
     <div class="popup-overlay" id="specialFarePopup">
         <div class="popup-container">
@@ -767,8 +772,8 @@
                         </div>
                     </div>
 
-                    <div class="row flight-details-popup">
-                        <div class="col-md-5 flight-route">
+                    <div class="d-flex justify-content-between align-items-center flight-details-popup">
+                        <div class=" flight-route">
                             <h3>NBI</h3>
                             <p>14.50</p>
                             <p>Sun, 29 Jan 2023</p>
@@ -777,11 +782,11 @@
                             <p>Terminal - 2, Gate - 25</p>
                         </div>
 
-                        <div class="col-md-2 route-separator">
-                            <span>✈️</span>
+                        <div class=" route-separator">
+                            <i class="fas fa-plane position-absolute bg-white px-1"></i>
                         </div>
 
-                        <div class="col-md-5 flight-route">
+                        <div class=" flight-route text-end">
                             <h3>MBO</h3>
                             <p>14.50</p>
                             <p>Sun, 29 Jan 2023</p>
@@ -891,52 +896,63 @@
     <!-- Search Section -->
     <section class="search-container">
 
-        <div class="radio-container">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="tripType" id="oneWay" checked>
-                <label class="form-check-label" for="oneWay">ONE WAY</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="tripType" id="roundTrip">
-                <label class="form-check-label" for="roundTrip">ROUND WAY</label>
-            </div>
-        </div>
+
 
         <form action="{{ route('flight.search') }}" method="POST" class="search-form">
             @csrf
+            <div class="radio-container">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tripType" id="oneWay" {{
+                        session('flight_search.tripType', 'oneWay' )=='oneWay' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="oneWay">ONE WAY</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tripType" id="roundTrip" {{
+                        session('flight_search.tripType')=='roundTrip' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="roundTrip">ROUND WAY</label>
+                </div>
+            </div>
             <div class="row flight-result-search">
                 <div class="col-md-2">
                     <label for="origin_city"><i class="fas fa-plane-departure me-1"></i> From</label>
-                    <input type="text" id="search1" class="form-select" placeholder="Enter City Name"
-                        autocomplete="off">
-                    <input type="hidden" name="origin_city" value="">
+                    <input type="text" id="search1" class="form-select" placeholder="Enter City Name" autocomplete="off"
+                        value="{{ session('flight_search.origin_city_name', '') }}">
+                    {{-- <input type="hidden" name="origin_city" value="">
                     <input type="hidden" name="origin_city_name" id="origin_city_name">
-                    <div id="result1" style="width: 90%;"></div>
+                    <div id="result1" style="width: 90%;"></div> --}}
                 </div>
                 <div class="col-md-2">
                     <label for="destination_city"><i class="fas fa-plane-arrival me-1"></i> To</label>
-                    <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off"
-                        class="form-select">
-                    <input type="hidden" name="destination_city" value="">
-
+                    <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off" class="form-select"
+                        value="{{ session('flight_search.destination_city_name', '') }}">
+                    {{-- <input type="hidden" name="destination_city" value="">
                     <input type="hidden" name="destination_city_name" id="destination_city_name">
-                    <div id="result2" style="width: 90%;"></div>
+                    <div id="result2" style="width: 90%;"></div> --}}
                 </div>
+
                 <div class="col-md-2">
                     <label for="departureDate"><i class="far fa-calendar-alt me-1"></i> Departure</label>
-                    <input type="date" id="departureDate" name="departureDate" class="form-control">
+                    <input type="date" id="departureDate" name="departureDate" class="form-control"
+                        value="{{ session('flight_search.departureDate', '') }}">
                 </div>
+                @if (session('flight_search.tripType')=='roundTrip')
                 <div class="col-md-2">
                     <label for="returnDate"><i class="far fa-calendar-alt me-1"></i> Return</label>
                     <input type="date" id="returnDate" name="returnDate" class="form-control">
                 </div>
+                @endif
+
                 <div class="col-md-2">
                     <label><i class="fas fa-user me-1"></i> Class</label>
                     <select id="cabin" name="cabin" class="form-select">
-                        <option value="ECONOMY">Economy</option>
-                        <option value="PREMIUM_ECONOMY">Premium Economy</option>
-                        <option value="BUSINESS">Business</option>
-                        <option value="FIRST">First Class</option>
+                        <option value="ECONOMY" {{ session('flight_search.cabin')=='ECONOMY' ? 'selected' : '' }}>
+                            Economy</option>
+                        <option value="PREMIUM_ECONOMY" {{ session('flight_search.cabin')=='PREMIUM_ECONOMY'
+                            ? 'selected' : '' }}>Premium Economy</option>
+                        <option value="BUSINESS" {{ session('flight_search.cabin')=='BUSINESS' ? 'selected' : '' }}>
+                            Business</option>
+                        <option value="FIRST" {{ session('flight_search.cabin')=='FIRST' ? 'selected' : '' }}>First
+                            Class</option>
                     </select>
                 </div>
                 <div class="col-md-1">
@@ -1008,7 +1024,8 @@
                         </div><!-- dropdown-menu -->
                     </div><!-- dropdown -->
                 </div>
-                <div class="col-md-1 d-flex align-items-end">
+                <div
+                    class="{{ session('flight_search.tripType')=='roundTrip' ? 'col-md-1' : 'col-md-2' }} d-flex align-items-end">
                     <button class="search-button w-100">Modify search</button>
                 </div>
             </div><!-- row -->
@@ -1195,25 +1212,25 @@
                                     <!-- Departure Details -->
                                     <div class="col-3">
                                         <?php
-                                            $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
-                                            $datetime = \Carbon\Carbon::parse($departureTime);
+                                                            $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
+                                                            $datetime = \Carbon\Carbon::parse($departureTime);
 
-                                            $originCity = $flightData['originCity'] ?? '';
-                                            $cityName = '';
-                                            $cityCode = '';
+                                                            $originCity = $flightData['originCity'] ?? '';
+                                                            $cityName = '';
+                                                            $cityCode = '';
 
-                                            // Extract city name (text in parentheses)
-                                            if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-                                                preg_match('/\((.*?)\)/', $originCity, $matches);
-                                                $cityName = isset($matches[1]) ? trim($matches[1]) : '';
-                                            }
+                                                            // Extract city name (text in parentheses)
+                                                            if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+                                                                preg_match('/\((.*?)\)/', $originCity, $matches);
+                                                                $cityName = isset($matches[1]) ? trim($matches[1]) : '';
+                                                            }
 
-                                            // Extract city code (after comma)
-                                            if (strpos($originCity, ',') !== false) {
-                                                $parts = explode(',', $originCity);
-                                                $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
-                                            }
-                                        ?>
+                                                            // Extract city code (after comma)
+                                                            if (strpos($originCity, ',') !== false) {
+                                                                $parts = explode(',', $originCity);
+                                                                $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
+                                                            }
+                                                        ?>
                                         <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
                                         <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
                                         <div class="flight-airport">{{ $cityName }}</div>
@@ -1223,19 +1240,19 @@
                                     <!-- Flight Duration -->
                                     <div class="col-6 d-flex flex-column justify-content-center align-items-center">
                                         <?php
-                                            if(isset($flight['itineraries'][0]['duration'])) {
-                                                $duration = $flight['itineraries'][0]['duration'];
-                                                // Convert PT2H30M format to 2h 30m
-                                                $duration = str_replace('PT', '', $duration);
-                                                $duration = str_replace('H', 'h ', $duration);
-                                                $duration = str_replace('M', 'm', $duration);
-                                            } else {
-                                                $duration = '';
-                                            }
+                                                            if(isset($flight['itineraries'][0]['duration'])) {
+                                                                $duration = $flight['itineraries'][0]['duration'];
+                                                                // Convert PT2H30M format to 2h 30m
+                                                                $duration = str_replace('PT', '', $duration);
+                                                                $duration = str_replace('H', 'h ', $duration);
+                                                                $duration = str_replace('M', 'm', $duration);
+                                                            } else {
+                                                                $duration = '';
+                                                            }
 
-                                            $outboundStops = isset($flight['outbound_stops_text']) ? $flight['outbound_stops_text'] :
-                                                            (isset($flight['itineraries'][0]['segments']) ? (count($flight['itineraries'][0]['segments']) - 1) : '0');
-                                        ?>
+                                                            $outboundStops = isset($flight['outbound_stops_text']) ? $flight['outbound_stops_text'] :
+                                                                            (isset($flight['itineraries'][0]['segments']) ? (count($flight['itineraries'][0]['segments']) - 1) : '0');
+                                                        ?>
                                         <div class="flight-duration">{{ $duration }}</div>
                                         <div class="position-relative w-100 my-2">
                                             <div class="border-top w-100"></div>
@@ -1262,10 +1279,10 @@
                                     <!-- Arrival Details -->
                                     <div class="col-3 text-end">
                                         <?php
-                                            $lastSegmentIndex = count($flight['itineraries'][0]['segments'] ?? []) - 1;
-                                            $arrivalTime = $flight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
-                                            $datetime = \Carbon\Carbon::parse($arrivalTime);
-                                        ?>
+                                                            $lastSegmentIndex = count($flight['itineraries'][0]['segments'] ?? []) - 1;
+                                                            $arrivalTime = $flight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
+                                                            $datetime = \Carbon\Carbon::parse($arrivalTime);
+                                                        ?>
                                         <div class="flight-time">{{ $datetime->format('H:i')}}</div>
                                         <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
                                         <div class="flight-airport">{{ trim(explode("(",
@@ -1290,22 +1307,22 @@
                                     @if($key < count($flight['itineraries'][0]['segments'])) <div
                                         class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
                                         <?php
-                                                        $departureAirport = $segment['departure']['iataCode'] ?? '';
-                                                        $departureTime = $segment['departure']['at'] ?? '';
-                                                        $departureDateTime = \Carbon\Carbon::parse($departureTime);
+                                                                        $departureAirport = $segment['departure']['iataCode'] ?? '';
+                                                                        $departureTime = $segment['departure']['at'] ?? '';
+                                                                        $departureDateTime = \Carbon\Carbon::parse($departureTime);
 
-                                                        $arrivalAirport = $segment['arrival']['iataCode'] ?? '';
-                                                        $arrivalTime = $segment['arrival']['at'] ?? '';
-                                                        $arrivalDateTime = \Carbon\Carbon::parse($arrivalTime);
+                                                                        $arrivalAirport = $segment['arrival']['iataCode'] ?? '';
+                                                                        $arrivalTime = $segment['arrival']['at'] ?? '';
+                                                                        $arrivalDateTime = \Carbon\Carbon::parse($arrivalTime);
 
-                                                        // Display connection time only for segments after the first one
-                                                        if($key > 0) {
-                                                            $prevArrival = \Carbon\Carbon::parse($flight['itineraries'][0]['segments'][$key-1]['arrival']['at'] ?? '');
-                                                            $connectionTime = $departureDateTime->diffInMinutes($prevArrival);
-                                                            $connectionHours = floor($connectionTime / 60);
-                                                            $connectionMinutes = $connectionTime % 60;
-                                                        }
-                                                    ?>
+                                                                        // Display connection time only for segments after the first one
+                                                                        if($key > 0) {
+                                                                            $prevArrival = \Carbon\Carbon::parse($flight['itineraries'][0]['segments'][$key-1]['arrival']['at'] ?? '');
+                                                                            $connectionTime = $departureDateTime->diffInMinutes($prevArrival);
+                                                                            $connectionHours = floor($connectionTime / 60);
+                                                                            $connectionMinutes = $connectionTime % 60;
+                                                                        }
+                                                                    ?>
 
                                         <!-- For outbound flights -->
                                         @if($key > 0)
@@ -1343,25 +1360,25 @@
                                         <div class="row">
                                             <div class="col-5">
                                                 <?php
-                                                    $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
-                                                    $datetime = \Carbon\Carbon::parse($departureTime);
+                                                                    $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
+                                                                    $datetime = \Carbon\Carbon::parse($departureTime);
 
-                                                    $originCity = $flightData['originCity'] ?? '';
-                                                    $cityName = '';
-                                                    $cityCode = '';
+                                                                    $originCity = $flightData['originCity'] ?? '';
+                                                                    $cityName = '';
+                                                                    $cityCode = '';
 
-                                                    // Extract city name (text in parentheses)
-                                                    if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-                                                        preg_match('/\((.*?)\)/', $originCity, $matches);
-                                                                                                $cityName = isset($matches[1]) ? trim($matches[1]) : '';
-                                                    }
+                                                                    // Extract city name (text in parentheses)
+                                                                    if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+                                                                        preg_match('/\((.*?)\)/', $originCity, $matches);
+                                                                                                                $cityName = isset($matches[1]) ? trim($matches[1]) : '';
+                                                                    }
 
-                                                    // Extract city code (after comma)
-                                                    if (strpos($originCity, ',') !== false) {
-                                                        $parts = explode(',', $originCity);
-                                                        $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
-                                                    }
-                                                ?>
+                                                                    // Extract city code (after comma)
+                                                                    if (strpos($originCity, ',') !== false) {
+                                                                        $parts = explode(',', $originCity);
+                                                                        $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
+                                                                    }
+                                                                ?>
                                                 <div class="text-primary">{{ $departureDateTime->format('H:i') }}</div>
                                                 <div class="small">{{ $departureDateTime->translatedFormat('d M Y') }}
                                                 </div>
@@ -1398,25 +1415,25 @@
                                 <!-- Departure Details -->
                                 <div class="col-3">
                                     <?php
-                                            $departureTime = $flight['itineraries'][1]['segments'][0]['departure']['at'] ?? '';
-                                            $datetime = \Carbon\Carbon::parse($departureTime);
+                                                            $departureTime = $flight['itineraries'][1]['segments'][0]['departure']['at'] ?? '';
+                                                            $datetime = \Carbon\Carbon::parse($departureTime);
 
-                                            $destinationCity = $flightData['destinationCity'] ?? '';
-                                            $cityName = '';
-                                            $cityCode = '';
+                                                            $destinationCity = $flightData['destinationCity'] ?? '';
+                                                            $cityName = '';
+                                                            $cityCode = '';
 
-                                            // Extract city name (text in parentheses)
-                                            if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false) {
-                                                preg_match('/\((.*?)\)/', $destinationCity, $matches);
-                                                $cityName = isset($matches[1]) ? trim($matches[1]) : '';
-                                            }
+                                                            // Extract city name (text in parentheses)
+                                                            if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false) {
+                                                                preg_match('/\((.*?)\)/', $destinationCity, $matches);
+                                                                $cityName = isset($matches[1]) ? trim($matches[1]) : '';
+                                                            }
 
-                                            // Extract city code (after comma)
-                                            if (strpos($destinationCity, ',') !== false) {
-                                                $parts = explode(',', $destinationCity);
-                                                $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
-                                            }
-                                        ?>
+                                                            // Extract city code (after comma)
+                                                            if (strpos($destinationCity, ',') !== false) {
+                                                                $parts = explode(',', $destinationCity);
+                                                                $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
+                                                            }
+                                                        ?>
                                     <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
                                     <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
                                     <div class="flight-airport">{{ $cityName }}</div>
@@ -1426,19 +1443,19 @@
                                 <!-- Flight Duration -->
                                 <div class="col-6 d-flex flex-column justify-content-center align-items-center">
                                     <?php
-                                            if(isset($flight['itineraries'][1]['duration'])) {
-                                                $duration = $flight['itineraries'][1]['duration'];
-                                                // Convert PT2H30M format to 2h 30m
-                                                $duration = str_replace('PT', '', $duration);
-                                                $duration = str_replace('H', 'h ', $duration);
-                                                $duration = str_replace('M', 'm', $duration);
-                                            } else {
-                                                $duration = '';
-                                            }
+                                                            if(isset($flight['itineraries'][1]['duration'])) {
+                                                                $duration = $flight['itineraries'][1]['duration'];
+                                                                // Convert PT2H30M format to 2h 30m
+                                                                $duration = str_replace('PT', '', $duration);
+                                                                $duration = str_replace('H', 'h ', $duration);
+                                                                $duration = str_replace('M', 'm', $duration);
+                                                            } else {
+                                                                $duration = '';
+                                                            }
 
-                                            $inboundStops = isset($flight['inbound_stops_text']) ? $flight['inbound_stops_text'] :
-                                                            (isset($flight['itineraries'][1]['segments']) ? (count($flight['itineraries'][1]['segments']) - 1) : '0');
-                                        ?>
+                                                            $inboundStops = isset($flight['inbound_stops_text']) ? $flight['inbound_stops_text'] :
+                                                                            (isset($flight['itineraries'][1]['segments']) ? (count($flight['itineraries'][1]['segments']) - 1) : '0');
+                                                        ?>
                                     <div class="flight-duration">{{ $duration }}</div>
                                     <div class="position-relative w-100 my-2">
                                         <div class="border-top w-100"></div>
@@ -1464,26 +1481,26 @@
                                 <!-- Arrival Details -->
                                 <div class="col-3 text-end">
                                     <?php
-                                            $lastSegmentIndex = count($flight['itineraries'][1]['segments'] ?? []) - 1;
-                                            $arrivalTime = $flight['itineraries'][1]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
-                                            $datetime = \Carbon\Carbon::parse($arrivalTime);
+                                                            $lastSegmentIndex = count($flight['itineraries'][1]['segments'] ?? []) - 1;
+                                                            $arrivalTime = $flight['itineraries'][1]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
+                                                            $datetime = \Carbon\Carbon::parse($arrivalTime);
 
-                                            $originCity = $flightData['originCity'] ?? '';
-                                            $returnCityName = '';
-                                            $returnCityCode = '';
+                                                            $originCity = $flightData['originCity'] ?? '';
+                                                            $returnCityName = '';
+                                                            $returnCityCode = '';
 
-                                            // Extract city name (text in parentheses)
-                                            if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-                                                preg_match('/\((.*?)\)/', $originCity, $matches);
-                                                $returnCityName = isset($matches[1]) ? trim($matches[1]) : '';
+                                                            // Extract city name (text in parentheses)
+                                                            if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+                                                                preg_match('/\((.*?)\)/', $originCity, $matches);
+                                                                $returnCityName = isset($matches[1]) ? trim($matches[1]) : '';
+                                                            }
+
+                                                            // Extract city code (after comma)
+                                            if (strpos($originCity, ',') !== false) {
+                                                $parts = explode(',', $originCity);
+                                                $returnCityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                             }
-
-                                            // Extract city code (after comma)
-                            if (strpos($originCity, ',') !== false) {
-                                $parts = explode(',', $originCity);
-                                $returnCityCode = isset($parts[1]) ? trim($parts[1]) : '';
-                            }
-                        ?>
+                                        ?>
                                     <div class="flight-time">{{ $datetime->format('H:i')}}</div>
                                     <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
                                     <div class="flight-airport">{{ $returnCityName }}</div>
@@ -1504,22 +1521,22 @@
                                 @if($key < count($flight['itineraries'][1]['segments'])) <div
                                     class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
                                     <?php
-                                    $departureAirport = $segment['departure']['iataCode'] ?? '';
-                                    $departureTime = $segment['departure']['at'] ?? '';
-                                    $departureDateTime = \Carbon\Carbon::parse($departureTime);
+                                                    $departureAirport = $segment['departure']['iataCode'] ?? '';
+                                                    $departureTime = $segment['departure']['at'] ?? '';
+                                                    $departureDateTime = \Carbon\Carbon::parse($departureTime);
 
-                                    $arrivalAirport = $segment['arrival']['iataCode'] ?? '';
-                                    $arrivalTime = $segment['arrival']['at'] ?? '';
-                                    $arrivalDateTime = \Carbon\Carbon::parse($arrivalTime);
+                                                    $arrivalAirport = $segment['arrival']['iataCode'] ?? '';
+                                                    $arrivalTime = $segment['arrival']['at'] ?? '';
+                                                    $arrivalDateTime = \Carbon\Carbon::parse($arrivalTime);
 
-                                    // Display connection time only for segments after the first one
-                                    if($key > 0) {
-                                        $prevArrival = \Carbon\Carbon::parse($flight['itineraries'][1]['segments'][$key-1]['arrival']['at'] ?? '');
-                                        $connectionTime = $departureDateTime->diffInMinutes($prevArrival);
-                                        $connectionHours = floor($connectionTime / 60);
-                                        $connectionMinutes = $connectionTime % 60;
-                                    }
-                                ?>
+                                                    // Display connection time only for segments after the first one
+                                                    if($key > 0) {
+                                                        $prevArrival = \Carbon\Carbon::parse($flight['itineraries'][1]['segments'][$key-1]['arrival']['at'] ?? '');
+                                                        $connectionTime = $departureDateTime->diffInMinutes($prevArrival);
+                                                        $connectionHours = floor($connectionTime / 60);
+                                                        $connectionMinutes = $connectionTime % 60;
+                                                    }
+                                                ?>
                                     {{-- @dd($flight['itineraries'][1]['segments']) --}}
 
                                     <!-- For Inbound flights -->
@@ -1600,17 +1617,21 @@
                 <!-- Flight Footer -->
                 <div class="flight-footer d-flex justify-content-start">
                     <div class="me-4">
-                        <i class="fas fa-ticket-alt me-1"></i> Separate tickets booked together for cheaper
-                        price
+                        <i class="fas fa-ticket-alt me-1"></i> Last Ticket Date : {{ $flight['lastTicketingDate'] }}
                     </div>
                     <div class="me-4">
-                        <i class="fas fa-plane-arrival me-1"></i> Change of Terminal
+                        <i class="fa-solid fa-suitcase-rolling me-1"></i> Checked Bags : {{
+                        $flight['travelerPricings'][0]['fareDetailsBySegment'][0]['includedCheckedBags']['quantity'] ??
+                        0
+                        }}
                     </div>
-                    <div class="me-4">
+                    {{-- <div class="me-4">
                         <i class="fas fa-exchange-alt me-1"></i> Self Transfer
-                    </div>
+                    </div> --}}
                     <div>
-                        <i class="fas fa-suitcase-rolling me-1"></i> 7kg
+                        <i class="fas fa-suitcase-rolling me-1"></i> Cabin Bags : {{
+                        $flight['travelerPricings'][0]['fareDetailsBySegment'][0]['includedCabinBags']['quantity'] ?? 0
+                        }}
                     </div>
                 </div>
             </div>
@@ -1650,60 +1671,35 @@
             </div>
         </div><!-- banner-container -->
         @empty
+
         <div class="container">
             <div class="result-container">
-                <div class="row g-0">
-                    <div class="col-md-6 bg-light-blue">
-                        <!-- Chat bubble icon -->
-                        <div class="agent-chat">
-                            <div class="lines">
-                                <div class="line" style="width: 80%;"></div>
-                                <div class="line" style="width: 60%;"></div>
-                                <div class="line" style="width: 70%;"></div>
-                            </div>
-                        </div>
 
-                        <!-- Agent illustration -->
-                        <div class="agent-figure">
-                            <!-- Coffee cup -->
-                            <div class="coffee-cup">
-                                <svg viewBox="0 0 50 60" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M10,15 L40,15 L38,50 C38,52.76 35.76,55 33,55 L17,55 C14.24,55 12,52.76 12,50 L10,15"
-                                        fill="#0099cc" />
-                                    <path d="M5,15 L45,15 L45,20 L5,20 L5,15" fill="#007bff" />
-                                    <path d="M40,20 C45,20 48,17 48,13 L48,10 L42,10 L42,13 C42,15 41,15 40,15"
-                                        fill="#0099cc" />
-                                </svg>
-                            </div>
 
-                            <!-- Agent with laptop image -->
-                            <img src="https://cdn.jsdelivr.net/gh/placeholder-app/placeholder@master/agent-laptop.svg"
-                                alt="Customer service agent" class="agent-image">
-                        </div>
-                    </div>
-                    <div class="col-md-6 content-section">
-                        <h1 class="result-heading">No Result Found. Don't Worry!</h1>
-                        <p class="description">Our agents can help you out. Call us to find our best flights to meet
-                            your travel
-                            requirements.</p>
+                <div class="content-section">
+                    <h1 class="result-heading d-block">No Result Found. Don't Worry!</h1>
+                    <p class="description d-block">Our agents can help you out. Call us to find our best flights
+                        to
+                        meet
+                        your travel
+                        requirements.</p>
 
-                        <div class="text-center">
-                            <p class="mb-2">Call us now at</p>
-                            <a href="tel:+12163022732" class="call-button">
-                                <i class="bi bi-telephone-fill me-2"></i> +1-216-302-2732
-                            </a>
-                            <p class="availability">we are available 24x7</p>
+                    <div class="justify-content-end">
+                        <p class="mb-2" style="padding-right: 80px;">Call us now at</p>
+                        <a href="tel:+12163022732" class="call-button" style="width: 250px; padding-right: 50px;">
+                            <i class="bi bi-telephone-fill me-2"></i> +1-216-302-2732
+                        </a>
+                        <p class="availability" style="padding-right: 50px;">we are available 24x7</p>
 
-                            <div class="discount-section">
-                                <p class="discount-text mb-0">Up to</p>
-                                <p class="discount-value">15% Discount</p>
-                                <p>on total value awaits!!</p>
-                            </div>
+                        <div class="discount-section">
+                            <p class="discount-text mb-0" style="padding-right: 100px;">Up to</p>
+                            <p class="discount-value">15% Discount</p>
+                            <p style="padding-right: 50px;">on total value awaits!!</p>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         @endforelse
 
@@ -1996,6 +1992,9 @@
             }
             });
             });
+
+
+
         });
 
 

@@ -13,16 +13,22 @@ return new class extends Migration
     {
         Schema::create('airports', function (Blueprint $table) {
             $table->id();
-            $table->string('iata_code', 3)->unique();        // رمز المطار (مثل JFK, DXB)
-            $table->string('name');                          // اسم المطار
-            $table->string('city');                          // اسم المدينة
-            $table->string('country')->nullable();           // اسم الدولة
-            $table->string('country_code', 2)->nullable();   // رمز الدولة
-            $table->decimal('latitude', 10, 7)->nullable();  // خط العرض
-            $table->decimal('longitude', 10, 7)->nullable(); // خط الطول
+            $table->string('iata_code', 3)->unique()->index();
+            $table->string('name');
+            $table->string('city');
+            $table->string('country_code', 2);
+            $table->string('country_name');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->string('timezone')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->dateTime('last_updated');
+            $table->json('raw_data')->nullable();
             $table->timestamps();
 
-            $table->index('iata_code');
+// إنشاء فهارس للتسريع
+            $table->index('city');
+            $table->index('country_code');
 
         });
     }

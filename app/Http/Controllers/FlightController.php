@@ -536,61 +536,6 @@ class FlightController extends Controller
 
     }
 
-    private function getOrCreateAirportCity($iataCode)
-    {
-        // البحث أولاً في قاعدة البيانات المحلية
-        $airport = \App\Models\Airport::where('iata_code', $iataCode)->first();
-
-        if ($airport) {
-            return $airport->city;
-        }
-
-        // إذا لم يكن موجودًا، قم بالبحث عبر API وأضفه إلى قاعدة البيانات
-        $token = $this->get_token();
-        $curl  = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL            => 'https://test.api.amadeus.com/v1/reference-data/locations?subType=AIRPORT&keyword=' . $iataCode,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING       => '',
-            CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_TIMEOUT        => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST  => 'GET',
-            CURLOPT_HTTPHEADER     => [
-                'Authorization: Bearer ' . $token . '',
-            ],
-        ]);
-
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $result = json_decode($response, true);
-
-        // if (isset($result['data'][0])) {
-        //     $airportData = $result['data'][0];
-
-        //     // إضافة مطار جديد
-        //     \App\Models\Airport::create([
-        //         'iata_code'    => $airportData['iataCode'],
-        //         'name'         => $airportData['name'],
-        //         'city'         => $airportData['address']['cityName'] ?? null,
-        //         'country'      => $airportData['address']['countryName'] ?? null,
-        //         'country_code' => $airportData['address']['countryCode'] ?? null,
-        //         'latitude'     => $airportData['geoCode']['latitude'] ?? null,
-        //         'longitude'    => $airportData['geoCode']['longitude'] ?? null,
-        //     ]);
-
-        //     return $airportData['address']['cityName'] ?? 'Unknown';
-        // }
-
-        return 'Unknown';
-    }
-
     public function search_city()
     {
         $token = $this->get_token();
