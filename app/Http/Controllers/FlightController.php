@@ -5,8 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\MyTestMail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Monarobase\CountryList\CountryList;
 use Rinvex\Country\CountryLoader;
@@ -148,13 +148,13 @@ class FlightController extends Controller
 
             if (! empty($airports['data'][0])) {
                 return [
-                    'name'    => $airports['data'][0]['name'] ?? 'غير معروف',
-                    'city'    => $airports['data'][0]['address']['cityName'] ?? 'غير معروف',
-                    'country' => $airports['data'][0]['address']['countryName'] ?? 'غير معروف',
+                    'name'    => $airports['data'][0]['name'] ?? 'Unknown',
+                    'city'    => $airports['data'][0]['address']['cityName'] ?? 'Unknown',
+                    'country' => $airports['data'][0]['address']['countryName'] ?? 'Unknown',
                 ];
             }
 
-            return ['name' => 'غير معروف', 'city' => 'غير معروف', 'country' => 'غير معروف'];
+            return ['name' => 'Unknown', 'city' => 'Unknown', 'country' => 'Unknown'];
         });
     }
 
@@ -186,12 +186,12 @@ class FlightController extends Controller
 
             if (! empty($airlines['data'][0])) {
                 return [
-                    'name' => $airlines['data'][0]['businessName'] ?? $airlines['data'][0]['commonName'] ?? 'غير معروف',
+                    'name' => $airlines['data'][0]['businessName'] ?? $airlines['data'][0]['commonName'] ?? 'Unknown',
                     'code' => $carrierCode,
                 ];
             }
 
-            return ['name' => 'غير معروف', 'code' => $carrierCode];
+            return ['name' => 'Unknown', 'code' => $carrierCode];
         });
     }
 
@@ -206,7 +206,70 @@ class FlightController extends Controller
         // // dd($returnDate);
         // // $returnDate    = $request->has('returnDate') ? Carbon::parse($request->returnDate)->format('Y-m-d') : null;
 
+        $validatedData = $request->validate([
+            'origin_city'      => 'required',
+            'destination_city' => 'required',
+            'departureDate'    => 'required|date',
+            'returnDate'       => 'nullable|date',
+            'adults'           => 'required|integer|min:1',
+            'children'         => 'nullable|integer',
+            'held_infants'     => 'nullable|integer',
+            'infants'          => 'nullable|integer',
+            'tripType'         => 'required|in:oneWay,roundTrip',
+
+        ]);
+
+        // إضافة تخزين مؤقت للنتائج - بداية التعديل
+        $cacheKey = 'flight_search_' . md5(json_encode([
+            'origin_city'      => $request->input('origin_city'),
+            'destination_city' => $request->input('destination_city'),
+            'departureDate'    => $request->input('departureDate'),
+            'returnDate'       => $request->input('returnDate'),
+            'adults'           => $request->input('adults', 1),
+            'cabin'            => $request->input('cabin', 'ECONOMY'),
+            'tripType'         => $request->input('tripType', 'oneWay'),
+            'airlines'         => $request->input('airlines', []),
+            'stops'            => $request->input('stops', []),
+            'departureTime'    => $request->input('departureTime', []),
+            'arrivalTime'      => $request->input('arrivalTime', [])
+        ]));
+
+        $cacheDuration = 30; // مدة التخزين المؤقت بالدقائق
+
+        // إذا كان طلب AJAX وكان هناك بيانات مخزنة
+        if (Cache::has($cacheKey) && ! $request->has('refresh_cache')) {
+            $cachedData = Cache::get($cacheKey);
+
+            if ($request->ajax()) {
+                $offset = (int) $request->input('offset', 0);
+                $limit  = (int) $request->input('limit', 10);
+
+                $paginatedFlights = collect($cachedData['flightsCollection'])->slice($offset, $limit);
+                $hasMore          = collect($cachedData['flightsCollection'])->count() > ($offset + $limit);
+
+                return response()->json([
+                    'html'    => view('flights.partials.flight_results', [
+                        'flightOffers' => $paginatedFlights,
+                        'flightData'   => $cachedData['flightData'],
+                    ])->render(),
+                    'hasMore' => $hasMore,
+                    'cached'  => true,
+                ]);
+            }
+
+            return view('flights.new-flight', [
+                'flightsArraySubset' => collect($cachedData['flightsCollection'])->slice(0, 10),
+                'flightData'         => $cachedData['flightData'],
+                'totalResults'       => collect($cachedData['flightsCollection'])->count(),
+                'cached'             => true,
+            ]);
+        }
+
         if ($request->has('origin_city') && $request->has('destination_city')) {
+            $totalChildren    = $request->input('children', 0);
+            $totalHeldInfants = $request->input('held_infants', 0);
+            $totalTravelers   = $request->adults + $totalChildren + $totalHeldInfants;
+
             session([
                 'flight_search' => [
                     'origin_city'           => $request->origin_city,
@@ -216,11 +279,15 @@ class FlightController extends Controller
                     'departureDate'         => $request->departureDate,
                     'returnDate'            => $request->returnDate,
                     'adults'                => $request->adults,
+                    'children'              => $totalChildren,
+                    'held_infants'          => $totalHeldInfants,
+                    'total_travelers'       => $totalTravelers,
                     'cabin'                 => $request->input('cabin', 'ECONOMY'),
                     'tripType'              => $request->input('tripType', 'oneWay'),
                 ],
             ]);
         }
+        //  dd(session('flight_search'));
 
         $searchData = session('flight_search', []);
 
@@ -244,18 +311,207 @@ class FlightController extends Controller
 
         $token = $this->get_token();
         // dd($token);
-        $travelers = "";
-        for ($i = 1; $i <= $adults; $i++) {
-            $travelers .= '
-                {
-                    "id": "' . $i . '",
-                    "travelerType": "ADULT",
-                    "fareOptions": [
-                        "STANDARD"
-                    ]
-                }' . (($i != $adults) ? ',' : '') . '
-            ';
+        // حساب إجمالي المسافرين
+        // إضافة متغيرات للتحقق من عدد المسافرين
+//         $totalAdults        = $request->input('adults', 1);
+//         $totalChildren      = $request->input('children', 0);
+//         $totalHeldInfants   = $request->input('held_infants', 0);
+//         $totalInfants = $request->input('infants', 0);
+
+//         $totalTravelers = $totalAdults + $totalChildren + $totalHeldInfants + $totalInfants;
+
+//         $travelers     = [];
+//         $travelerCount = 0;
+
+// // المسافرون البالغون
+//         for ($i = 1; $i <= $totalAdults; $i++) {
+//             $travelers[] = [
+//                 "id"           => (string) $i,
+//                 "travelerType" => "ADULT",
+//                 "fareOptions"  => ["STANDARD"],
+//             ];
+//             $travelerCount++;
+//         }
+
+// // الأطفال
+//         for ($i = 1; $i <= $totalChildren; $i++) {
+//             $travelers[] = [
+//                 "id"           => (string) ($travelerCount + $i),
+//                 "travelerType" => "CHILD",
+//                 "fareOptions"  => ["STANDARD"],
+//             ];
+//             $travelerCount++;
+//         }
+
+// // الرضع المحمولين
+//         for ($i = 1; $i <= $totalHeldInfants; $i++) {
+//             $travelers[] = [
+//                 "id"                => (string) ($travelerCount + $i),
+//                 "travelerType"      => "HELD_INFANT",
+//                 "associatedAdultId" => "1",
+//                 "fareOptions"       => ["STANDARD"],
+//             ];
+//         }
+
+// // الرضع الجالسين
+//         for ($i = 1; $i <= $totalInfants; $i++) {
+//             $travelers[] = [
+//                 "id"                => (string) ($travelerCount + $totalHeldInfants + $i),
+//                 "travelerType"      => "SEATED_INFANT",
+//                 "associatedAdultId" => "1",
+//                 "fareOptions"       => ["STANDARD"],
+//             ];
+//         }
+
+// // تحويل المصفوفة إلى JSON
+//         $travelers_json = json_encode($travelers);
+
+//         $request->merge([
+//             'travelers_json' => $travelers_json,
+//         ]);
+
+        // $travelers = "";
+        // for ($i = 1; $i <= $adults; $i++) {
+        //     $travelers .= '
+        //         {
+        //             "id": "' . $i . '",
+        //             "travelerType": "ADULT",
+        //             "fareOptions": [
+        //                 "STANDARD"
+        //             ]
+        //         }' . (($i != $adults) ? ',' : '') . '
+        //     ';
+        // }
+
+        // جمع بيانات المسافرين
+        $totalAdults      = $request->input('adults', 1);
+        $totalChildren    = $request->input('children', 0);
+        $totalHeldInfants = $request->input('held_infants', 0);
+        // $totalInfants = $request->input('infants', 0);
+
+// إنشاء مصفوفة المسافرين
+        $travelers     = [];
+        $travelerCount = 0;
+
+// المسافرون البالغون
+        for ($i = 1; $i <= $totalAdults; $i++) {
+            $travelers[] = [
+                "id"           => (string) $i,
+                "travelerType" => "ADULT",
+                "fareOptions"  => ["STANDARD"],
+            ];
+            $travelerCount++;
         }
+
+// الأطفال
+        for ($i = 1; $i <= $totalChildren; $i++) {
+            $travelers[] = [
+                "id"           => (string) ($travelerCount + $i),
+                "travelerType" => "CHILD",
+                "fareOptions"  => ["STANDARD"],
+            ];
+            $travelerCount++;
+        }
+
+        $heldInfantsCount = min($totalHeldInfants, $totalAdults);
+
+// الرضع المحمولين
+        for ($i = 1; $i <= $heldInfantsCount; $i++) {
+            $associatedAdultId = (string) (($i - 1) % $totalAdults + 1);
+
+            $travelers[] = [
+                "id"                => (string) ($travelerCount + $i),
+                "travelerType"      => "HELD_INFANT",
+                "associatedAdultId" => $associatedAdultId,
+                "fareOptions"       => ["STANDARD"],
+                "seatRequired"      => false,
+            ];
+            $travelerCount++;
+        }
+
+// الرضع الجالسين
+        // for ($i = 1; $i <= $InfantsCount; $i++) {
+        //     $associatedAdultId = (string) (($i - 1) % $totalAdults + 1);
+
+        //     $travelers[] = [
+        //         "id"                => (string) ($travelerCount + $i),
+        //         "travelerType"      => "INFANT",
+        //         "associatedAdultId" => $associatedAdultId,
+        //         "fareOptions"       => ["STANDARD"],
+        //         "seatRequired"      => true,
+        //     ];
+        //     $travelerCount++;
+
+        // }
+
+// تحويل إلى JSON بدون الأقواس الخارجية
+        $travelers_json = json_encode($travelers);
+        $travelers_json = substr($travelers_json, 1, -1);
+
+// // جمع بيانات المسافرين
+//         $totalAdults        = $request->input('adults', 1);
+//         $totalChildren      = $request->input('children', 0);
+//         $totalHeldInfants   = $request->input('held_infants', 0);
+//         $totalInfants = $request->input('infants', 0);
+
+// // إنشاء مصفوفة المسافرين
+//         $travelers     = [];
+//         $travelerCount = 0;
+
+// // المسافرون البالغون
+//         for ($i = 1; $i <= $totalAdults; $i++) {
+//             $travelers[] = [
+//                 "id"           => (string) $i,
+//                 "travelerType" => "ADULT",
+//                 "fareOptions"  => ["STANDARD"],
+//             ];
+//             $travelerCount++;
+//         }
+
+// // الأطفال
+//         for ($i = 1; $i <= $totalChildren; $i++) {
+//             $travelers[] = [
+//                 "id"           => (string) ($travelerCount + $i),
+//                 "travelerType" => "CHILD",
+//                 "fareOptions"  => ["STANDARD"],
+//             ];
+//             $travelerCount++;
+//         }
+
+// // التأكد من أن عدد الرضع المحمولين لا يتجاوز عدد البالغين (قيود شركات الطيران)
+//         $heldInfantsCount = min($totalHeldInfants, $totalAdults);
+
+// // الرضع المحمولين - توزيعهم بالتساوي على البالغين
+//         for ($i = 1; $i <= $heldInfantsCount; $i++) {
+//             // التوزيع المتساوي - كل رضيع مرتبط ببالغ
+//             $associatedAdultId = (string) (($i - 1) % $totalAdults + 1);
+
+//             $travelers[] = [
+//                 "id"                => (string) ($travelerCount + $i),
+//                 "travelerType"      => "HELD_INFANT",
+//                 "associatedAdultId" => $associatedAdultId, // ربط كل رضيع ببالغ محدد
+//                 "fareOptions"       => ["STANDARD"],
+//             ];
+//             $travelerCount++;
+//         }
+
+// // الرضع الجالسين - يمكن توزيعهم بالتساوي أيضاً
+//         for ($i = 1; $i <= $totalInfants; $i++) {
+//             // التوزيع المتساوي - كل رضيع مرتبط ببالغ
+//             $associatedAdultId = (string) (($i - 1) % $totalAdults + 1);
+
+//             $travelers[] = [
+//                 "id"                => (string) ($travelerCount + $i),
+//                 "travelerType"      => "SEATED_INFANT",
+//                 "associatedAdultId" => $associatedAdultId, // ربط كل رضيع ببالغ محدد
+//                 "fareOptions"       => ["STANDARD"],
+//             ];
+//             $travelerCount++;
+//         }
+
+// // تحويل إلى JSON بدون الأقواس الخارجية
+//         $travelers_json = json_encode($travelers);
+//         $travelers_json = substr($travelers_json, 1, -1);
 
         $orign_location = '
             {
@@ -302,7 +558,7 @@ class FlightController extends Controller
                     ' . $orign_location . '
                 ],
                 "travelers": [
-                    ' . $travelers . '
+                    ' . $travelers_json . '
                 ],
                 "sources": [
                     "GDS"
@@ -397,6 +653,7 @@ class FlightController extends Controller
         }
 
 // إزالة الرموز المكررة
+
 //         $allAirportCodes = array_unique($allAirportCodes);
 
 // // الحصول على معلومات المطارات من قاعدة البيانات
@@ -412,6 +669,7 @@ class FlightController extends Controller
 //         }
 
         // dd($flightsArray);
+
         $flightData = [
             'originCityName'      => $request->input('origin_city'),
             'originCity'          => $request->input('origin_city_name'),
@@ -425,50 +683,31 @@ class FlightController extends Controller
 
 // Convert array to collection
 
-        $flightsCollection = collect($flightsArray);
+        // تقسيم معالجة البيانات - بداية التعديل
+// تحويل المصفوفة إلى Collection وتقسيمها إلى دفعات صغيرة لتحسين الأداء
+        $flightsCollection = collect();
+        $chunkSize         = 50; // حجم الدفعة
 
-        $flightsCollection = $flightsCollection->map(function ($flightOffer) {
-            // Outbound flight
+// تقسيم البيانات إلى مجموعات للمعالجة
+        foreach (collect($flightsArray)->chunk($chunkSize) as $index => $chunk) {
+            // تسجيل الوقت للتشخيص
+            $startTime = microtime(true);
 
-            $outboundStops = isset($flightOffer['itineraries'][0]['segments'])
-            ? count($flightOffer['itineraries'][0]['segments']) - 1
-            : 0;
-            $flightOffer['outbound_stops_text'] = $outboundStops == 0 ? "0" : "$outboundStops";
+            // معالجة كل دفعة من البيانات
+            $processedChunk = $chunk->map(function ($flightOffer) {
+                // Outbound flight
+                $outboundStops = isset($flightOffer['itineraries'][0]['segments'])
+                ? count($flightOffer['itineraries'][0]['segments']) - 1
+                : 0;
+                $flightOffer['outbound_stops_text'] = $outboundStops == 0 ? "0" : "$outboundStops";
 
-            // إضافة معلومات الخطوط الجوية لكل جزء من الرحلة
-            $flightOffer['segments_info'] = [];
-            foreach ($flightOffer['itineraries'][0]['segments'] as $segment) {
-                $carrierCode = $segment['carrierCode'];
-                $airlineInfo = $this->get_airline_info($carrierCode);
-
-                $flightOffer['segments_info'][] = [
-                    'carrierCode'  => $carrierCode,
-                    'airline_info' => $airlineInfo,
-                    'departure'    => [
-                        'iataCode' => $segment['departure']['iataCode'],
-                        'at'       => $segment['departure']['at'],
-                    ],
-                    'arrival'      => [
-                        'iataCode' => $segment['arrival']['iataCode'],
-                        'at'       => $segment['arrival']['at'],
-                    ],
-                    'flightNumber' => $segment['number'],
-                    'duration'     => $segment['duration'] ?? null,
-                ];
-            }
-
-            // رحلة العودة (إذا كانت موجودة)
-            if (isset($flightOffer['itineraries'][1]) && isset($flightOffer['itineraries'][1]['segments'])) {
-                $inboundStops                      = count($flightOffer['itineraries'][1]['segments']) - 1;
-                $flightOffer['inbound_stops_text'] = $inboundStops == 0 ? "0" : "$inboundStops";
-
-                // إضافة معلومات الخطوط الجوية لرحلة العودة
-                $flightOffer['return_segments_info'] = [];
-                foreach ($flightOffer['itineraries'][1]['segments'] as $segment) {
+                // إضافة معلومات الخطوط الجوية لكل جزء من الرحلة
+                $flightOffer['segments_info'] = [];
+                foreach ($flightOffer['itineraries'][0]['segments'] as $segment) {
                     $carrierCode = $segment['carrierCode'];
                     $airlineInfo = $this->get_airline_info($carrierCode);
 
-                    $flightOffer['return_segments_info'][] = [
+                    $flightOffer['segments_info'][] = [
                         'carrierCode'  => $carrierCode,
                         'airline_info' => $airlineInfo,
                         'departure'    => [
@@ -483,58 +722,229 @@ class FlightController extends Controller
                         'duration'     => $segment['duration'] ?? null,
                     ];
                 }
-            }
 
-            return $flightOffer;
-        });
+                // رحلة العودة (إذا كانت موجودة)
+                if (isset($flightOffer['itineraries'][1]) && isset($flightOffer['itineraries'][1]['segments'])) {
+                    $inboundStops                      = count($flightOffer['itineraries'][1]['segments']) - 1;
+                    $flightOffer['inbound_stops_text'] = $inboundStops == 0 ? "0" : "$inboundStops";
+
+                    // إضافة معلومات الخطوط الجوية لرحلة العودة
+                    $flightOffer['return_segments_info'] = [];
+                    foreach ($flightOffer['itineraries'][1]['segments'] as $segment) {
+                        $carrierCode = $segment['carrierCode'];
+                        $airlineInfo = $this->get_airline_info($carrierCode);
+
+                        $flightOffer['return_segments_info'][] = [
+                            'carrierCode'  => $carrierCode,
+                            'airline_info' => $airlineInfo,
+                            'departure'    => [
+                                'iataCode' => $segment['departure']['iataCode'],
+                                'at'       => $segment['departure']['at'],
+                            ],
+                            'arrival'      => [
+                                'iataCode' => $segment['arrival']['iataCode'],
+                                'at'       => $segment['arrival']['at'],
+                            ],
+                            'flightNumber' => $segment['number'],
+                            'duration'     => $segment['duration'] ?? null,
+                        ];
+                    }
+                }
+
+                return $flightOffer;
+            });
+
+            // إضافة النتائج المعالجة إلى المجموعة الرئيسية
+            $flightsCollection = $flightsCollection->concat($processedChunk);
+
+            // تسجيل وقت المعالجة للتشخيص
+            $processingTime = microtime(true) - $startTime;
+            Log::info("Processed chunk {$index} ({$chunk->count()} items) in {$processingTime} seconds");
+        }
 
         // dd($flightData);
-
-        // تطبيق الفلاتر
-        if ($request->has('stops')) {
-            $stops             = array_map('intval', $request->stops);
-            $flightsCollection = $flightsCollection->filter(function ($flight) use ($stops) {
-                $maxStops = max($flight['outbound_stops'], $flight['inbound_stops'] ?? 0);
-                return in_array($maxStops, $stops);
+// Filter by airlines if specified
+        if ($request->has('airlines') && is_array($request->airlines) && count($request->airlines) > 0) {
+            $flightsCollection = $flightsCollection->filter(function ($flight) use ($request) {
+                if (isset($flight['segments_info'][0]['airline_info']['name']) &&
+                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN') {
+                    return in_array($flight['segments_info'][0]['airline_info']['name'], $request->airlines);
+                } else {
+                    return in_array($flight['validatingAirlineCodes'][0] ?? 'Unknown Airline', $request->airlines);
+                }
             });
         }
 
-        if ($request->has('departureTime')) {
+        // Filter by stops if specified
+        if ($request->has('stops') && is_array($request->stops) && count($request->stops) > 0) {
+            $flightsCollection = $flightsCollection->filter(function ($flight) use ($request) {
+                $outboundStops = isset($flight['outbound_stops_text'])
+                ? $flight['outbound_stops_text']
+                : (isset($flight['itineraries'][0]['segments']) ? (count($flight['itineraries'][0]['segments']) - 1) : '0');
+
+                // For inbound (return) flights if they exist
+                $inboundStops = 0;
+                if (isset($flight['itineraries'][1]) && isset($flight['itineraries'][1]['segments'])) {
+                    $inboundStops = isset($flight['inbound_stops_text'])
+                    ? $flight['inbound_stops_text']
+                    : (count($flight['itineraries'][1]['segments']) - 1);
+                }
+
+                return in_array($outboundStops, $request->stops) || in_array($inboundStops, $request->stops);
+            });
+        }
+
+        // Filter by departure time if specified
+        if ($request->has('departureTime') && is_array($request->departureTime) && count($request->departureTime) == 2) {
             $departureRange    = $request->departureTime;
             $flightsCollection = $flightsCollection->filter(function ($flight) use ($departureRange) {
-                $departureTime = (int) Carbon::parse($flight['itineraries'][0]['segments'][0]['departure']['at'])->format('Hi');
-                return $departureTime >= $departureRange[0] && $departureTime <= $departureRange[1];
+                $departureDateTime = Carbon::parse($flight['itineraries'][0]['segments'][0]['departure']['at']);
+                $departureMinutes  = $departureDateTime->hour * 60 + $departureDateTime->minute;
+                return $departureMinutes >= $departureRange[0] && $departureMinutes <= $departureRange[1];
             });
         }
 
-        if ($request->has('arrivalTime')) {
+        // Filter by arrival time if specified
+        if ($request->has('arrivalTime') && is_array($request->arrivalTime) && count($request->arrivalTime) == 2) {
             $arrivalRange      = $request->arrivalTime;
             $flightsCollection = $flightsCollection->filter(function ($flight) use ($arrivalRange) {
-                $arrivalTime = (int) Carbon::parse(end($flight['itineraries'][0]['segments'])['arrival']['at'])->format('Hi');
-                return $arrivalTime >= $arrivalRange[0] && $arrivalTime <= $arrivalRange[1];
+                $lastSegmentIndex = count($flight['itineraries'][0]['segments']) - 1;
+                $arrivalDateTime  = Carbon::parse($flight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at']);
+                $arrivalMinutes   = $arrivalDateTime->hour * 60 + $arrivalDateTime->minute;
+                return $arrivalMinutes >= $arrivalRange[0] && $arrivalMinutes <= $arrivalRange[1];
             });
         }
+// تخزين النتائج في ذاكرة التخزين المؤقت - بداية التعديل
+        $cacheData = [
+            'flightsCollection' => $flightsCollection->toArray(),
+            'flightData'        => $flightData,
+        ];
 
-        // إعداد الترقيم اليدوي
-        // Pagination مع الحفاظ على معلمات الفلتر
-        $perPage     = 20;
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $pagedData   = $flightsCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        Cache::put($cacheKey, $cacheData, $cacheDuration * 60); // تخزين البيانات لمدة محددة بالثواني
+                                                                // نهاية تعديل التخزين المؤقت
 
-        $flightOffers = new LengthAwarePaginator(
-            $pagedData,
-            $flightsCollection->count(),
-            $perPage,
-            $currentPage,
-            [
-                'path'  => LengthAwarePaginator::resolveCurrentPath(),
-                'query' => $request->query(),
-            ]
-        );
+// للطلبات AJAX، قم بإرجاع عرض جزئي أو استجابة JSON
+        if ($request->ajax()) {
+            try {
+                $offset = (int) $request->input('offset', 0);
+                $limit  = (int) $request->input('limit', 10);
 
-        return view('flights.new-flight', compact('flightOffers', 'flightData'));
+                // استخدام مجموعة البيانات التي تم تصفيتها
+                $paginatedFlights = $flightsCollection->slice($offset, $limit);
+
+                // التحقق مما إذا كان هناك المزيد من النتائج
+                $hasMore = $flightsCollection->count() > ($offset + $limit);
+
+                if ($paginatedFlights->isEmpty()) {
+                    return response()->json([
+                        'html'    => view('flights.partials.no_flights_found')->render(),
+                        'hasMore' => false,
+                    ]);
+                }
+
+                // إرجاع البيانات كاستجابة JSON
+                return response()->json([
+                    'html'    => view('flights.flight-results', [
+                        'flightOffers' => $paginatedFlights,
+                        'flightData'   => $flightData,
+                    ])->render(),
+                    'hasMore' => $hasMore,
+                ]);
+            } catch (\Exception $e) {
+                // تسجيل الخطأ للتصحيح
+                Log::error('Flight search error: ' . $e->getMessage());
+
+                return response()->json(['error' => 'Internal Server Error: ' . $e->getMessage()], 500);
+            }
+        }
+
+// للطلبات العادية، عرض الصفحة الكاملة
+        return view('flights.new-flight', [
+            'flightsArraySubset' => $flightsCollection->slice(0, 10),
+            'flightData'         => $flightData,
+            'totalResults'       => $flightsCollection->count(),
+            'searchData'         => $searchData,
+
+        ]);
+
+        // // For AJAX requests, return partial view or JSON response
+        // if ($request->ajax()) {
+        //     $html = view('flights.partials.flight-results', compact('flightOffers', 'flightData'))->render();
+        //     return response()->json(['html' => $html]);
+        // }
+
+        // return view('flights.new-flight', compact('flightsArraySubset', 'flightData'));
 
     }
+
+    // public function search_flight(Request $request)
+    // {
+    //     $request->validate([
+    //         'origin_city'      => 'required',
+    //         'destination_city' => 'required',
+    //         'departureDate'    => 'required|date',
+    //         'adults'           => 'required|integer|min:1',
+    //     ]);
+
+    //     $departureDate = Carbon::parse($request->departureDate)->format('Y-m-d');
+    //     $returnDate    = $request->returnDate ? Carbon::parse($request->returnDate)->format('Y-m-d') : null;
+
+    //     $token = $this->get_token();
+
+    //     $travelers = [];
+    //     for ($i = 1; $i <= $request->adults; $i++) {
+    //         $travelers[] = [
+    //             "id"           => (string) $i,
+    //             "travelerType" => "ADULT",
+    //             "fareOptions"  => ["STANDARD"],
+    //         ];
+    //     }
+
+    //     $originLocation = [
+    //         [
+    //             "id"                      => "1",
+    //             "originLocationCode"      => $request->origin_city,
+    //             "destinationLocationCode" => $request->destination_city,
+    //             "departureDateTimeRange"  => ["date" => $departureDate, "time" => "10:00:00"],
+    //         ],
+    //     ];
+
+    //     if ($request->tripType === 'roundTrip' && $returnDate) {
+    //         $originLocation[] = [
+    //             "id"                      => "2",
+    //             "originLocationCode"      => $request->destination_city,
+    //             "destinationLocationCode" => $request->origin_city,
+    //             "departureDateTimeRange"  => ["date" => $returnDate, "time" => "10:00:00"],
+    //         ];
+    //     }
+
+    //     $payload = [
+    //         "currencyCode"       => "USD",
+    //         "originDestinations" => $originLocation,
+    //         "travelers"          => $travelers,
+    //         "sources"            => ["GDS"],
+    //         "searchCriteria"     => [
+    //             "flightFilters" => [
+    //                 "cabinRestrictions" => [
+    //                     [
+    //                         "cabin"                => strtoupper($request->cabin),
+    //                         "coverage"             => "MOST_SEGMENTS",
+    //                         "originDestinationIds" => isset($returnDate) ? ["1", "2"] : ["1"],
+    //                     ],
+    //                 ],
+    //             ],
+    //         ],
+    //     ];
+
+    //     $response     = Http::withToken($token)->post('https://test.api.amadeus.com/v2/shopping/flight-offers', $payload);
+    //     $responseData = $response->json();
+
+    //     if (! isset($responseData['data'])) {
+    //         return response()->json(['error' => 'No flights found'], 404);
+    //     }
+
+    //     return response()->json($responseData['data']);
+    // }
 
     public function search_city()
     {

@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>موقع حجز رحلات طيران</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -67,7 +70,7 @@
         .popup-content {
             display: flex;
             flex-direction: row;
-            padding: 20px 0;
+
         }
 
         .popup-image {
@@ -81,7 +84,7 @@
 
         .popup-details {
             flex: 0 0 60%;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .popup-header {
@@ -741,11 +744,28 @@
             width: 50px;
             height: 60px;
         }
+
+        .airline-logo-img {
+            max-width: 50px;
+            max-height: 50px;
+            object-fit: contain;
+        }
+
+        .airline-logo-img.logo-error {
+            display: none;
+            /* إخفاء الصورة */
+        }
+
+        .airline-logo .airline-name {
+            display: inline-block;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 </head>
 
 <body>
-    {{-- @dd($flightOffers) --}}
+    {{-- @dd($flightsArraySubset) --}}
     <!-- Popup -->
     <div class="popup-overlay" id="specialFarePopup">
         <div class="popup-container">
@@ -753,9 +773,9 @@
             <div class="popup-content">
                 <div class="popup-image">
                     <div class="customer-service">
-                        <img src="https://via.placeholder.com/200x300" alt="Customer Service Representative"
+                        <img src="{{ asset('assets/images/pop-up-frame.webp') }}" alt="Customer Service Representative"
                             class="img-fluid">
-                        <div class="service-badge">24/7</div>
+                        {{-- <div class="service-badge">24/7</div> --}}
                     </div>
                 </div>
                 <div class="popup-details">
@@ -898,7 +918,7 @@
 
 
 
-        <form action="{{ route('flight.search') }}" method="POST" class="search-form">
+        <form class="search-form">
             @csrf
             <div class="radio-container">
                 <div class="form-check">
@@ -916,7 +936,7 @@
                 <div class="col-md-2">
                     <label for="origin_city"><i class="fas fa-plane-departure me-1"></i> From</label>
                     <input type="text" id="search1" class="form-select" placeholder="Enter City Name" autocomplete="off"
-                        value="{{ session('flight_search.origin_city_name', '') }}">
+                        value="{{ session('flight_search.origin_city_name', '') }}" readonly>
                     {{-- <input type="hidden" name="origin_city" value="">
                     <input type="hidden" name="origin_city_name" id="origin_city_name">
                     <div id="result1" style="width: 90%;"></div> --}}
@@ -924,7 +944,7 @@
                 <div class="col-md-2">
                     <label for="destination_city"><i class="fas fa-plane-arrival me-1"></i> To</label>
                     <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off" class="form-select"
-                        value="{{ session('flight_search.destination_city_name', '') }}">
+                        value="{{ session('flight_search.destination_city_name', '') }}" readonly>
                     {{-- <input type="hidden" name="destination_city" value="">
                     <input type="hidden" name="destination_city_name" id="destination_city_name">
                     <div id="result2" style="width: 90%;"></div> --}}
@@ -933,18 +953,19 @@
                 <div class="col-md-2">
                     <label for="departureDate"><i class="far fa-calendar-alt me-1"></i> Departure</label>
                     <input type="date" id="departureDate" name="departureDate" class="form-control"
-                        value="{{ session('flight_search.departureDate', '') }}">
+                        value="{{ session('flight_search.departureDate', '') }}" readonly>
                 </div>
                 @if (session('flight_search.tripType')=='roundTrip')
                 <div class="col-md-2">
                     <label for="returnDate"><i class="far fa-calendar-alt me-1"></i> Return</label>
-                    <input type="date" id="returnDate" name="returnDate" class="form-control">
+                    <input type="date" id="returnDate" name="returnDate" class="form-control"
+                        value="{{ session('flight_search.returnDate', '') }}" readonly>
                 </div>
                 @endif
 
                 <div class="col-md-2">
                     <label><i class="fas fa-user me-1"></i> Class</label>
-                    <select id="cabin" name="cabin" class="form-select">
+                    <select id="cabin" name="cabin" class="form-select" disabled>
                         <option value="ECONOMY" {{ session('flight_search.cabin')=='ECONOMY' ? 'selected' : '' }}>
                             Economy</option>
                         <option value="PREMIUM_ECONOMY" {{ session('flight_search.cabin')=='PREMIUM_ECONOMY'
@@ -960,8 +981,8 @@
                     <div class="dropdown">
                         <button class="form-control d-flex justify-content-between align-items-center dropdown-toggle"
                             type="button" id="travelersDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span id="totalTravelers">1</span>
-                            <i class="fas fa-chevron-down"></i>
+                            <span id="totalTravelers">{{ session('flight_search.total_travelers', 1) }}</span>
+                            {{-- <i class="fas fa-chevron-down"></i> --}}
                         </button>
                         <div class="dropdown-menu p-3" style="width: 300px;">
                             <div class="mb-3">
@@ -970,18 +991,20 @@
                                     <div class="d-flex align-items-center">
                                         <button type="button"
                                             class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="adults" data-action="decrease">
+                                            data-type="adults" data-action="decrease" disabled>
                                             <i class="fas fa-minus"></i>
                                         </button>
-                                        <span class="mx-3" id="adultsCount">1</span>
+                                        <span class="mx-3" id="adultsCount">{{ session('flight_search.adults', 1)
+                                            }}</span>
                                         <button type="button"
                                             class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="adults" data-action="increase">
+                                            data-type="adults" data-action="increase" disabled>
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
-                                <input type="hidden" name="adults" id="adultsInput" value="1">
+                                <input type="hidden" name="adults" id="adultsInput"
+                                    value="{{ session('flight_search.adults', 1) }}">
                             </div>
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -989,18 +1012,20 @@
                                     <div class="d-flex align-items-center">
                                         <button type="button"
                                             class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="children" data-action="decrease">
+                                            data-type="children" data-action="decrease" disabled>
                                             <i class="fas fa-minus"></i>
                                         </button>
-                                        <span class="mx-3" id="childrenCount">0</span>
+                                        <span class="mx-3" id="childrenCount">{{ session('flight_search.children', 0)
+                                            }}</span>
                                         <button type="button"
                                             class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="children" data-action="increase">
+                                            data-type="children" data-action="increase" disabled>
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
-                                <input type="hidden" name="children" id="childrenInput" value="0">
+                                <input type="hidden" name="children" id="childrenInput"
+                                    value="{{ session('flight_search.children', 0) }}">
                             </div>
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -1008,25 +1033,28 @@
                                     <div class="d-flex align-items-center">
                                         <button type="button"
                                             class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="infants" data-action="decrease">
+                                            data-type="held_infants" data-action="decrease" disabled>
                                             <i class="fas fa-minus"></i>
                                         </button>
-                                        <span class="mx-3" id="infantsCount">0</span>
+                                        <span class="mx-3" id="heldInfantsCount">{{
+                                            session('flight_search.held_infants', 0) }}</span>
                                         <button type="button"
                                             class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="infants" data-action="increase">
+                                            data-type="held_infants" data-action="increase" disabled>
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
-                                <input type="hidden" name="infants" id="infantsInput" value="0">
+                                <input type="hidden" name="held_infants" id="heldInfantsInput"
+                                    value="{{ session('flight_search.held_infants', 0) }}">
                             </div>
                         </div><!-- dropdown-menu -->
                     </div><!-- dropdown -->
                 </div>
                 <div
                     class="{{ session('flight_search.tripType')=='roundTrip' ? 'col-md-1' : 'col-md-2' }} d-flex align-items-end">
-                    <button class="search-button w-100">Modify search</button>
+                    <button class="search-button w-100"><a href="{{ route('index') }}"
+                            style="text-decoration: none; color: #fff;">Modify search</a></button>
                 </div>
             </div><!-- row -->
         </form>
@@ -1039,7 +1067,7 @@
         <div class="row">
             <!-- Filters Column -->
             <div class="col-md-3">
-                <div class="filter-card">
+                {{-- <div class="filter-card">
                     <div class="filter-title">Filter By</div>
 
                     <!-- Stop Filter -->
@@ -1132,44 +1160,64 @@
                         </div>
                     </div>
 
-                    <!-- Departure Airports Filter -->
+
+
+
+                    <!-- Filter Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-outline-secondary">Reset</button>
+                        <button class="btn btn-primary">Apply Filters</button>
+                    </div>
+                </div> --}}
+                <div class="filter-card">
+                    <div class="filter-title">Filter By</div>
+
+                    <!-- Stop Filter -->
                     <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Departure Airports</div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lcyLondon">
-                                <label class="form-check-label" for="lcyLondon">LCY, London (11)</label>
-                            </div>
+                        <div class="filter-subtitle mb-2">Stop</div>
+                        <div id="stops-filter">
+                            <!-- This will be populated dynamically by JavaScript -->
                         </div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lhrLondon">
-                                <label class="form-check-label" for="lhrLondon">LHR, London (19)</label>
+                    </div>
+
+                    <!-- Airlines Filter -->
+                    <div class="mb-4">
+                        <div class="filter-subtitle mb-2">Airlines</div>
+                        <div id="airlines-filter">
+                            <!-- This will be populated dynamically by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Departure Time Filter -->
+                    <div class="mb-4">
+                        <div class="filter-subtitle mb-2">Departure Time</div>
+                        <div class="time-slider-container">
+                            <div id="departure-time-slider-values" class="time-labels">
+                                <span>00:00 - 24:00</span>
+                            </div>
+                            <div id="departure-time-slider" class="time-slider">
+                                <!-- Slider will be initialized by jQuery UI -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- Arrival Airports Filter -->
+                    <!-- Arrival Time Filter -->
                     <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Arrival Airports</div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="nboNairobi">
-                                <label class="form-check-label" for="nboNairobi">NBO, Nairobi (32)</label>
+                        <div class="filter-subtitle mb-2">Arrival Time</div>
+                        <div class="time-slider-container">
+                            <div id="arrival-time-slider-values" class="time-labels">
+                                <span>00:00 - 24:00</span>
                             </div>
-                        </div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="wilNairobi">
-                                <label class="form-check-label" for="wilNairobi">WIL, Nairobi (21)</label>
+                            <div id="arrival-time-slider" class="time-slider">
+                                <!-- Slider will be initialized by jQuery UI -->
                             </div>
                         </div>
                     </div>
 
                     <!-- Filter Buttons -->
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-outline-secondary">Reset</button>
-                        <button class="btn btn-primary">Apply Filters</button>
+                        <button id="reset-filters" class="btn btn-outline-secondary">Reset</button>
+                        <button id="apply-filters" class="btn btn-primary">Apply Filters</button>
                     </div>
                 </div>
             </div>
@@ -1178,40 +1226,52 @@
             <div class="col-md-9">
 
                 {{-- @dd($flightOffers) --}}
-                @forelse ($flightOffers as $flight)
-                <!-- Flight Card -->
-                <div class="flight-card">
-                    <div class="flight-header">
-                        <div class="d-flex align-items-center">
-                            <div class="airline-logo">
-                                @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                <!-- If we have airline logo URL, we could use it here -->
-                                <i class="fas fa-plane text-primary"></i>
-                                @else
-                                <i class="fas fa-plane text-primary"></i>
-                                @endif
-                            </div>
-                            <div>
-                                @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                @else
-                                {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                @endif
-                            </div>
-                        </div>
-                        <div>Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ?? 'Economy' }}</span></div>
-                    </div><!-- flight-header -->
+                <div id="flight-results-container">
+                    @forelse ($flightsArraySubset as $flight)
+                    <!-- Flight Card -->
 
-                    <div class="row" style="box-sizing: border-box;">
-                        <div class="col-md-9" style="padding: 0 15px 0 25px;">
-                            <!-- OUTBOUND FLIGHT -->
-                            <div class="flight-details" style="border-bottom: 1px solid #eee;">
-                                <div class="row">
-                                    <!-- Departure Details -->
-                                    <div class="col-3">
-                                        <?php
+                    <div class="flight-card">
+                        <div class="flight-header">
+                            <div class="d-flex align-items-center">
+                                <div class="airline-logo">
+                                    @php
+                                    $airlineName = $flight['segments_info'][0]['airline_info']['name'] ?? 'UNKNOWN';
+
+                                    // استدعاء الدالة مباشرة بدون use
+                                    $logoUrl = \App\Services\AirlineLogoService::getLogoUrl($airlineName);
+                                    // dd($logoUrl);
+                                    // dd($flight['segments_info'][0]['airline_info']['name']);
+                                    $defaultLogo = \App\Services\AirlineLogoService::getDefaultLogo();
+                                    @endphp
+
+                                    @if($airlineName !== 'UNKNOWN')
+                                    <img src="{{ $logoUrl }}" alt="{{ $airlineName }} Logo" class="airline-logo-img"
+                                        onerror="this.onerror=null; this.src='{{ $defaultLogo }}';">
+                                    @else
+                                    <span class="airline-name">{{ $airlineName }}</span>
+                                    @endif
+                                </div>
+                                <div>
+                                    @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
+                                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                    {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                    @else
+                                    {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                    @endif
+                                </div>
+                            </div>
+                            <div>Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ?? 'Economy' }}</span>
+                            </div>
+                        </div><!-- flight-header -->
+
+                        <div class="row" style="box-sizing: border-box;">
+                            <div class="col-md-9" style="padding: 0 15px 0 25px;">
+                                <!-- OUTBOUND FLIGHT -->
+                                <div class="flight-details" style="border-bottom: 1px solid #eee;">
+                                    <div class="row">
+                                        <!-- Departure Details -->
+                                        <div class="col-3">
+                                            <?php
                                                             $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
                                                             $datetime = \Carbon\Carbon::parse($departureTime);
 
@@ -1231,15 +1291,15 @@
                                                                 $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                                             }
                                                         ?>
-                                        <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
-                                        <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                        <div class="flight-airport">{{ $cityName }}</div>
-                                        <div class="flight-airport">{{ $cityCode }}</div>
-                                    </div>
+                                            <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
+                                            <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
+                                            <div class="flight-airport">{{ $cityName }}</div>
+                                            <div class="flight-airport">{{ $cityCode }}</div>
+                                        </div>
 
-                                    <!-- Flight Duration -->
-                                    <div class="col-6 d-flex flex-column justify-content-center align-items-center">
-                                        <?php
+                                        <!-- Flight Duration -->
+                                        <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                                            <?php
                                                             if(isset($flight['itineraries'][0]['duration'])) {
                                                                 $duration = $flight['itineraries'][0]['duration'];
                                                                 // Convert PT2H30M format to 2h 30m
@@ -1253,60 +1313,61 @@
                                                             $outboundStops = isset($flight['outbound_stops_text']) ? $flight['outbound_stops_text'] :
                                                                             (isset($flight['itineraries'][0]['segments']) ? (count($flight['itineraries'][0]['segments']) - 1) : '0');
                                                         ?>
-                                        <div class="flight-duration">{{ $duration }}</div>
-                                        <div class="position-relative w-100 my-2">
-                                            <div class="border-top w-100"></div>
-                                            <i
-                                                class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
-                                        </div>
-                                        <div class="flight-duration">
-                                            @if($outboundStops > 0)
-                                            <div>{{ $outboundStops }} stop(s)</div>
-                                            <div class="mt-1">
-                                                <button
-                                                    class="btn btn-outline-primary rounded-circle outbound-stops-toggle"
-                                                    data-flight-id="{{ $flight['id'] }}"
-                                                    style="width: 28px; height: 28px; padding: 0;">
-                                                    <i class="fas fa-chevron-down"></i>
-                                                </button>
+                                            <div class="flight-duration">{{ $duration }}</div>
+                                            <div class="position-relative w-100 my-2">
+                                                <div class="border-top w-100"></div>
+                                                <i
+                                                    class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
                                             </div>
-                                            @else
-                                            Direct Flight
-                                            @endif
+                                            <div class="flight-duration">
+                                                @if($outboundStops > 0)
+                                                <div>{{ $outboundStops }} stop(s)</div>
+                                                <div class="mt-1">
+                                                    <button
+                                                        class="btn btn-outline-primary rounded-circle outbound-stops-toggle"
+                                                        data-flight-id="{{ $flight['id'] }}"
+                                                        style="width: 28px; height: 28px; padding: 0;">
+                                                        <i class="fas fa-chevron-down"></i>
+                                                    </button>
+                                                </div>
+                                                @else
+                                                Direct Flight
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Arrival Details -->
-                                    <div class="col-3 text-end">
-                                        <?php
+                                        <!-- Arrival Details -->
+                                        <div class="col-3 text-end">
+                                            <?php
                                                             $lastSegmentIndex = count($flight['itineraries'][0]['segments'] ?? []) - 1;
                                                             $arrivalTime = $flight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
                                                             $datetime = \Carbon\Carbon::parse($arrivalTime);
                                                         ?>
-                                        <div class="flight-time">{{ $datetime->format('H:i')}}</div>
-                                        <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                        <div class="flight-airport">{{ trim(explode("(",
-                                            explode(")", $flightData['destinationCity'] ?? '')[0] ?? '')[1] ?? '') }}
+                                            <div class="flight-time">{{ $datetime->format('H:i')}}</div>
+                                            <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
+                                            <div class="flight-airport">{{ trim(explode("(",
+                                                explode(")", $flightData['destinationCity'] ?? '')[0] ?? '')[1] ?? '')
+                                                }}
+                                            </div>
+                                            <div class="flight-airport">{{ trim(explode(",",
+                                                $flightData['destinationCity'] ?? '')[1] ?? '')
+                                                }}</div>
                                         </div>
-                                        <div class="flight-airport">{{ trim(explode(",",
-                                            $flightData['destinationCity'] ?? '')[1] ?? '')
-                                            }}</div>
                                     </div>
-                                </div>
-                            </div><!-- flight-details -->
+                                </div><!-- flight-details -->
 
-                            <!-- Outbound Stops Details (Initially Hidden) -->
-                            @if(isset($flight['itineraries'][0]['segments']) &&
-                            count($flight['itineraries'][0]['segments']) > 1)
-                            <div class="outbound-stops-details" id="outbound-stops-{{ $flight['id'] }}"
-                                style="display: none;">
-                                <div class="stops-details-container p-3 bg-light">
-                                    <h6 class="mb-3">Connection Details</h6>
+                                <!-- Outbound Stops Details (Initially Hidden) -->
+                                @if(isset($flight['itineraries'][0]['segments']) &&
+                                count($flight['itineraries'][0]['segments']) > 1)
+                                <div class="outbound-stops-details" id="outbound-stops-{{ $flight['id'] }}"
+                                    style="display: none;">
+                                    <div class="stops-details-container p-3 bg-light">
+                                        <h6 class="mb-3">Connection Details</h6>
 
-                                    @foreach($flight['itineraries'][0]['segments'] as $key => $segment)
-                                    @if($key < count($flight['itineraries'][0]['segments'])) <div
-                                        class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
-                                        <?php
+                                        @foreach($flight['itineraries'][0]['segments'] as $key => $segment)
+                                        @if($key < count($flight['itineraries'][0]['segments'])) <div
+                                            class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
+                                            <?php
                                                                         $departureAirport = $segment['departure']['iataCode'] ?? '';
                                                                         $departureTime = $segment['departure']['at'] ?? '';
                                                                         $departureDateTime = \Carbon\Carbon::parse($departureTime);
@@ -1324,42 +1385,42 @@
                                                                         }
                                                                     ?>
 
-                                        <!-- For outbound flights -->
-                                        @if($key > 0)
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span><i class="fas fa-clock text-warning me-1"></i> Connection time:
-                                                @if($connectionHours > 0){{ $connectionHours }}h @endif
-                                                {{ $connectionMinutes }}m at {{ $departureAirport }}
-                                            </span>
-                                            <span class="badge bg-secondary">
+                                            <!-- For outbound flights -->
+                                            @if($key > 0)
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><i class="fas fa-clock text-warning me-1"></i> Connection time:
+                                                    @if($connectionHours > 0){{ $connectionHours }}h @endif
+                                                    {{ $connectionMinutes }}m at {{ $departureAirport }}
+                                                </span>
+                                                <span class="badge bg-secondary">
 
-                                                @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                                $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                                {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                                @else
-                                                {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                                @endif
+                                                    @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
+                                                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                                    {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                                    @else
+                                                    {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                                    @endif
 
-                                            </span>
-                                        </div><!-- d-flex justify-content-between mb-2 -->
-                                        @else
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span><i class="fas fa-plane-departure text-success me-1"></i>
-                                                Departure</span>
-                                            <span class="badge bg-secondary">
-                                                @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                                $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                                {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                                @else
-                                                {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                                @endif
-                                            </span>
-                                        </div><!-- /d-flex justify-content-between mb-2 -->
-                                        @endif
+                                                </span>
+                                            </div><!-- d-flex justify-content-between mb-2 -->
+                                            @else
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><i class="fas fa-plane-departure text-success me-1"></i>
+                                                    Departure</span>
+                                                <span class="badge bg-secondary">
+                                                    @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
+                                                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                                    {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                                    @else
+                                                    {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                                    @endif
+                                                </span>
+                                            </div><!-- /d-flex justify-content-between mb-2 -->
+                                            @endif
 
-                                        <div class="row">
-                                            <div class="col-5">
-                                                <?php
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <?php
                                                                     $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
                                                                     $datetime = \Carbon\Carbon::parse($departureTime);
 
@@ -1379,42 +1440,46 @@
                                                                         $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                                                     }
                                                                 ?>
-                                                <div class="text-primary">{{ $departureDateTime->format('H:i') }}</div>
-                                                <div class="small">{{ $departureDateTime->translatedFormat('d M Y') }}
+                                                    <div class="text-primary">{{ $departureDateTime->format('H:i') }}
+                                                    </div>
+                                                    <div class="small">{{ $departureDateTime->translatedFormat('d M Y')
+                                                        }}
+                                                    </div>
+                                                    <div>{{ $departureAirport }}</div>
                                                 </div>
-                                                <div>{{ $departureAirport }}</div>
-                                            </div>
-                                            <div class="col-2 text-center d-flex flex-column justify-content-center">
-                                                <div class="small">{{ str_replace(['PT', 'H', 'M'], ['', 'h ', 'm'],
-                                                    $segment['duration'] ?? '') }}</div>
-                                                <div><i class="fas fa-arrow-right"></i></div>
-                                            </div>
-                                            <div class="col-5 text-end">
-                                                <div class="text-primary">{{ $arrivalDateTime->format('H:i') }}</div>
-                                                <div class="small">{{ $arrivalDateTime->translatedFormat('d M Y') }}
+                                                <div
+                                                    class="col-2 text-center d-flex flex-column justify-content-center">
+                                                    <div class="small">{{ str_replace(['PT', 'H', 'M'], ['', 'h ', 'm'],
+                                                        $segment['duration'] ?? '') }}</div>
+                                                    <div><i class="fas fa-arrow-right"></i></div>
                                                 </div>
-                                                <div>{{ $arrivalAirport }}</div>
-                                            </div>
-                                        </div><!-- row -->
+                                                <div class="col-5 text-end">
+                                                    <div class="text-primary">{{ $arrivalDateTime->format('H:i') }}
+                                                    </div>
+                                                    <div class="small">{{ $arrivalDateTime->translatedFormat('d M Y') }}
+                                                    </div>
+                                                    <div>{{ $arrivalAirport }}</div>
+                                                </div>
+                                            </div><!-- row -->
 
-                                </div><!-- stops-details-container -->
-                                @endif
+                                    </div><!-- stops-details-container -->
+                                    @endif
 
-                                @endforeach
-                                {{-- div div/div> --}}
-                                <!-- outbound-stops-details -->
+                                    @endforeach
+                                    {{-- div div/div> --}}
+                                    <!-- outbound-stops-details -->
+                                </div>
+
                             </div>
+                            @endif
 
-                        </div>
-                        @endif
-
-                        <!-- RETURN FLIGHT (if exists) -->
-                        @if (isset($flight['itineraries'][1]))
-                        <div class="flight-details mt-3">
-                            <div class="row">
-                                <!-- Departure Details -->
-                                <div class="col-3">
-                                    <?php
+                            <!-- RETURN FLIGHT (if exists) -->
+                            @if (isset($flight['itineraries'][1]))
+                            <div class="flight-details mt-3">
+                                <div class="row">
+                                    <!-- Departure Details -->
+                                    <div class="col-3">
+                                        <?php
                                                             $departureTime = $flight['itineraries'][1]['segments'][0]['departure']['at'] ?? '';
                                                             $datetime = \Carbon\Carbon::parse($departureTime);
 
@@ -1434,15 +1499,15 @@
                                                                 $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                                             }
                                                         ?>
-                                    <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
-                                    <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                    <div class="flight-airport">{{ $cityName }}</div>
-                                    <div class="flight-airport">{{ $cityCode }}</div>
-                                </div>
+                                        <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
+                                        <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
+                                        <div class="flight-airport">{{ $cityName }}</div>
+                                        <div class="flight-airport">{{ $cityCode }}</div>
+                                    </div>
 
-                                <!-- Flight Duration -->
-                                <div class="col-6 d-flex flex-column justify-content-center align-items-center">
-                                    <?php
+                                    <!-- Flight Duration -->
+                                    <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                                        <?php
                                                             if(isset($flight['itineraries'][1]['duration'])) {
                                                                 $duration = $flight['itineraries'][1]['duration'];
                                                                 // Convert PT2H30M format to 2h 30m
@@ -1456,31 +1521,32 @@
                                                             $inboundStops = isset($flight['inbound_stops_text']) ? $flight['inbound_stops_text'] :
                                                                             (isset($flight['itineraries'][1]['segments']) ? (count($flight['itineraries'][1]['segments']) - 1) : '0');
                                                         ?>
-                                    <div class="flight-duration">{{ $duration }}</div>
-                                    <div class="position-relative w-100 my-2">
-                                        <div class="border-top w-100"></div>
-                                        <i
-                                            class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
-                                    </div>
-                                    <div class="flight-duration">
-                                        @if($inboundStops > 0)
-                                        <div>{{ $inboundStops }} stop(s)</div>
-                                        <div class="mt-1">
-                                            <button class="btn btn-outline-primary rounded-circle inbound-stops-toggle"
-                                                data-flight-id="{{ $flight['id'] }}"
-                                                style="width: 28px; height: 28px; padding: 0;">
-                                                <i class="fas fa-chevron-down"></i>
-                                            </button>
+                                        <div class="flight-duration">{{ $duration }}</div>
+                                        <div class="position-relative w-100 my-2">
+                                            <div class="border-top w-100"></div>
+                                            <i
+                                                class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
                                         </div>
-                                        @else
-                                        Direct Flight
-                                        @endif
+                                        <div class="flight-duration">
+                                            @if($inboundStops > 0)
+                                            <div>{{ $inboundStops }} stop(s)</div>
+                                            <div class="mt-1">
+                                                <button
+                                                    class="btn btn-outline-primary rounded-circle inbound-stops-toggle"
+                                                    data-flight-id="{{ $flight['id'] }}"
+                                                    style="width: 28px; height: 28px; padding: 0;">
+                                                    <i class="fas fa-chevron-down"></i>
+                                                </button>
+                                            </div>
+                                            @else
+                                            Direct Flight
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
 
-                                <!-- Arrival Details -->
-                                <div class="col-3 text-end">
-                                    <?php
+                                    <!-- Arrival Details -->
+                                    <div class="col-3 text-end">
+                                        <?php
                                                             $lastSegmentIndex = count($flight['itineraries'][1]['segments'] ?? []) - 1;
                                                             $arrivalTime = $flight['itineraries'][1]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
                                                             $datetime = \Carbon\Carbon::parse($arrivalTime);
@@ -1501,214 +1567,226 @@
                                                 $returnCityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                             }
                                         ?>
-                                    <div class="flight-time">{{ $datetime->format('H:i')}}</div>
-                                    <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                    <div class="flight-airport">{{ $returnCityName }}</div>
-                                    <div class="flight-airport">{{ $returnCityCode }}</div>
+                                        <div class="flight-time">{{ $datetime->format('H:i')}}</div>
+                                        <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
+                                        <div class="flight-airport">{{ $returnCityName }}</div>
+                                        <div class="flight-airport">{{ $returnCityCode }}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Inbound Stops Details (Initially Hidden) -->
-                        @if(isset($flight['itineraries'][1]['segments']) && count($flight['itineraries'][1]['segments'])
-                        > 1)
-                        <div class="inbound-stops-details" id="inbound-stops-{{ $flight['id'] }}"
-                            style="display: none;">
-                            <div class="stops-details-container p-3 bg-light">
-                                <h6 class="mb-3">Connection Details</h6>
+                            <!-- Inbound Stops Details (Initially Hidden) -->
+                            @if(isset($flight['itineraries'][1]['segments']) &&
+                            count($flight['itineraries'][1]['segments'])
+                            > 1)
+                            <div class="inbound-stops-details" id="inbound-stops-{{ $flight['id'] }}"
+                                style="display: none;">
+                                <div class="stops-details-container p-3 bg-light">
+                                    <h6 class="mb-3">Connection Details</h6>
 
-                                @foreach($flight['itineraries'][1]['segments'] as $key => $segment)
-                                @if($key < count($flight['itineraries'][1]['segments'])) <div
-                                    class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
-                                    <?php
-                                                    $departureAirport = $segment['departure']['iataCode'] ?? '';
-                                                    $departureTime = $segment['departure']['at'] ?? '';
-                                                    $departureDateTime = \Carbon\Carbon::parse($departureTime);
+                                    @foreach($flight['itineraries'][1]['segments'] as $key => $segment)
+                                    @if($key < count($flight['itineraries'][1]['segments'])) <div
+                                        class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
+                                        <?php
+                                                        $departureAirport = $segment['departure']['iataCode'] ?? '';
+                                                        $departureTime = $segment['departure']['at'] ?? '';
+                                                        $departureDateTime = \Carbon\Carbon::parse($departureTime);
 
-                                                    $arrivalAirport = $segment['arrival']['iataCode'] ?? '';
-                                                    $arrivalTime = $segment['arrival']['at'] ?? '';
-                                                    $arrivalDateTime = \Carbon\Carbon::parse($arrivalTime);
+                                                        $arrivalAirport = $segment['arrival']['iataCode'] ?? '';
+                                                        $arrivalTime = $segment['arrival']['at'] ?? '';
+                                                        $arrivalDateTime = \Carbon\Carbon::parse($arrivalTime);
 
-                                                    // Display connection time only for segments after the first one
-                                                    if($key > 0) {
-                                                        $prevArrival = \Carbon\Carbon::parse($flight['itineraries'][1]['segments'][$key-1]['arrival']['at'] ?? '');
-                                                        $connectionTime = $departureDateTime->diffInMinutes($prevArrival);
-                                                        $connectionHours = floor($connectionTime / 60);
-                                                        $connectionMinutes = $connectionTime % 60;
-                                                    }
-                                                ?>
-                                    {{-- @dd($flight['itineraries'][1]['segments']) --}}
+                                                        // Display connection time only for segments after the first one
+                                                        if($key > 0) {
+                                                            $prevArrival = \Carbon\Carbon::parse($flight['itineraries'][1]['segments'][$key-1]['arrival']['at'] ?? '');
+                                                            $connectionTime = $departureDateTime->diffInMinutes($prevArrival);
+                                                            $connectionHours = floor($connectionTime / 60);
+                                                            $connectionMinutes = $connectionTime % 60;
+                                                        }
+                                                    ?>
+                                        {{-- @dd($flight['itineraries'][1]['segments']) --}}
 
-                                    <!-- For Inbound flights -->
-                                    @if($key > 0)
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span><i class="fas fa-clock text-warning me-1"></i> Connection time:
-                                            @if($connectionHours > 0){{ $connectionHours }}h @endif
-                                            {{ $connectionMinutes }}m at {{ $departureAirport }}
-                                        </span>
-                                        <span class="badge bg-secondary">
-                                            @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                            $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                            {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                            @else
-                                            {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                            @endif
-                                        </span>
-                                    </div>
-                                    @else
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span><i class="fas fa-plane-departure text-success me-1"></i> Departure</span>
-                                        <span class="badge bg-secondary">
-                                            @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                            $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                            {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                            @else
-                                            {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                            @endif
-                                        </span>
-                                    </div>
-                                    @endif
+                                        <!-- For Inbound flights -->
+                                        @if($key > 0)
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span><i class="fas fa-clock text-warning me-1"></i> Connection time:
+                                                @if($connectionHours > 0){{ $connectionHours }}h @endif
+                                                {{ $connectionMinutes }}m at {{ $departureAirport }}
+                                            </span>
+                                            <span class="badge bg-secondary">
+                                                @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
+                                                $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                                {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                                @else
+                                                {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                        @else
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span><i class="fas fa-plane-departure text-success me-1"></i>
+                                                Departure</span>
+                                            <span class="badge bg-secondary">
+                                                @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
+                                                $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                                {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                                @else
+                                                {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                        @endif
 
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <div class="text-primary">{{ $departureDateTime->format('H:i') }}</div>
-                                            <div class="small">{{ $departureDateTime->translatedFormat('d M Y') }}
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <div class="text-primary">{{ $departureDateTime->format('H:i') }}</div>
+                                                <div class="small">{{ $departureDateTime->translatedFormat('d M Y') }}
+                                                </div>
+                                                <div>{{ $departureAirport }}</div>
                                             </div>
-                                            <div>{{ $departureAirport }}</div>
-                                        </div>
-                                        <div class="col-2 text-center d-flex flex-column justify-content-center">
-                                            <div class="small">{{ str_replace(['PT', 'H', 'M'], ['', 'h ', 'm'],
-                                                $segment['duration'] ?? '') }}</div>
-                                            <div><i class="fas fa-arrow-right"></i></div>
-                                        </div>
-                                        <div class="col-5 text-end">
-                                            <div class="text-primary">{{ $arrivalDateTime->format('H:i') }}</div>
-                                            <div class="small">{{ $arrivalDateTime->translatedFormat('d M Y') }}
+                                            <div class="col-2 text-center d-flex flex-column justify-content-center">
+                                                <div class="small">{{ str_replace(['PT', 'H', 'M'], ['', 'h ', 'm'],
+                                                    $segment['duration'] ?? '') }}</div>
+                                                <div><i class="fas fa-arrow-right"></i></div>
                                             </div>
-                                            <div>{{ $arrivalAirport }}</div>
+                                            <div class="col-5 text-end">
+                                                <div class="text-primary">{{ $arrivalDateTime->format('H:i') }}</div>
+                                                <div class="small">{{ $arrivalDateTime->translatedFormat('d M Y') }}
+                                                </div>
+                                                <div>{{ $arrivalAirport }}</div>
+                                            </div>
                                         </div>
-                                    </div>
+                                </div>
+                                @endif
+                                @endforeach
                             </div>
-                            @endif
-                            @endforeach
                         </div>
-                    </div>
-                    @endif
-                    @endif
+                        @endif
+                        @endif
 
-                </div><!-- col-md-9 -->
+                    </div><!-- col-md-9 -->
 
-                <div class="col-md-3 d-flex justify-content-center">
-                    <!-- Price and Book Button -->
-                    <div class="p-3 d-flex text-center justify-content-center align-items-center">
-                        <div class="me-3">
-                            <div class="flight-price">${{ $flight['price']['grandTotal'] ?? '0.00' }}</div>
-                            <button class="book-button px-3 py-2">Book Now</button>
+                    <div class="col-md-3 d-flex justify-content-center">
+                        <!-- Price and Book Button -->
+                        <div class="p-3 d-flex text-center justify-content-center align-items-center">
+                            <div class="me-3">
+                                <div class="flight-price">${{ $flight['price']['grandTotal'] ?? '0.00' }}</div>
+                                <button class="book-button px-3 py-2">Book Now</button>
+                            </div>
                         </div>
+                    </div><!-- col-md-3 -->
+
+
+                </div><!-- row -->
+
+                <!-- Seats Remaining and Refund Status -->
+                <div class="p-3 d-flex justify-content-between">
+                    <div style="padding: 10px 15px;">{{ $flight['numberOfBookableSeats'] ?? '0' }} seats remaining
                     </div>
-                </div><!-- col-md-3 -->
-                {{--
-            </div><!-- row --> --}}
-
-            <!-- Seats Remaining and Refund Status -->
-            <div class="p-3 d-flex justify-content-between">
-                <div style="padding: 10px 15px;">{{ $flight['numberOfBookableSeats'] ?? '0' }} seats remaining
-                </div>
-                <!-- Flight Footer -->
-                <div class="flight-footer d-flex justify-content-start">
-                    <div class="me-4">
-                        <i class="fas fa-ticket-alt me-1"></i> Last Ticket Date : {{ $flight['lastTicketingDate'] }}
-                    </div>
-                    <div class="me-4">
-                        <i class="fa-solid fa-suitcase-rolling me-1"></i> Checked Bags : {{
-                        $flight['travelerPricings'][0]['fareDetailsBySegment'][0]['includedCheckedBags']['quantity'] ??
-                        0
-                        }}
-                    </div>
-                    {{-- <div class="me-4">
-                        <i class="fas fa-exchange-alt me-1"></i> Self Transfer
-                    </div> --}}
-                    <div>
-                        <i class="fas fa-suitcase-rolling me-1"></i> Cabin Bags : {{
-                        $flight['travelerPricings'][0]['fareDetailsBySegment'][0]['includedCabinBags']['quantity'] ?? 0
-                        }}
-                    </div>
-                </div>
-            </div>
-        </div><!-- Flight Card -->
-        </div>
-
-        <div class="banner-container d-flex flex-wrap justify-content-between align-items-center my-3">
-            <!-- Left side with icons and text -->
-            <div class="d-flex align-items-center justify-content-between mb-3 mb-md-0">
-                <div class="d-flex me-3">
-                    <div class="icon-circle">
-                        <i class="fa-solid fa-hotel"></i>
-                    </div>
-                    <div class="icon-circle position-relative" style="margin-left: -15px; z-index: 2;">
-                        <i class="fa-solid fa-plane"></i>
-                    </div>
-                    <div class="icon-circle position-relative" style="margin-left: -15px;">
-                        <i class="fa-solid fa-car-side"></i>
-                    </div>
-                </div>
-
-            </div>
-            <div>
-                <div class="yellow-pill">Save big on Bundle</div>
-                <div class="save-text">Add Hotel or Car with Flight and<br>Save Extra 30% on Your Trip</div>
-            </div>
-
-            <!-- Right side with phone button -->
-            <div>
-                <a href="tel:+17144775913" class="phone-button">
-                    <i class="fa-solid fa-phone-volume me-2" style="width: 30px; height: 30px;"></i>
-                    <div>
-                        <span class="phone-number">+1-714-477-5913</span>
-                        <span class="expert-text">Talk to a Travel Expert Now</span>
-                    </div>
-                </a>
-            </div>
-        </div><!-- banner-container -->
-        @empty
-
-        <div class="container">
-            <div class="result-container">
-
-
-                <div class="content-section">
-                    <h1 class="result-heading d-block">No Result Found. Don't Worry!</h1>
-                    <p class="description d-block">Our agents can help you out. Call us to find our best flights
-                        to
-                        meet
-                        your travel
-                        requirements.</p>
-
-                    <div class="justify-content-end">
-                        <p class="mb-2" style="padding-right: 80px;">Call us now at</p>
-                        <a href="tel:+12163022732" class="call-button" style="width: 250px; padding-right: 50px;">
-                            <i class="bi bi-telephone-fill me-2"></i> +1-216-302-2732
-                        </a>
-                        <p class="availability" style="padding-right: 50px;">we are available 24x7</p>
-
-                        <div class="discount-section">
-                            <p class="discount-text mb-0" style="padding-right: 100px;">Up to</p>
-                            <p class="discount-value">15% Discount</p>
-                            <p style="padding-right: 50px;">on total value awaits!!</p>
+                    <!-- Flight Footer -->
+                    <div class="flight-footer d-flex justify-content-start">
+                        <div class="me-4">
+                            <i class="fas fa-ticket-alt me-1"></i> Last Ticket Date : {{ $flight['lastTicketingDate'] }}
+                        </div>
+                        <div class="me-4">
+                            <i class="fa-solid fa-suitcase-rolling me-1"></i> Checked Bags : {{
+                            $flight['travelerPricings'][0]['fareDetailsBySegment'][0]['includedCheckedBags']['quantity']
+                            ??
+                            0
+                            }}
+                        </div>
+                        {{-- <div class="me-4">
+                            <i class="fas fa-exchange-alt me-1"></i> Self Transfer
+                        </div> --}}
+                        <div>
+                            <i class="fas fa-suitcase-rolling me-1"></i> Cabin Bags : {{
+                            $flight['travelerPricings'][0]['fareDetailsBySegment'][0]['includedCabinBags']['quantity']
+                            ?? 0
+                            }}
                         </div>
                     </div>
                 </div>
+            </div><!-- Flight Card -->
+
+
+
+            <div class="banner-container d-flex flex-wrap justify-content-between align-items-center my-3">
+                <!-- Left side with icons and text -->
+                <div class="d-flex align-items-center justify-content-between mb-3 mb-md-0">
+                    <div class="d-flex me-3">
+                        <div class="icon-circle">
+                            <i class="fa-solid fa-hotel"></i>
+                        </div>
+                        <div class="icon-circle position-relative" style="margin-left: -15px; z-index: 2;">
+                            <i class="fa-solid fa-plane"></i>
+                        </div>
+                        <div class="icon-circle position-relative" style="margin-left: -15px;">
+                            <i class="fa-solid fa-car-side"></i>
+                        </div>
+                    </div>
+
+                </div>
+                <div>
+                    <div class="yellow-pill">Save big on Bundle</div>
+                    <div class="save-text">Add Hotel or Car with Flight and<br>Save Extra 30% on Your Trip</div>
+                </div>
+
+                <!-- Right side with phone button -->
+                <div>
+                    <a href="tel:+17144775913" class="phone-button">
+                        <i class="fa-solid fa-phone-volume me-2" style="width: 30px; height: 30px;"></i>
+                        <div>
+                            <span class="phone-number">+1-714-477-5913</span>
+                            <span class="expert-text">Talk to a Travel Expert Now</span>
+                        </div>
+                    </a>
+                </div>
+            </div><!-- banner-container -->
+            @empty
+            <div class="container">
+                <div class="result-container">
+
+
+                    <div class="content-section">
+                        <h1 class="result-heading d-block">No Result Found. Don't Worry!</h1>
+                        <p class="description d-block">Our agents can help you out. Call us to find our best flights
+                            to
+                            meet
+                            your travel
+                            requirements.</p>
+
+                        <div class="justify-content-end">
+                            <p class="mb-2" style="padding-right: 80px;">Call us now at</p>
+                            <a href="tel:+12163022732" class="call-button" style="width: 250px; padding-right: 50px;">
+                                <i class="bi bi-telephone-fill me-2"></i> +1-216-302-2732
+                            </a>
+                            <p class="availability" style="padding-right: 50px;">we are available 24x7</p>
+
+                            <div class="discount-section">
+                                <p class="discount-text mb-0" style="padding-right: 100px;">Up to</p>
+                                <p class="discount-value">15% Discount</p>
+                                <p style="padding-right: 50px;">on total value awaits!!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        </div>
-        @endforelse
+
+            @endforelse
+        </div><!-- #flight-results-container -->
 
 
 
+        <div id="loading" style="display:none;">
+            <p>Loading...</p>
 
 
-        </div>
-        </div>
+
+        </div><!-- #loading -->
+        </div><!-- col-md-9 -->
+        </div><!-- row -->
+        {{-- </div>
+        </div> --}}
         <!-- Show More Button -->
         <button class="show-more-btn">Show more</button>
     </section>
@@ -1904,6 +1982,7 @@
 
     <!-- jQuery library (must come first) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Font Awesome -->
@@ -1911,94 +1990,395 @@
 
 
     <script>
+        // $(document).ready(function() {
+        // // Collect unique airline names and stop counts from the rendered flight cards
+        // let airlines = new Set();
+        // let stopCounts = new Map(); // Map to store stop counts and their occurrences
+
+        // // Process each flight card to extract data
+        // $('.flight-card').each(function() {
+        // // Extract airline name
+        // const airlineName = $(this).find('.flight-header .d-flex > div:nth-child(2)').text().trim();
+        // if (airlineName && airlineName !== 'Unknown Airline') {
+        // airlines.add(airlineName);
+        // }
+
+        // // Extract stop information
+        // const outboundStopText = $(this).find('.flight-duration:contains("stop")').text().trim();
+        // const directFlightText = $(this).find('.flight-duration:contains("Direct Flight")').text().trim();
+
+        // let stopCount;
+        // if (directFlightText.includes("Direct Flight")) {
+        // stopCount = "0";
+        // if (!stopCounts.has("0")) {
+        // stopCounts.set("0", 1);
+        // } else {
+        // stopCounts.set("0", stopCounts.get("0") + 1);
+        // }
+        // } else if (outboundStopText) {
+        // // Extract the number before "stop(s)"
+        // const match = outboundStopText.match(/(\d+)\s+stop/);
+        // if (match && match[1]) {
+        // stopCount = match[1];
+        // if (!stopCounts.has(stopCount)) {
+        // stopCounts.set(stopCount, 1);
+        // } else {
+        // stopCounts.set(stopCount, stopCounts.get(stopCount) + 1);
+        // }
+        // }
+        // }
+        // });
+
+        // // Populate the airline filter checkboxes
+        // const airlinesContainer = $('#airlines-filter');
+        // airlinesContainer.empty(); // Clear existing options
+
+        // airlines.forEach(airline => {
+        // const checkboxId = 'airline-' + airline.replace(/\s+/g, '-').toLowerCase();
+        // const checkbox = `
+        // <div class="filter-option">
+        //     <div class="form-check">
+        //         <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="airline"
+        //             data-value="${airline}">
+        //         <label class="form-check-label" for="${checkboxId}">${airline}</label>
+        //     </div>
+        // </div>
+        // `;
+        // airlinesContainer.append(checkbox);
+        // });
+
+        // // Populate the stop filter checkboxes
+        // const stopsContainer = $('#stops-filter');
+        // stopsContainer.empty(); // Clear existing options
+
+        // // Sort stops by count (0, 1, 2+)
+        // const sortedStops = [...stopCounts.entries()].sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+
+        // sortedStops.forEach(([stopCount, count]) => {
+        // let label;
+        // if (stopCount === "0") {
+        // label = `Nonstop (${count})`;
+        // } else if (stopCount === "1") {
+        // label = `1 Stop (${count})`;
+        // } else {
+        // label = `${stopCount} Stops (${count})`;
+        // }
+
+        // const checkboxId = 'stop-' + stopCount;
+        // const checkbox = `
+        // <div class="filter-option">
+        //     <div class="form-check">
+        //         <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="stop"
+        //             data-value="${stopCount}">
+        //         <label class="form-check-label" for="${checkboxId}">${label}</label>
+        //     </div>
+        // </div>
+        // `;
+        // stopsContainer.append(checkbox);
+        // });
+
+        // // Handle filter changes
+        // $('.filter-checkbox').on('change', applyFilters);
+
+        // // Time sliders for departure and arrival
+        // initTimeSlider('#departure-time-slider', 'departure');
+        // initTimeSlider('#arrival-time-slider', 'arrival');
+
+        // // Apply and Reset buttons
+        // $('#apply-filters').on('click', applyFilters);
+        // $('#reset-filters').on('click', resetFilters);
+
+        // // Function to initialize time sliders
+        // function initTimeSlider(selector, timeType) {
+        // $(selector).slider({
+        // range: true,
+        // min: 0,
+        // max: 1440, // 24 hours in minutes
+        // step: 15,
+        // values: [0, 1440],
+        // slide: function(event, ui) {
+        // // Update the displayed times
+        // updateTimeLabels(selector + '-values', ui.values[0], ui.values[1]);
+        // },
+        // change: function(event, ui) {
+        // // Store the values as data attributes
+        // $(selector).data('start', ui.values[0]);
+        // $(selector).data('end', ui.values[1]);
+        // }
+        // });
+        // // Initialize labels
+        // updateTimeLabels(selector + '-values', 0, 1440);
+        // }
+
+        // // Function to update time labels
+        // function updateTimeLabels(selector, startMinutes, endMinutes) {
+        // const formatTime = (minutes) => {
+        // const hours = Math.floor(minutes / 60);
+        // const mins = minutes % 60;
+        // return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+        // };
+
+        // $(selector).html(`${formatTime(startMinutes)} - ${formatTime(endMinutes)}`);
+        // }
+
+        // // Function to apply filters
+        // function applyFilters() {
+        // // Get selected airlines
+        // const selectedAirlines = [];
+        // $('input[data-filter="airline"]:checked').each(function() {
+        // selectedAirlines.push($(this).data('value'));
+        // });
+
+        // // Get selected stop counts
+        // const selectedStops = [];
+        // $('input[data-filter="stop"]:checked').each(function() {
+        // selectedStops.push($(this).data('value'));
+        // });
+
+        // // Get time range values if sliders are initialized
+        // const departureStart = $('#departure-time-slider').data('start') || 0;
+        // const departureEnd = $('#departure-time-slider').data('end') || 1440;
+        // const arrivalStart = $('#arrival-time-slider').data('start') || 0;
+        // const arrivalEnd = $('#arrival-time-slider').data('end') || 1440;
+
+        // // Prepare the AJAX request with filter data
+        // $.ajax({
+        // url: {{ route('flight.search') }},
+        // type: 'GET',
+        // data: {
+        // airlines: selectedAirlines.length > 0 ? selectedAirlines : null,
+        // stops: selectedStops.length > 0 ? selectedStops : null,
+        // departureTime: [departureStart, departureEnd],
+        // arrivalTime: [arrivalStart, arrivalEnd]
+        // },
+        // headers: {
+        // 'X-Requested-With': 'XMLHttpRequest'
+        // },
+        // success: function(response) {
+        // // If it's an AJAX request, we expect HTML content to replace
+        // if (response.html) {
+        // $('#flight-results-container').html(response.html);
+        // } else if ($(response).find('#flight-results-container').length) {
+        // // If we received full HTML page, extract the flight results
+        // $('#flight-results-container').html($(response).find('#flight-results-container').html());
+        // }
+        // // Reinitialize any event handlers for the new content
+        // initFlightCardEvents();
+        // },
+        // error: function(xhr, status, error) {
+        // console.error("Filter request failed:", error);
+        // alert("Failed to apply filters. Please try again.");
+        // }
+        // });
+        // }
+
+        // // Function to reset all filters
+        // function resetFilters() {
+        // // Uncheck all checkboxes
+        // $('.filter-checkbox').prop('checked', false);
+
+        // // Reset time sliders
+        // $('#departure-time-slider').slider('values', [0, 1440]);
+        // $('#arrival-time-slider').slider('values', [0, 1440]);
+
+        // // Update time labels
+        // updateTimeLabels('#departure-time-slider-values', 0, 1440);
+        // updateTimeLabels('#arrival-time-slider-values', 0, 1440);
+
+        // // Apply the reset filters (which effectively shows all flights)
+        // applyFilters();
+        // }
+
+        // // Initialize events for flight cards (for toggles, etc.)
+        // function initFlightCardEvents() {
+        // // Toggle outbound stops details
+        // $('.outbound-stops-toggle').on('click', function() {
+        // const flightId = $(this).data('flight-id');
+        // $('#outbound-stops-' + flightId).slideToggle();
+        // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+        // });
+
+        // // Toggle inbound stops details
+        // $('.inbound-stops-toggle').on('click', function() {
+        // const flightId = $(this).data('flight-id');
+        // $('#inbound-stops-' + flightId).slideToggle();
+        // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+        // });
+        // }
+
+        // // Initialize events for the initial load
+        // initFlightCardEvents();
+        // });
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Countdown timer functionality
-            function startCountdown() {
-            let minutes = 15;
-            let seconds = 30;
+        // Countdown timer functionality
+        function startCountdown() {
+        let minutes = 15;
+        let seconds = 30;
 
-            const countdownInterval = setInterval(() => {
-            if (seconds === 0) {
-            if (minutes === 0) {
-            clearInterval(countdownInterval);
-            document.getElementById('specialFarePopup').style.display = 'none';
-            return;
-            }
-            minutes--;
-            seconds = 59;
-            } else {
-            seconds--;
-            }
+        const countdownInterval = setInterval(() => {
+        if (seconds === 0) {
+        if (minutes === 0) {
+        clearInterval(countdownInterval);
+        document.getElementById('specialFarePopup').style.display = 'none';
+        return;
+        }
+        minutes--;
+        seconds = 59;
+        } else {
+        seconds--;
+        }
 
-            document.getElementById('countdown').textContent = `${minutes}m ${seconds}s`;
-            }, 1000);
-            }
+        document.getElementById('countdown').textContent = `${minutes}m ${seconds}s`;
+        }, 1000);
+        }
 
-            // Close popup functionality
-            document.getElementById('closePopup').addEventListener('click', function() {
-            document.getElementById('specialFarePopup').style.display = 'none';
-            });
-
-            // Start the countdown when page loads
-            window.addEventListener('load', startCountdown);
-
-            // Function to show the popup (can be triggered by a button or after a delay)
-            function showPopup() {
-            document.getElementById('specialFarePopup').style.display = 'flex';
-            }
-
-            // Example: Show popup after 3 seconds
-            setTimeout(showPopup, 3000);
-
-
-            // Outbound stops toggle
-            const outboundToggles = document.querySelectorAll('.outbound-stops-toggle');
-            outboundToggles.forEach(toggle => {
-            toggle.addEventListener('click', function() {
-            const flightId = this.getAttribute('data-flight-id');
-            const detailsDiv = document.getElementById('outbound-stops-' + flightId);
-
-            if (detailsDiv) {
-            if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-            detailsDiv.style.display = 'block';
-            this.querySelector('i').classList.remove('fa-chevron-down');
-            this.querySelector('i').classList.add('fa-chevron-up');
-            } else {
-            detailsDiv.style.display = 'none';
-            this.querySelector('i').classList.remove('fa-chevron-up');
-            this.querySelector('i').classList.add('fa-chevron-down');
-            }
-            }
-            });
-            });
-
-            // Inbound stops toggle
-            const inboundToggles = document.querySelectorAll('.inbound-stops-toggle');
-            inboundToggles.forEach(toggle => {
-            toggle.addEventListener('click', function() {
-            const flightId = this.getAttribute('data-flight-id');
-            const detailsDiv = document.getElementById('inbound-stops-' + flightId);
-
-            if (detailsDiv) {
-            if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-            detailsDiv.style.display = 'block';
-            this.querySelector('i').classList.remove('fa-chevron-down');
-            this.querySelector('i').classList.add('fa-chevron-up');
-            } else {
-            detailsDiv.style.display = 'none';
-            this.querySelector('i').classList.remove('fa-chevron-up');
-            this.querySelector('i').classList.add('fa-chevron-down');
-            }
-            }
-            });
-            });
-
-
-
+        // Close popup functionality
+        document.getElementById('closePopup').addEventListener('click', function() {
+        document.getElementById('specialFarePopup').style.display = 'none';
         });
 
+        // Start the countdown when page loads
+        window.addEventListener('load', startCountdown);
 
+        // Function to show the popup (can be triggered by a button or after a delay)
+        function showPopup() {
+        document.getElementById('specialFarePopup').style.display = 'flex';
+        }
 
+        // Example: Show popup after 3 seconds
+        setTimeout(showPopup, 3000);
+
+        // Toggle function for outbound and inbound stops
+        function toggleFlightStops(toggleSelector, prefix) {
+        const toggles = document.querySelectorAll(toggleSelector);
+        toggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+        const flightId = this.getAttribute('data-flight-id');
+        const detailsDiv = document.getElementById(prefix + '-stops-' + flightId);
+
+        if (detailsDiv) {
+        if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+        detailsDiv.style.display = 'block';
+        this.querySelector('i').classList.remove('fa-chevron-down');
+        this.querySelector('i').classList.add('fa-chevron-up');
+        } else {
+        detailsDiv.style.display = 'none';
+        this.querySelector('i').classList.remove('fa-chevron-up');
+        this.querySelector('i').classList.add('fa-chevron-down');
+        }
+        }
+        });
+        });
+        }
+
+        // Apply toggle for both outbound and inbound
+        toggleFlightStops('.outbound-stops-toggle', 'outbound');
+        toggleFlightStops('.inbound-stops-toggle', 'inbound');
+        });
+
+        // Define these variables outside your event handler
+        // تعريف المتغيرات خارج معالج الحدث
+        let offset = 0;
+        const limit = 10;
+        let loading = false;
+        let hasMoreResults = true; // لتتبع ما إذا كان هناك المزيد من النتائج
+
+        function loadMoreFlights() {
+        if (loading || !hasMoreResults) return;
+
+        loading = true;
+        $('#loading').show();
+
+        $.ajax({
+        url: "{{ route('flight.search') }}",
+        type: "GET",
+        data: {
+        offset: offset,
+        limit: limit,
+        origin_city: "{{ $flightData['originCityName'] ?? '' }}",
+        destination_city: "{{ $flightData['destinationCityName'] ?? '' }}",
+        origin_city_name: "{{ $flightData['originCity'] ?? '' }}",
+        destination_city_name: "{{ $flightData['destinationCity'] ?? '' }}",
+        departureDate: "{{ $flightData['departureDate'] ?? '' }}",
+        returnDate: "{{ $flightData['returnDate'] ?? '' }}",
+        adults: "{{ $flightData['adults'] ?? '1' }}",
+        cabin: "{{ $flightData['cabin'] ?? 'ECONOMY' }}",
+        tripType: "{{ ($flightData['returnDate']) ? 'roundTrip' : 'oneWay' }}"
+        // أضف أي معايير تصفية أخرى هنا
+        },
+        dataType: "json",
+        success: function(response) {
+        if (response.error) {
+        $('#loading').hide();
+        loading = false;
+        console.error('Server Error:', response.error);
+        alert("حدث خطأ أثناء تحميل البيانات: " + response.error);
+        return;
+        }
+
+        // إضافة نتائج البحث إلى الحاوية
+        $('#flight-results-container').append(response.html);
+
+        // تحديث متغيرات التتبع
+        hasMoreResults = response.hasMore;
+
+        if (hasMoreResults) {
+        offset += limit;
+        } else {
+        // إخفاء زر "تحميل المزيد" أو مؤشر التمرير اللانهائي
+        $('#load-more-container').hide();
+        }
+
+        $('#loading').hide();
+        loading = false;
+        },
+        error: function(xhr, status, error) {
+        $('#loading').hide();
+        loading = false;
+
+        // تسجيل معلومات الخطأ المفصلة
+        console.error('AJAX Error:', error);
+        console.error('Status:', status);
+        console.error('Response:', xhr.responseText);
+
+        try {
+        const response = JSON.parse(xhr.responseText);
+        if (response.error) {
+        alert("حدث خطأ: " + response.error);
+        } else {
+        alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
+        }
+        } catch(e) {
+        alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
+        }
+        },
+        timeout: 60000 // مهلة 60 ثانية (زيادة القيمة لأن API أماديوس قد يكون بطيئًا)
+        });
+        }
+
+        // استدعاء هذه الدالة عند تحميل الصفحة للحصول على أول مجموعة من النتائج
+        $(document).ready(function() {
+        // التحقق من وجود نتائج مسبقة على الصفحة
+        const initialResultsCount = $('#flight-results-container .flight-result-item').length;
+        if (initialResultsCount > 0) {
+        offset = initialResultsCount; // تعيين الإزاحة إلى عدد النتائج الموجودة
+        } else {
+        loadMoreFlights(); // تحميل الدفعة الأولى من النتائج
+        }
+
+        // تنفيذ التمرير اللانهائي
+        $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300 && !loading && hasMoreResults) {
+        loadMoreFlights();
+        }
+        });
+
+        // أو زر تحميل المزيد
+        $('#load-more-btn').click(function() {
+        loadMoreFlights();
+        });
+        });
 
 
 

@@ -48,7 +48,7 @@ Route::get('/newconfirm', function () {
 });
 
 Route::group([], function () {
-    Route::get('/', [FlightController::class, 'index']);
+    Route::get('/', [FlightController::class, 'index'])->name('index');
 
     Route::post('/get_token', [FlightController::class, 'get_token']);
     Route::match(['get', 'post'], '/search_flight', [FlightController::class, 'search_flight'])->name('flight.search');

@@ -972,3 +972,116 @@ for (let i = 0; i < itemsToLoad; i++) { if (visibleFlights[loadIndex + i]) { set
             }
 
             ;
+
+
+            // ===== وظائف المسافرين =====
+            function setupTravelersDropdown() {
+                // تهيئة القائمة المنسدلة
+                updateTravelersText();
+
+                // معالجة فتح وإغلاق القائمة المنسدلة يدوياً (إذا لم يتم استخدام Bootstrap)
+                const dropdownToggle=document.getElementById('travelersDropdown');
+                const dropdownMenu=document.querySelector('.dropdown-menu');
+
+                if (dropdownToggle && dropdownMenu) {
+                    // إزالة السمة التي قد تتداخل مع الكود الخاص بنا
+                    dropdownToggle.removeAttribute('data-bs-toggle');
+
+                    dropdownToggle.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            dropdownMenu.classList.toggle('show');
+                        });
+
+                    // إضافة مستمعي الأحداث لأزرار المسافرين
+                    const travelerBtns=document.querySelectorAll('.traveler-btn');
+
+                    travelerBtns.forEach(btn=> {
+                            btn.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+
+                                    const type=this.getAttribute('data-type');
+                                    const action=this.getAttribute('data-action');
+
+                                    if (action==='increase') {
+                                        increaseCount(type);
+                                    }
+
+                                    else if (action==='decrease') {
+                                        decreaseCount(type);
+                                    }
+                                });
+                        });
+
+                    // إغلاق القائمة المنسدلة عند النقر خارجها
+                    document.addEventListener('click', function(e) {
+                            if ( !dropdownMenu.contains(e.target) && e.target !==dropdownToggle) {
+                                dropdownMenu.classList.remove('show');
+                            }
+                        });
+
+                    // منع إغلاق القائمة المنسدلة عند النقر داخلها
+                    dropdownMenu.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                        });
+                }
+            }
+
+            // زيادة عدد المسافرين
+            function increaseCount(type) {
+                const countElement=document.getElementById(type + 'Count');
+                const inputElement=document.getElementById(type + 'Input');
+
+                if (countElement && inputElement) {
+                    let count=parseInt(countElement.textContent);
+
+                    // تطبيق القيود
+                    if (type==='adults' && count >=9) return;
+                    if ((type==='children' || type==='infants') && count >=8) return;
+
+                    const adultsCount=document.getElementById('adultsCount');
+                    if (type==='infants' && adultsCount && count >=parseInt(adultsCount.textContent)) return;
+
+                    count++;
+                    countElement.textContent=count;
+                    inputElement.value=count;
+                    updateTravelersText();
+                }
+            }
+
+            // تقليل عدد المسافرين
+            function decreaseCount(type) {
+                const countElement=document.getElementById(type + 'Count');
+                const inputElement=document.getElementById(type + 'Input');
+
+                if (countElement && inputElement) {
+                    let count=parseInt(countElement.textContent);
+
+                    // تطبيق القيود
+                    if (type==='adults' && count <=1) return;
+                    if ((type==='children' || type==='infants') && count <=0) return;
+                    count--;
+                    countElement.textContent=count;
+                    inputElement.value=count; // إذا كان عدد الرضع أكثر من البالغين، قم بتقليل عدد الرضع
+
+                    if (type==='adults') {
+                        const infantsCount=document.getElementById('infantsCount');
+                        const infantsInput=document.getElementById('infantsInput');
+
+                        if (infantsCount && infantsInput) {
+                            const infantsValue=parseInt(infantsCount.textContent);
+
+                            if (infantsValue> count) {
+                                infantsCount.textContent=count;
+                                infantsInput.value=count;
+                            }
+                        }
+                    }
+
+                    updateTravelersText();
+                }
+            }
+
+            // تحديث نص المسافرين
+            function updateTravelersText() {

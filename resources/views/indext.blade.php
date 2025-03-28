@@ -384,14 +384,14 @@
                                     Tickets</label>
                                 <div class="dropdown">
                                     <button
-                                        class="form-control d-flex justify-content-between align-items-center dropdown-toggle"
+                                        class="form-control d-flex justify-content-between align-items-center dropdown-toggle "
                                         type="button" id="travelersDropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
-                                        <span id="totalTravelers">1 Traveler</span>
+                                        <span id="totalTravelers">Traveler</span>
                                         <i class="fas fa-chevron-down"></i>
                                     </button>
-                                    <div class="dropdown-menu p-3" style="width: 300px;">
-                                        <div class="mb-3">
+                                    <div class="dropdown-menu p-3 " style="width: 300px;">
+                                        <div class="mb-3" id="adults">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <label class="form-label mb-0">Adults</label>
                                                 <div class="d-flex align-items-center">
@@ -410,7 +410,7 @@
                                             </div>
                                             <input type="hidden" name="adults" id="adultsInput" value="1">
                                         </div>
-                                        <div class="mb-3">
+                                        <div class="mb-3" id="children">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <label class="form-label mb-0">Children</label>
                                                 <div class="d-flex align-items-center">
@@ -429,7 +429,7 @@
                                             </div>
                                             <input type="hidden" name="children" id="childrenInput" value="0">
                                         </div>
-                                        <div class="mb-3">
+                                        {{-- <div class="mb-3" id="infants">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <label class="form-label mb-0">Infants</label>
                                                 <div class="d-flex align-items-center">
@@ -447,6 +447,25 @@
                                                 </div>
                                             </div>
                                             <input type="hidden" name="infants" id="infantsInput" value="0">
+                                        </div> --}}
+                                        <div class="mb-3" id="heldInfants">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <label class="form-label mb-0">Infants</label>
+                                                <div class="d-flex align-items-center">
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
+                                                        data-type="held_infants" data-action="decrease">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                    <span class="mx-3" id="heldInfantsCount">0</span>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
+                                                        data-type="held_infants" data-action="increase">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="held_infants" id="heldInfantsInput" value="0">
                                         </div>
                                     </div><!-- dropdown-menu -->
                                 </div><!-- dropdown -->
@@ -1138,121 +1157,108 @@
         });
 
         $('input[name="tripType"]:checked').trigger('change');
-    });
 
-    // ===== وظائف المسافرين =====
-    function setupTravelersDropdown() {
-    // تهيئة القائمة المنسدلة
-    updateTravelersText();
 
-    // معالجة فتح وإغلاق القائمة المنسدلة يدوياً (إذا لم يتم استخدام Bootstrap)
-    const dropdownToggle = document.getElementById('travelersDropdown');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-
-    if (dropdownToggle && dropdownMenu) {
-    // إزالة السمة التي قد تتداخل مع الكود الخاص بنا
-    dropdownToggle.removeAttribute('data-bs-toggle');
-
-    dropdownToggle.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropdownMenu.classList.toggle('show');
-    });
-
-    // إضافة مستمعي الأحداث لأزرار المسافرين
-    const travelerBtns = document.querySelectorAll('.traveler-btn');
-    travelerBtns.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const type = this.getAttribute('data-type');
-    const action = this.getAttribute('data-action');
-
-    if (action === 'increase') {
-    increaseCount(type);
-    } else if (action === 'decrease') {
-    decreaseCount(type);
-    }
-    });
-    });
-
-    // إغلاق القائمة المنسدلة عند النقر خارجها
-    document.addEventListener('click', function(e) {
-    if (!dropdownMenu.contains(e.target) && e.target !== dropdownToggle) {
-    dropdownMenu.classList.remove('show');
-    }
-    });
-
-    // منع إغلاق القائمة المنسدلة عند النقر داخلها
-    dropdownMenu.addEventListener('click', function(e) {
-    e.stopPropagation();
-    });
-    }
-    }
-
-    // زيادة عدد المسافرين
-    function increaseCount(type) {
-    const countElement = document.getElementById(type + 'Count');
-    const inputElement = document.getElementById(type + 'Input');
-
-    if (countElement && inputElement) {
-    let count = parseInt(countElement.textContent);
-
-    // تطبيق القيود
-    if (type === 'adults' && count >= 9) return;
-    if ((type === 'children' || type === 'infants') && count >= 8) return;
-
-    const adultsCount = document.getElementById('adultsCount');
-    if (type === 'infants' && adultsCount && count >= parseInt(adultsCount.textContent)) return;
-
-    count++;
-    countElement.textContent = count;
-    inputElement.value = count;
-    updateTravelersText();
-    }
-    }
-
-    // تقليل عدد المسافرين
-    function decreaseCount(type) {
-    const countElement = document.getElementById(type + 'Count');
-    const inputElement = document.getElementById(type + 'Input');
-
-    if (countElement && inputElement) {
-    let count = parseInt(countElement.textContent);
-
-    // تطبيق القيود
-    if (type === 'adults' && count <= 1) return; if ((type==='children' || type==='infants' ) && count <=0) return; count--;
-        countElement.textContent=count; inputElement.value=count; // إذا كان عدد الرضع أكثر من البالغين، قم بتقليل عدد الرضع
-        if (type==='adults' ) { const infantsCount=document.getElementById('infantsCount'); const
-        infantsInput=document.getElementById('infantsInput'); if (infantsCount && infantsInput) { const
-        infantsValue=parseInt(infantsCount.textContent); if (infantsValue> count) {
-        infantsCount.textContent = count;
-        infantsInput.value = count;
-        }
-        }
+        $('form.search-form').on('submit', function(e) {
+        // Check if origin and destination are selected
+        if ($('input[name="origin_city"]').val() === '' || $('input[name="destination_city"]').val() === '') {
+        e.preventDefault();
+        alert('Please select both origin and destination cities');
+        return false;
         }
 
-        updateTravelersText();
-        }
+        // Check if departure date is selected
+        if ($('#departureDate').val() === '') {
+        e.preventDefault();
+        alert('Please select a departure date');
+        return false;
         }
 
-        // تحديث نص المسافرين
-        function updateTravelersText() {
-        const adultsElement = document.getElementById('adultsCount');
-        const childrenElement = document.getElementById('childrenCount');
-        const infantsElement = document.getElementById('infantsCount');
-        const totalElement = document.getElementById('totalTravelers');
-
-        if (adultsElement && childrenElement && infantsElement && totalElement) {
-        const adults = parseInt(adultsElement.textContent);
-        const children = parseInt(childrenElement.textContent);
-        const infants = parseInt(infantsElement.textContent);
-        const total = adults + children + infants;
-
-        totalElement.textContent = total === 1 ? '1 Traveler' : total + ' Travelers';
+        // Check if return date is selected for round trip
+        if ($('#roundTrip').is(':checked') && $('#returnDate').val() === '') {
+        e.preventDefault();
+        alert('Please select a return date');
+        return false;
         }
+        });
+
+
+        function setupCounter(parentId,spanEle,inputEle) {
+
+        const parentElement = document.getElementById(parentId);
+
+        if (!parentElement) return;
+
+
+        const increaseBtn = parentElement.querySelector('[data-action="increase"]');
+        const decreaseBtn = parentElement.querySelector('[data-action="decrease"]');
+        const totalTravelersSpan = document.getElementById('totalTravelers');
+        const span = parentElement.querySelector(spanEle);
+        const input = parentElement.querySelector(inputEle);
+
+        if (!span || !input) return;
+
+        let currentValue = parseInt(span.textContent);
+
+        increaseBtn.addEventListener("click", () => updateCounter("increase"));
+        decreaseBtn.addEventListener("click", () => updateCounter("decrease"));
+
+            function updateCounter(action) {
+
+                let defaultValue=0;
+                if (parentId === 'adults') {
+                    defaultValue = 1;
+                }
+
+                if (action === "increase") {
+
+                currentValue++;
+                } else if (action === "decrease" && currentValue > defaultValue) {
+                currentValue--;
+                }
+                span.textContent = currentValue;
+                input.value = currentValue;
+            }
+
+            // function updateTotalTravelers() {
+            // const totalTravelers =
+            // parseInt(document.getElementById('adultsCount').textContent) +
+            // parseInt(document.getElementById('childrenCount').textContent) +
+            // parseInt(document.getElementById('infantsCount').textContent) +
+            // parseInt(document.getElementById('heldInfantsCount').textContent);
+
+            // document.getElementById('totalTravelers').textContent =
+            // `${totalTravelers} Traveler${totalTravelers !== 1 ? 's' : ''}`;
+            // }
+
+
         }
+
+        setupCounter('adults', '#adultsCount', '#adultsInput');
+        setupCounter('children', '#childrenCount', '#childrenInput');
+        // setupCounter('infants', '#infantsCount', '#infantsInput');
+        setupCounter('heldInfants', '#heldInfantsCount', '#heldInfantsInput');
+
+        function updateTotalTravelersDisplay() {
+        const adults = parseInt($('#adultsInput').val() || 1);
+        const children = parseInt($('#childrenInput').val() || 0);
+        // const infants = parseInt($('#infantsInput').val() || 0);
+        const heldInfants = parseInt($('#heldInfantsInput').val() || 0);
+
+        const total = adults + children + heldInfants;
+        $('#totalTravelers').text(total + ' ' + (total === 1 ? 'Traveler' : 'Travelers'));
+        }
+
+        // Call initially to set the display
+        updateTotalTravelersDisplay();
+
+        // Update whenever traveler buttons are clicked
+        $('.traveler-btn').on('click', function() {
+        // Give time for the counter to update
+        setTimeout(updateTotalTravelersDisplay, 50);
+        });
+
+        });
     </script>
 
     {{-- <script>
