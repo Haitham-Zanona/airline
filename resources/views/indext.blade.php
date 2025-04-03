@@ -25,7 +25,21 @@
             width: 100%;
             background-color: rgba(255, 255, 255, 0.1);
             z-index: 100;
+
         }
+
+        .navbar-toggler {
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+
+        }
+
+        .navbar-toggler-icon {
+            height: 24px;
+        }
+
+
 
         .logo {
             color: #4444ff;
@@ -45,8 +59,18 @@
         }
 
         .contact-info {
-            color: #4444ff;
+            color: #4B45FF;
+            margin-bottom: 20px;
+            margin-right: 10px;
         }
+
+        .nav-background {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /*End Header Style*/
 
         #result1,
         #result2 {
@@ -218,9 +242,37 @@
             opacity: 0.9;
         }
 
+        .footer-contact-icons {
+            width: 30px;
+            height: 30px;
+        }
+
         @media (max-width: 767px) {
+            /* .hero-header {
+                font-size: 24px;
+            }
+
+            ..search-form {
+                height: 60%;
+            }
+
+            .form-header {
+                 font-size: 14px;
+            margin: 0 !important;
+        } */
+
             .footer .d-flex.flex-column.flex-md-row {
                 gap: 10px;
+            }
+
+            .footer-contact-res {
+                font-size: 11px;
+                font-weight: 600;
+            }
+
+            .footer-contact-icons {
+                width: 20px;
+                height: 20px;
             }
         }
 
@@ -296,11 +348,12 @@
     <section class="hero d-flex align-items-center">
         <header class="py-3">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-3 col-6">
+                <!-- Desktop View -->
+                <div class="row align-items-center d-none d-md-flex">
+                    <div class="col-md-3">
                         <div class="logo">LOGO</div>
                     </div>
-                    <div class="col-md-6 mt-3 mt-md-0 order-md-2 order-3">
+                    <div class="col-md-6">
                         <ul class="nav justify-content-center">
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Home</a>
@@ -313,8 +366,8 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-3 col-6 text-end order-md-3 order-2">
-                        <div class="contact-info d-flex align-items-center">
+                    <div class="col-md-3 text-end">
+                        <div class="contact-info d-flex align-items-center justify-content-end m-0">
                             <img src="{{ asset('assets/images/phone-call.webp') }}" width="40px" height="40px" alt="">
                             <div class="text-start mx-2">
                                 <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
@@ -325,20 +378,70 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Mobile View -->
+                <div class="d-md-none">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Logo on Left -->
+                        <div class="logo">LOGO</div>
+
+                        <!-- Menu Button on Right -->
+                        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon d-flex align-items-center justify-content-center">
+                                <i class="fas fa-bars"></i>
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Collapsible Content -->
+                    <div class="collapse mt-3" id="navbarMobile">
+                        <div class="nav-background p-3">
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">About us</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Contact us</a>
+                                </li>
+
+                            </ul>
+
+                            <!-- Contact Info in Menu -->
+                            <div class="contact-info-mobile mt-3 pt-3 border-top">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ asset('assets/images/phone-call.webp') }}" width="30px" height="30px"
+                                        alt="">
+                                    <div class="text-start mx-2">
+                                        <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!
+                                        </p>
+                                        <span class="fw-bold"><a href="tel:+1-111-111-1111"
+                                                style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
         <div class="hero-content container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-4 mb-lg-0 text-center text-lg-start">
-                    <h1 class="display-4 fw-bold">Transforming Travel,<br>One Trip at a Time</h1>
+                    <h1 class="display-4 fw-bold hero-header">Transforming Travel,<br>One Trip at a Time</h1>
                 </div>
                 <div class="col-lg-6">
                     <form action="{{ route('flight.search') }}" method="POST" class="search-form p-4">
                         @csrf
-                        <h3 class="text-center mb-4">Find your ticket Now</h3>
+                        <h3 class="text-center mb-4 form-header">Find your ticket Now</h3>
                         <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="col-6 mb-3 mb-md-0 mb-sm-0">
                                 <label for="origin_city" class="form-label"><i class="fas fa-plane-departure me-2"></i>
                                     From</label>
                                 <input type="text" id="search1" class="form-select" placeholder="Enter City Name"
@@ -347,7 +450,7 @@
                                 <input type="hidden" name="origin_city_name" id="origin_city_name">
                                 <div id="result1" style="width: 60%;"></div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-6">
                                 <label for="destination_city" class="form-label"><i
                                         class="fas fa-plane-arrival me-2"></i>
                                     To</label>
@@ -361,12 +464,12 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="col-6 mb-3 mb-md-0">
                                 <label for="departureDate" class="form-label"><i class="far fa-calendar-alt me-2"></i>
                                     Check-In</label>
                                 <input type="date" id="departureDate" name="departureDate" class="form-control">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-6">
                                 <div id="returnDateContainer" style="display:none;">
                                     <label for="returnDate" class="form-label"><i class="far fa-calendar-alt me-2"></i>
                                         Check-Out</label>
@@ -379,7 +482,7 @@
                                 <label for="adults" class="form-label"><i class="fas fa-user me-2"></i> Tickets</label>
                                 <input type="number" id="adults" name="adults" class="form-control" value="1" min="1">
                             </div>--}}
-                            <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="col-6 mb-3 mb-md-0">
                                 <label for="travelers" class="form-label"><i class="fas fa-user me-2"></i>
                                     Tickets</label>
                                 <div class="dropdown">
@@ -471,7 +574,7 @@
                                 </div><!-- dropdown -->
                             </div><!-- col-md-6 -->
 
-                            <div class="col-md-6">
+                            <div class="col-6">
                                 <label for="class" class="form-label"><i class="fas fa-ticket-alt me-2"></i>
                                     Class</label>
                                 <select id="cabin" name="cabin" class="form-select">
@@ -904,7 +1007,7 @@
                 </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
 
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
-                    <img src="{{ asset('assets/images/NET_BIG.png') }}" alt="Cloudflare" class="img-fluid"
+                    <img src="{{ asset('assets/images/cloudflare.webp') }}" alt="Cloudflare" class="img-fluid"
                         style="max-height: 50px;">
                 </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
@@ -917,7 +1020,7 @@
                 <p class="text-muted small">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
                     nibh euismod tincidunt ut laoreet dolore</p>
             </div><!-- text-center mb-5 -->
-            <div class="row">
+            <div class="row px-3">
                 <!-- Logo Column -->
                 <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
                     <h2 class="mb-3" style="color: #6f42c1; font-weight: bold;">LOGO</h2>
@@ -925,8 +1028,8 @@
                 </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
 
                 <!-- Quick Links Column -->
-                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-secondary mb-3">Quick links</h5>
+                <div class="col-lg-2 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
+                    <h5 class="text-secondary mb-3 fw-bold">Quick links</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Home</a></li>
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">About Us</a></li>
@@ -937,8 +1040,8 @@
 
 
                 <!-- Legal Column -->
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-secondary mb-3">Legal</h5>
+                <div class="col-lg-3 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
+                    <h5 class="text-secondary mb-3 fw-bold">Legal</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Important Guidelines</a>
                         </li>
@@ -950,17 +1053,17 @@
                 </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->
 
                 <!-- keep in touch Column -->
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-secondary mb-3">Keep In Touch</h5>
+                <div class="col-lg-3 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
+                    <h5 class="text-secondary mb-3 fw-bold">Keep In Touch</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="tel:+" class="text-decoration-none text-muted"><img
-                                    src="{{ asset('assets/images/phone-call-purple.webp') }}" width="30px" height="30px"
-                                    alt="">
-                                <span class="mx-2">+1-111-111-1111</span></a>
+                                    src="{{ asset('assets/images/phone-call-purple.webp') }}"
+                                    class="footer-contact-icons" alt="">
+                                <span class="footer-contact-res">+1-111-111-1111</span></a>
                         </li>
                         <li class="mb-2"><a href="mailto:" class="text-decoration-none text-muted"><svg fill="#7042c1"
                                     viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg"
-                                    style="width: 30px; height: 30px;">
+                                    class="footer-contact-icons">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                     <g id="SVGRepo_iconCarrier">
@@ -969,15 +1072,15 @@
                                             fill-rule="evenodd"></path>
                                     </g>
                                 </svg>
-                                <span class="mx-2">email@gmail.com</span></a></li>
+                                <span class="footer-contact-res">email@gmail.com</span></a></li>
 
                     </ul>
                 </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->
 
                 <!-- Contact Column -->
-                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                <div class="col-lg-2 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
 
-                    <h5 class="text-secondary mb-3">Follow Us</h5>
+                    <h5 class="text-secondary mb-3 fw-bold">Follow Us</h5>
                     <div class="d-flex gap-3">
                         <a href="#" class="text-decoration-none text-muted">
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"

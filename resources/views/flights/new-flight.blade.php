@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>موقع حجز رحلات طيران</title>
     <!-- Bootstrap CSS -->
@@ -179,48 +179,7 @@
             font-size: 14px;
         }
 
-        @media (max-width: 768px) {
-            .popup-content {
-                flex-direction: column;
-                padding: 0;
-            }
 
-            .popup-image {
-                flex: 0 0 200px;
-                display: none;
-            }
-
-            .popup-container {
-                height: 90%;
-                width: 80%;
-                max-width: 400px;
-                max-height: 700px;
-            }
-
-            .popup-details {
-                flex: 1;
-            }
-
-            .flight-details-popup {
-                flex-direction: column;
-                margin: 0;
-            }
-
-            .route-separator {
-                transform: rotate(90deg);
-                margin: 10px 0;
-            }
-
-            .popup-header {
-                flex-direction: column;
-                align-items: flex-start;
-                margin: 0;
-            }
-
-            .timer {
-                margin-top: 10px;
-            }
-        }
 
         .container {
             max-width: 1200px;
@@ -243,16 +202,7 @@
             height: 24px;
         }
 
-        @media (max-width: 767.98px) {
-            .nav-link {
-                padding: 10px 0;
-                border-bottom: 1px solid #eee;
-            }
 
-            .nav-item:last-child .nav-link {
-                border-bottom: none;
-            }
-        }
 
         .logo {
             color: #4444ff;
@@ -274,6 +224,8 @@
         .contact-info {
             color: #4444ff;
         }
+
+        /*End Header Style*/
 
         .flight-result-search .col-md-2 label {
             padding-left: 10px;
@@ -470,11 +422,18 @@
             background-color: #0069d9;
         }
 
+        .flight-extra-info {
+            display: flex;
+            /* justify-content: space-between; */
+            align-items: center;
+            gap: 20%;
+        }
+
         .flight-footer {
             color: #666;
             padding: 10px 15px;
             /* border-top: 1px solid #eee; */
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .stops-details-container {
@@ -487,22 +446,6 @@
             border-radius: 4px;
         }
 
-        .refund-status {
-            font-size: 12px;
-            margin: 10px 0;
-        }
-
-        .non-refundable {
-            color: #ff5050;
-        }
-
-        .partially-refundable {
-            color: #ffa500;
-        }
-
-        .fully-refundable {
-            color: #55aa55;
-        }
 
 
         .flight-tabs {
@@ -566,6 +509,10 @@
         }
 
         .banner-container {
+            display: flex;
+            flex-wrap: wrap;
+            /* justify-content: space-between; */
+            align-items: center;
             background-color: #4285f4;
             border-radius: 10px;
             padding: 20px;
@@ -573,6 +520,23 @@
             position: relative;
             max-width: 1000px;
             margin: 0 auto;
+            gap: 10%;
+        }
+
+        .right-side-banner {
+            display: flex;
+            /* flex-direction: column; */
+            justify-content: space-between;
+            align-items: center;
+            width: 70%;
+            gap: 5%;
+
+        }
+
+        .banner-icons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .icon-circle {
@@ -761,11 +725,181 @@
             font-weight: bold;
             color: #333;
         }
+
+        .footer-contact-icons {
+            width: 30px;
+            height: 30px;
+        }
+
+        @media (max-width: 767.98px) {
+            .nav-link {
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .nav-item:last-child .nav-link {
+                border-bottom: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+
+            .flight-extra-info {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0;
+            }
+
+            .flight-footer {
+                font-size: 12px;
+            }
+
+            .popup-content {
+                flex-direction: column;
+                padding: 0;
+            }
+
+            .popup-image {
+                flex: 0 0 200px;
+                display: none;
+            }
+
+            .popup-container {
+                height: 65%;
+                width: 80%;
+                max-width: 500px;
+                max-height: 700px;
+            }
+
+            .popup-details {
+                flex: 1;
+            }
+
+            .flight-details-popup {
+                flex-direction: row;
+                margin: 0;
+            }
+
+            .route-separator {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+
+            .popup-header {
+                flex-direction: row;
+                align-items: flex-center;
+                margin: 10px 0;
+            }
+
+            .timer {
+                /* margin-top: 10px; */
+            }
+
+            .banner-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                /* gap: 10px; */
+                padding: 15px;
+            }
+
+            .right-side-banner {
+                flex-direction: column;
+                align-items: self-start;
+            }
+
+            .banner-icons {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .icon-circle {
+                background-color: #0069d9;
+                color: #fff;
+                border-radius: 50%;
+                border: 3px solid #fff;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 10px;
+            }
+
+            .icon-circle i {
+                color: #4285f4;
+                font-size: 24px;
+            }
+
+            .yellow-pill {
+                background-color: #FFD600;
+                color: #000;
+                border-radius: 20px;
+                padding: 6px 15px;
+                font-weight: bold;
+                display: inline-block;
+                margin-bottom: 10px;
+            }
+
+            .save-text {
+                font-size: 13px;
+                line-height: 1.3;
+                padding: 0 5px;
+            }
+
+            .phone-button {
+                background-color: #FF6A00;
+                color: white;
+                border-radius: 8px;
+                padding: 10px 11px;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                font-weight: bold;
+            }
+
+            .phone-button:hover {
+                background-color: #e55f00;
+                color: white;
+            }
+
+            .phone-number {
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .expert-text {
+                font-size: 10px;
+                display: block;
+                text-align: center;
+            }
+
+            .footer .d-flex.flex-column.flex-md-row {
+                gap: 10px;
+            }
+
+            .footer-contact-res {
+                font-size: 11px;
+                font-weight: 600;
+            }
+
+            .footer-contact-icons {
+                width: 20px;
+                height: 20px;
+            }
+
+        }
+
+        /* @media(max width) */
     </style>
 </head>
 
 <body>
-    {{-- @dd($flightsArraySubset) --}}
+
+
     <!-- Popup -->
     <div class="popup-overlay" id="specialFarePopup">
         <div class="popup-container">
@@ -802,8 +936,12 @@
                             <p>Terminal - 2, Gate - 25</p>
                         </div>
 
-                        <div class=" route-separator">
+                        {{-- <div class=" route-separator">
                             <i class="fas fa-plane position-absolute bg-white px-1"></i>
+                        </div> --}}
+                        <div class="position-relative my-2">
+                            <div class="border-top w-100"></div>
+                            <i class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
                         </div>
 
                         <div class=" flight-route text-end">
@@ -1229,49 +1367,51 @@
                 <div id="flight-results-container">
                     @forelse ($flightsArraySubset as $flight)
                     <!-- Flight Card -->
+                    <form action="{{ route('flight.select') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="flight_id" value="{{ $flight['id'] }}">
+                        <div class="flight-card">
+                            <div class="flight-header">
+                                <div class="d-flex align-items-center">
+                                    {{-- <div class="airline-logo">
+                                        @php
+                                        $airlineName = $flight['segments_info'][0]['airline_info']['name'] ?? 'UNKNOWN';
 
-                    <div class="flight-card">
-                        <div class="flight-header">
-                            <div class="d-flex align-items-center">
-                                <div class="airline-logo">
-                                    @php
-                                    $airlineName = $flight['segments_info'][0]['airline_info']['name'] ?? 'UNKNOWN';
 
-                                    // استدعاء الدالة مباشرة بدون use
-                                    $logoUrl = \App\Services\AirlineLogoService::getLogoUrl($airlineName);
-                                    // dd($logoUrl);
-                                    // dd($flight['segments_info'][0]['airline_info']['name']);
-                                    $defaultLogo = \App\Services\AirlineLogoService::getDefaultLogo();
-                                    @endphp
+                                        $logoUrl = \App\Services\AirlineLogoService::getLogoUrl($airlineName);
+                                        // dd($logoUrl);
+                                        // dd($flight['segments_info'][0]['airline_info']['name']);
+                                        $defaultLogo = \App\Services\AirlineLogoService::getDefaultLogo();
+                                        @endphp
 
-                                    @if($airlineName !== 'UNKNOWN')
-                                    <img src="{{ $logoUrl }}" alt="{{ $airlineName }} Logo" class="airline-logo-img"
-                                        onerror="this.onerror=null; this.src='{{ $defaultLogo }}';">
-                                    @else
-                                    <span class="airline-name">{{ $airlineName }}</span>
-                                    @endif
+                                        @if($airlineName !== 'UNKNOWN')
+                                        <img src="{{ $logoUrl }}" alt="{{ $airlineName }} Logo" class="airline-logo-img"
+                                            onerror="this.onerror=null; this.src='{{ $defaultLogo }}';">
+                                        @else
+                                        <span class="airline-name">{{ $airlineName }}</span>
+                                        @endif
+                                    </div> --}}
+                                    <div class="fw-bold">
+                                        @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
+                                        $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                        {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                        @else
+                                        {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                        @endif
+                                    </div>
                                 </div>
-                                <div>
-                                    @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                    {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                    @else
-                                    {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                    @endif
+                                <div>Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ?? 'Economy' }}</span>
                                 </div>
-                            </div>
-                            <div>Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ?? 'Economy' }}</span>
-                            </div>
-                        </div><!-- flight-header -->
+                            </div><!-- flight-header -->
 
-                        <div class="row" style="box-sizing: border-box;">
-                            <div class="col-md-9" style="padding: 0 15px 0 25px;">
-                                <!-- OUTBOUND FLIGHT -->
-                                <div class="flight-details" style="border-bottom: 1px solid #eee;">
-                                    <div class="row">
-                                        <!-- Departure Details -->
-                                        <div class="col-3">
-                                            <?php
+                            <div class="row" style="box-sizing: border-box;">
+                                <div class="col-md-9" style="padding: 0 15px 0 25px;">
+                                    <!-- OUTBOUND FLIGHT -->
+                                    <div class="flight-details" style="border-bottom: 1px solid #eee;">
+                                        <div class="row">
+                                            <!-- Departure Details -->
+                                            <div class="col-3">
+                                                <?php
                                                             $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
                                                             $datetime = \Carbon\Carbon::parse($departureTime);
 
@@ -1291,15 +1431,17 @@
                                                                 $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                                             }
                                                         ?>
-                                            <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
-                                            <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                            <div class="flight-airport">{{ $cityName }}</div>
-                                            <div class="flight-airport">{{ $cityCode }}</div>
-                                        </div>
+                                                <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
+                                                <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}
+                                                </div>
+                                                <div class="flight-airport">{{ $cityName }}</div>
+                                                <div class="flight-airport">{{ $cityCode }}</div>
+                                            </div>
 
-                                        <!-- Flight Duration -->
-                                        <div class="col-6 d-flex flex-column justify-content-center align-items-center">
-                                            <?php
+                                            <!-- Flight Duration -->
+                                            <div
+                                                class="col-6 d-flex flex-column justify-content-center align-items-center">
+                                                <?php
                                                             if(isset($flight['itineraries'][0]['duration'])) {
                                                                 $duration = $flight['itineraries'][0]['duration'];
                                                                 // Convert PT2H30M format to 2h 30m
@@ -1313,61 +1455,63 @@
                                                             $outboundStops = isset($flight['outbound_stops_text']) ? $flight['outbound_stops_text'] :
                                                                             (isset($flight['itineraries'][0]['segments']) ? (count($flight['itineraries'][0]['segments']) - 1) : '0');
                                                         ?>
-                                            <div class="flight-duration">{{ $duration }}</div>
-                                            <div class="position-relative w-100 my-2">
-                                                <div class="border-top w-100"></div>
-                                                <i
-                                                    class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
-                                            </div>
-                                            <div class="flight-duration">
-                                                @if($outboundStops > 0)
-                                                <div>{{ $outboundStops }} stop(s)</div>
-                                                <div class="mt-1">
-                                                    <button
-                                                        class="btn btn-outline-primary rounded-circle outbound-stops-toggle"
-                                                        data-flight-id="{{ $flight['id'] }}"
-                                                        style="width: 28px; height: 28px; padding: 0;">
-                                                        <i class="fas fa-chevron-down"></i>
-                                                    </button>
+                                                <div class="flight-duration">{{ $duration }}</div>
+                                                <div class="position-relative w-100 my-2">
+                                                    <div class="border-top w-100"></div>
+                                                    <i
+                                                        class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
                                                 </div>
-                                                @else
-                                                Direct Flight
-                                                @endif
+                                                <div class="flight-duration">
+                                                    @if($outboundStops > 0)
+                                                    <div>{{ $outboundStops }} stop(s)</div>
+                                                    <div class="mt-1">
+                                                        <button
+                                                            class="btn btn-outline-primary rounded-circle outbound-stops-toggle"
+                                                            data-flight-id="{{ $flight['id'] }}"
+                                                            style="width: 28px; height: 28px; padding: 0;">
+                                                            <i class="fas fa-chevron-down"></i>
+                                                        </button>
+                                                    </div>
+                                                    @else
+                                                    Direct Flight
+                                                    @endif
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Arrival Details -->
-                                        <div class="col-3 text-end">
-                                            <?php
+                                            <!-- Arrival Details -->
+                                            <div class="col-3 text-end">
+                                                <?php
                                                             $lastSegmentIndex = count($flight['itineraries'][0]['segments'] ?? []) - 1;
                                                             $arrivalTime = $flight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
                                                             $datetime = \Carbon\Carbon::parse($arrivalTime);
                                                         ?>
-                                            <div class="flight-time">{{ $datetime->format('H:i')}}</div>
-                                            <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                            <div class="flight-airport">{{ trim(explode("(",
-                                                explode(")", $flightData['destinationCity'] ?? '')[0] ?? '')[1] ?? '')
-                                                }}
+                                                <div class="flight-time">{{ $datetime->format('H:i')}}</div>
+                                                <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}
+                                                </div>
+                                                <div class="flight-airport">{{ trim(explode("(",
+                                                    explode(")", $flightData['destinationCity'] ?? '')[0] ?? '')[1] ??
+                                                    '')
+                                                    }}
+                                                </div>
+                                                <div class="flight-airport">{{ trim(explode(",",
+                                                    $flightData['destinationCity'] ?? '')[1] ?? '')
+                                                    }}</div>
                                             </div>
-                                            <div class="flight-airport">{{ trim(explode(",",
-                                                $flightData['destinationCity'] ?? '')[1] ?? '')
-                                                }}</div>
                                         </div>
-                                    </div>
-                                </div><!-- flight-details -->
+                                    </div><!-- flight-details -->
 
-                                <!-- Outbound Stops Details (Initially Hidden) -->
-                                @if(isset($flight['itineraries'][0]['segments']) &&
-                                count($flight['itineraries'][0]['segments']) > 1)
-                                <div class="outbound-stops-details" id="outbound-stops-{{ $flight['id'] }}"
-                                    style="display: none;">
-                                    <div class="stops-details-container p-3 bg-light">
-                                        <h6 class="mb-3">Connection Details</h6>
+                                    <!-- Outbound Stops Details (Initially Hidden) -->
+                                    @if(isset($flight['itineraries'][0]['segments']) &&
+                                    count($flight['itineraries'][0]['segments']) > 1)
+                                    <div class="outbound-stops-details" id="outbound-stops-{{ $flight['id'] }}"
+                                        style="display: none;">
+                                        <div class="stops-details-container p-3 bg-light">
+                                            <h6 class="mb-3">Connection Details</h6>
 
-                                        @foreach($flight['itineraries'][0]['segments'] as $key => $segment)
-                                        @if($key < count($flight['itineraries'][0]['segments'])) <div
-                                            class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
-                                            <?php
+                                            @foreach($flight['itineraries'][0]['segments'] as $key => $segment)
+                                            @if($key < count($flight['itineraries'][0]['segments'])) <div
+                                                class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
+                                                <?php
                                                                         $departureAirport = $segment['departure']['iataCode'] ?? '';
                                                                         $departureTime = $segment['departure']['at'] ?? '';
                                                                         $departureDateTime = \Carbon\Carbon::parse($departureTime);
@@ -1385,42 +1529,47 @@
                                                                         }
                                                                     ?>
 
-                                            <!-- For outbound flights -->
-                                            @if($key > 0)
-                                            <div class="d-flex justify-content-between mb-2">
-                                                <span><i class="fas fa-clock text-warning me-1"></i> Connection time:
-                                                    @if($connectionHours > 0){{ $connectionHours }}h @endif
-                                                    {{ $connectionMinutes }}m at {{ $departureAirport }}
-                                                </span>
-                                                <span class="badge bg-secondary">
+                                                <!-- For outbound flights -->
+                                                @if($key > 0)
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span><i class="fas fa-clock text-warning me-1"></i> Connection
+                                                        time:
+                                                        @if($connectionHours > 0){{ $connectionHours }}h @endif
+                                                        {{ $connectionMinutes }}m at {{ $departureAirport }}
+                                                    </span>
+                                                    <span class="badge bg-secondary">
 
-                                                    @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                                    {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                                    @else
-                                                    {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                                    @endif
+                                                        @if(isset($flight['segments_info'][0]['airline_info']['name'])
+                                                        &&
+                                                        $flight['segments_info'][0]['airline_info']['name'] !==
+                                                        'UNKNOWN')
+                                                        {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                                        @else
+                                                        {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                                        @endif
 
-                                                </span>
-                                            </div><!-- d-flex justify-content-between mb-2 -->
-                                            @else
-                                            <div class="d-flex justify-content-between mb-2">
-                                                <span><i class="fas fa-plane-departure text-success me-1"></i>
-                                                    Departure</span>
-                                                <span class="badge bg-secondary">
-                                                    @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                                    {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                                    @else
-                                                    {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                                    @endif
-                                                </span>
-                                            </div><!-- /d-flex justify-content-between mb-2 -->
-                                            @endif
+                                                    </span>
+                                                </div><!-- d-flex justify-content-between mb-2 -->
+                                                @else
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span><i class="fas fa-plane-departure text-success me-1"></i>
+                                                        Departure</span>
+                                                    <span class="badge bg-secondary">
+                                                        @if(isset($flight['segments_info'][0]['airline_info']['name'])
+                                                        &&
+                                                        $flight['segments_info'][0]['airline_info']['name'] !==
+                                                        'UNKNOWN')
+                                                        {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                                        @else
+                                                        {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                                        @endif
+                                                    </span>
+                                                </div><!-- /d-flex justify-content-between mb-2 -->
+                                                @endif
 
-                                            <div class="row">
-                                                <div class="col-5">
-                                                    <?php
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <?php
                                                                     $departureTime = $flight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
                                                                     $datetime = \Carbon\Carbon::parse($departureTime);
 
@@ -1440,46 +1589,50 @@
                                                                         $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                                                     }
                                                                 ?>
-                                                    <div class="text-primary">{{ $departureDateTime->format('H:i') }}
+                                                        <div class="text-primary">{{ $departureDateTime->format('H:i')
+                                                            }}
+                                                        </div>
+                                                        <div class="small">{{ $departureDateTime->translatedFormat('d M
+                                                            Y')
+                                                            }}
+                                                        </div>
+                                                        <div>{{ $departureAirport }}</div>
                                                     </div>
-                                                    <div class="small">{{ $departureDateTime->translatedFormat('d M Y')
-                                                        }}
+                                                    <div
+                                                        class="col-2 text-center d-flex flex-column justify-content-center">
+                                                        <div class="small">{{ str_replace(['PT', 'H', 'M'], ['', 'h ',
+                                                            'm'],
+                                                            $segment['duration'] ?? '') }}</div>
+                                                        <div><i class="fas fa-arrow-right"></i></div>
                                                     </div>
-                                                    <div>{{ $departureAirport }}</div>
-                                                </div>
-                                                <div
-                                                    class="col-2 text-center d-flex flex-column justify-content-center">
-                                                    <div class="small">{{ str_replace(['PT', 'H', 'M'], ['', 'h ', 'm'],
-                                                        $segment['duration'] ?? '') }}</div>
-                                                    <div><i class="fas fa-arrow-right"></i></div>
-                                                </div>
-                                                <div class="col-5 text-end">
-                                                    <div class="text-primary">{{ $arrivalDateTime->format('H:i') }}
+                                                    <div class="col-5 text-end">
+                                                        <div class="text-primary">{{ $arrivalDateTime->format('H:i') }}
+                                                        </div>
+                                                        <div class="small">{{ $arrivalDateTime->translatedFormat('d M
+                                                            Y') }}
+                                                        </div>
+                                                        <div>{{ $arrivalAirport }}</div>
                                                     </div>
-                                                    <div class="small">{{ $arrivalDateTime->translatedFormat('d M Y') }}
-                                                    </div>
-                                                    <div>{{ $arrivalAirport }}</div>
-                                                </div>
-                                            </div><!-- row -->
+                                                </div><!-- row -->
 
-                                    </div><!-- stops-details-container -->
-                                    @endif
+                                        </div><!-- stops-details-container -->
+                                        @endif
 
-                                    @endforeach
-                                    {{-- div div/div> --}}
-                                    <!-- outbound-stops-details -->
+                                        @endforeach
+                                        {{-- div div/div> --}}
+                                        <!-- outbound-stops-details -->
+                                    </div>
+
                                 </div>
+                                @endif
 
-                            </div>
-                            @endif
-
-                            <!-- RETURN FLIGHT (if exists) -->
-                            @if (isset($flight['itineraries'][1]))
-                            <div class="flight-details mt-3">
-                                <div class="row">
-                                    <!-- Departure Details -->
-                                    <div class="col-3">
-                                        <?php
+                                <!-- RETURN FLIGHT (if exists) -->
+                                @if (isset($flight['itineraries'][1]))
+                                <div class="flight-details mt-3">
+                                    <div class="row">
+                                        <!-- Departure Details -->
+                                        <div class="col-3">
+                                            <?php
                                                             $departureTime = $flight['itineraries'][1]['segments'][0]['departure']['at'] ?? '';
                                                             $datetime = \Carbon\Carbon::parse($departureTime);
 
@@ -1499,15 +1652,15 @@
                                                                 $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                                             }
                                                         ?>
-                                        <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
-                                        <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                        <div class="flight-airport">{{ $cityName }}</div>
-                                        <div class="flight-airport">{{ $cityCode }}</div>
-                                    </div>
+                                            <div class="flight-time">{{ $datetime->translatedFormat('H:i') }}</div>
+                                            <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
+                                            <div class="flight-airport">{{ $cityName }}</div>
+                                            <div class="flight-airport">{{ $cityCode }}</div>
+                                        </div>
 
-                                    <!-- Flight Duration -->
-                                    <div class="col-6 d-flex flex-column justify-content-center align-items-center">
-                                        <?php
+                                        <!-- Flight Duration -->
+                                        <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                                            <?php
                                                             if(isset($flight['itineraries'][1]['duration'])) {
                                                                 $duration = $flight['itineraries'][1]['duration'];
                                                                 // Convert PT2H30M format to 2h 30m
@@ -1521,32 +1674,32 @@
                                                             $inboundStops = isset($flight['inbound_stops_text']) ? $flight['inbound_stops_text'] :
                                                                             (isset($flight['itineraries'][1]['segments']) ? (count($flight['itineraries'][1]['segments']) - 1) : '0');
                                                         ?>
-                                        <div class="flight-duration">{{ $duration }}</div>
-                                        <div class="position-relative w-100 my-2">
-                                            <div class="border-top w-100"></div>
-                                            <i
-                                                class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
-                                        </div>
-                                        <div class="flight-duration">
-                                            @if($inboundStops > 0)
-                                            <div>{{ $inboundStops }} stop(s)</div>
-                                            <div class="mt-1">
-                                                <button
-                                                    class="btn btn-outline-primary rounded-circle inbound-stops-toggle"
-                                                    data-flight-id="{{ $flight['id'] }}"
-                                                    style="width: 28px; height: 28px; padding: 0;">
-                                                    <i class="fas fa-chevron-down"></i>
-                                                </button>
+                                            <div class="flight-duration">{{ $duration }}</div>
+                                            <div class="position-relative w-100 my-2">
+                                                <div class="border-top w-100"></div>
+                                                <i
+                                                    class="fas fa-plane position-absolute top-0 start-50 translate-middle bg-white px-1"></i>
                                             </div>
-                                            @else
-                                            Direct Flight
-                                            @endif
+                                            <div class="flight-duration">
+                                                @if($inboundStops > 0)
+                                                <div>{{ $inboundStops }} stop(s)</div>
+                                                <div class="mt-1">
+                                                    <button
+                                                        class="btn btn-outline-primary rounded-circle inbound-stops-toggle"
+                                                        data-flight-id="{{ $flight['id'] }}"
+                                                        style="width: 28px; height: 28px; padding: 0;">
+                                                        <i class="fas fa-chevron-down"></i>
+                                                    </button>
+                                                </div>
+                                                @else
+                                                Direct Flight
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Arrival Details -->
-                                    <div class="col-3 text-end">
-                                        <?php
+                                        <!-- Arrival Details -->
+                                        <div class="col-3 text-end">
+                                            <?php
                                                             $lastSegmentIndex = count($flight['itineraries'][1]['segments'] ?? []) - 1;
                                                             $arrivalTime = $flight['itineraries'][1]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
                                                             $datetime = \Carbon\Carbon::parse($arrivalTime);
@@ -1567,27 +1720,27 @@
                                                 $returnCityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                             }
                                         ?>
-                                        <div class="flight-time">{{ $datetime->format('H:i')}}</div>
-                                        <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                        <div class="flight-airport">{{ $returnCityName }}</div>
-                                        <div class="flight-airport">{{ $returnCityCode }}</div>
+                                            <div class="flight-time">{{ $datetime->format('H:i')}}</div>
+                                            <div class="flight-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
+                                            <div class="flight-airport">{{ $returnCityName }}</div>
+                                            <div class="flight-airport">{{ $returnCityCode }}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Inbound Stops Details (Initially Hidden) -->
-                            @if(isset($flight['itineraries'][1]['segments']) &&
-                            count($flight['itineraries'][1]['segments'])
-                            > 1)
-                            <div class="inbound-stops-details" id="inbound-stops-{{ $flight['id'] }}"
-                                style="display: none;">
-                                <div class="stops-details-container p-3 bg-light">
-                                    <h6 class="mb-3">Connection Details</h6>
+                                <!-- Inbound Stops Details (Initially Hidden) -->
+                                @if(isset($flight['itineraries'][1]['segments']) &&
+                                count($flight['itineraries'][1]['segments'])
+                                > 1)
+                                <div class="inbound-stops-details" id="inbound-stops-{{ $flight['id'] }}"
+                                    style="display: none;">
+                                    <div class="stops-details-container p-3 bg-light">
+                                        <h6 class="mb-3">Connection Details</h6>
 
-                                    @foreach($flight['itineraries'][1]['segments'] as $key => $segment)
-                                    @if($key < count($flight['itineraries'][1]['segments'])) <div
-                                        class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
-                                        <?php
+                                        @foreach($flight['itineraries'][1]['segments'] as $key => $segment)
+                                        @if($key < count($flight['itineraries'][1]['segments'])) <div
+                                            class="connection-info mb-3 p-2 border-start border-4 @if($key == 0) border-success @else border-primary @endif">
+                                            <?php
                                                         $departureAirport = $segment['departure']['iataCode'] ?? '';
                                                         $departureTime = $segment['departure']['at'] ?? '';
                                                         $departureDateTime = \Carbon\Carbon::parse($departureTime);
@@ -1604,83 +1757,87 @@
                                                             $connectionMinutes = $connectionTime % 60;
                                                         }
                                                     ?>
-                                        {{-- @dd($flight['itineraries'][1]['segments']) --}}
+                                            {{-- @dd($flight['itineraries'][1]['segments']) --}}
 
-                                        <!-- For Inbound flights -->
-                                        @if($key > 0)
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span><i class="fas fa-clock text-warning me-1"></i> Connection time:
-                                                @if($connectionHours > 0){{ $connectionHours }}h @endif
-                                                {{ $connectionMinutes }}m at {{ $departureAirport }}
-                                            </span>
-                                            <span class="badge bg-secondary">
-                                                @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                                $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                                {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                                @else
-                                                {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                                @endif
-                                            </span>
-                                        </div>
-                                        @else
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span><i class="fas fa-plane-departure text-success me-1"></i>
-                                                Departure</span>
-                                            <span class="badge bg-secondary">
-                                                @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
-                                                $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                                {{ $flight['segments_info'][0]['airline_info']['name'] }}
-                                                @else
-                                                {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                                @endif
-                                            </span>
-                                        </div>
-                                        @endif
+                                            <!-- For Inbound flights -->
+                                            @if($key > 0)
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><i class="fas fa-clock text-warning me-1"></i> Connection time:
+                                                    @if($connectionHours > 0){{ $connectionHours }}h @endif
+                                                    {{ $connectionMinutes }}m at {{ $departureAirport }}
+                                                </span>
+                                                <span class="badge bg-secondary">
+                                                    @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
+                                                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                                    {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                                    @else
+                                                    {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                            @else
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span><i class="fas fa-plane-departure text-success me-1"></i>
+                                                    Departure</span>
+                                                <span class="badge bg-secondary">
+                                                    @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
+                                                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                                    {{ $flight['segments_info'][0]['airline_info']['name'] }}
+                                                    @else
+                                                    {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                            @endif
 
-                                        <div class="row">
-                                            <div class="col-5">
-                                                <div class="text-primary">{{ $departureDateTime->format('H:i') }}</div>
-                                                <div class="small">{{ $departureDateTime->translatedFormat('d M Y') }}
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <div class="text-primary">{{ $departureDateTime->format('H:i') }}
+                                                    </div>
+                                                    <div class="small">{{ $departureDateTime->translatedFormat('d M Y')
+                                                        }}
+                                                    </div>
+                                                    <div>{{ $departureAirport }}</div>
                                                 </div>
-                                                <div>{{ $departureAirport }}</div>
-                                            </div>
-                                            <div class="col-2 text-center d-flex flex-column justify-content-center">
-                                                <div class="small">{{ str_replace(['PT', 'H', 'M'], ['', 'h ', 'm'],
-                                                    $segment['duration'] ?? '') }}</div>
-                                                <div><i class="fas fa-arrow-right"></i></div>
-                                            </div>
-                                            <div class="col-5 text-end">
-                                                <div class="text-primary">{{ $arrivalDateTime->format('H:i') }}</div>
-                                                <div class="small">{{ $arrivalDateTime->translatedFormat('d M Y') }}
+                                                <div
+                                                    class="col-2 text-center d-flex flex-column justify-content-center">
+                                                    <div class="small">{{ str_replace(['PT', 'H', 'M'], ['', 'h ', 'm'],
+                                                        $segment['duration'] ?? '') }}</div>
+                                                    <div><i class="fas fa-arrow-right"></i></div>
                                                 </div>
-                                                <div>{{ $arrivalAirport }}</div>
+                                                <div class="col-5 text-end">
+                                                    <div class="text-primary">{{ $arrivalDateTime->format('H:i') }}
+                                                    </div>
+                                                    <div class="small">{{ $arrivalDateTime->translatedFormat('d M Y') }}
+                                                    </div>
+                                                    <div>{{ $arrivalAirport }}</div>
+                                                </div>
                                             </div>
-                                        </div>
+                                    </div>
+                                    @endif
+                                    @endforeach
                                 </div>
-                                @endif
-                                @endforeach
                             </div>
-                        </div>
-                        @endif
-                        @endif
+                            @endif
+                            @endif
 
-                    </div><!-- col-md-9 -->
+                        </div><!-- col-md-9 -->
 
-                    <div class="col-md-3 d-flex justify-content-center">
-                        <!-- Price and Book Button -->
-                        <div class="p-3 d-flex text-center justify-content-center align-items-center">
-                            <div class="me-3">
-                                <div class="flight-price">${{ $flight['price']['grandTotal'] ?? '0.00' }}</div>
-                                <button class="book-button px-3 py-2">Book Now</button>
+                        <div class="col-md-3 d-flex justify-content-center">
+                            <!-- Price and Book Button -->
+                            <div class="p-3 d-flex text-center justify-content-center align-items-center">
+                                <div class="me-3">
+                                    <div class="flight-price">${{ $flight['price']['grandTotal'] ?? '0.00' }}</div>
+                                    <button class="book-button px-3 py-2">Book Now</button>
+                                </div>
                             </div>
-                        </div>
-                    </div><!-- col-md-3 -->
+                        </div><!-- col-md-3 -->
 
 
                 </div><!-- row -->
 
                 <!-- Seats Remaining and Refund Status -->
-                <div class="p-3 d-flex justify-content-between">
+                <div class="flight-extra-info p-3">
                     <div style="padding: 10px 15px;">{{ $flight['numberOfBookableSeats'] ?? '0' }} seats remaining
                     </div>
                     <!-- Flight Footer -->
@@ -1708,11 +1865,11 @@
                 </div>
             </div><!-- Flight Card -->
 
+            </form>
 
-
-            <div class="banner-container d-flex flex-wrap justify-content-between align-items-center my-3">
+            <div class="banner-container my-3">
                 <!-- Left side with icons and text -->
-                <div class="d-flex align-items-center justify-content-between mb-3 mb-md-0">
+                <div class="banner-icons mb-3 mb-md-0">
                     <div class="d-flex me-3">
                         <div class="icon-circle">
                             <i class="fa-solid fa-hotel"></i>
@@ -1726,20 +1883,26 @@
                     </div>
 
                 </div>
-                <div>
-                    <div class="yellow-pill">Save big on Bundle</div>
-                    <div class="save-text">Add Hotel or Car with Flight and<br>Save Extra 30% on Your Trip</div>
-                </div>
 
                 <!-- Right side with phone button -->
-                <div>
-                    <a href="tel:+17144775913" class="phone-button">
-                        <i class="fa-solid fa-phone-volume me-2" style="width: 30px; height: 30px;"></i>
-                        <div>
-                            <span class="phone-number">+1-714-477-5913</span>
-                            <span class="expert-text">Talk to a Travel Expert Now</span>
-                        </div>
-                    </a>
+                <div class="right-side-banner">
+
+                    <div>
+                        <div class="yellow-pill">Save big on Bundle</div>
+                        <div class="save-text">Add Hotel or Car with Flight and<br>Save Extra 30% on Your Trip</div>
+                    </div>
+
+
+                    <div>
+                        <a href="tel:+17144775913" class="phone-button">
+                            <i class="fa-solid fa-phone-volume me-2" style="width: 30px; height: 30px;"></i>
+                            <div>
+                                <span class="phone-number">+1-714-477-5913</span>
+                                <span class="expert-text">Talk to a Travel Expert Now</span>
+                            </div>
+                        </a>
+                    </div>
+
                 </div>
             </div><!-- banner-container -->
             @empty
@@ -1801,7 +1964,7 @@
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
                     <img src="{{ asset('assets/images/IATA.webp') }}" alt="IATA" class="img-fluid"
                         style="max-height: 50px;">
-                </div>
+                </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
 
                     <?xml version="1.0" encoding="utf-8"?><svg version="1.1" id="Layer_1"
@@ -1816,48 +1979,48 @@
                                 d="M111.219,18.126c0-0.314,0-0.598,0-0.912 c0-0.26,0.127-0.438,0.398-0.423c0.505,0.072,1.22,0.144,1.728,0.039c0.662-0.138,1.138-0.607,1.419-1.251 c0.396-0.906,0.658-1.638,0.824-2.117l-5.032-12.466c-0.085-0.211-0.109-0.604,0.313-0.604h1.76c0.335,0,0.472,0.212,0.547,0.421 l3.648,10.125l3.482-10.125c0.071-0.208,0.214-0.421,0.546-0.421h1.659c0.42,0,0.396,0.392,0.313,0.604l-4.991,12.854 c-0.646,1.712-1.507,4.437-3.444,4.91c-0.972,0.254-2.198,0.162-2.918-0.14C111.288,18.53,111.219,18.287,111.219,18.126 L111.219,18.126z M90.582,2.084c2.752,0,3.502,2.165,3.502,4.643c0.016,1.67-0.292,3.16-1.156,4.013 c-0.647,0.639-1.371,0.813-2.46,0.813c-0.969,0-2.244-0.505-3.196-1.209V3.257C88.263,2.496,89.528,2.084,90.582,2.084 L90.582,2.084z M86.851,18.57h-1.662c-0.232,0-0.423-0.189-0.423-0.422c0-5.771,0-11.542,0-17.313c0-0.232,0.19-0.422,0.423-0.422 h1.271c0.268,0,0.451,0.193,0.484,0.422l0.134,0.907c1.191-1.057,2.725-1.735,4.187-1.735c4.092,0,5.438,3.372,5.438,6.878 c0,3.751-2.059,6.766-5.54,6.766c-1.466,0-2.836-0.541-3.891-1.48v5.978C87.271,18.381,87.082,18.57,86.851,18.57L86.851,18.57z M108.872,12.912c0,0.232-0.19,0.423-0.424,0.423h-1.24c-0.268,0-0.451-0.194-0.484-0.423l-0.125-0.844 c-0.57,0.482-1.27,0.906-2.028,1.201c-1.459,0.566-3.141,0.66-4.566-0.215c-1.031-0.633-1.578-1.87-1.578-3.146 c0-0.987,0.304-1.966,0.979-2.677c0.9-0.971,2.204-1.448,3.78-1.448c0.951,0,2.313,0.112,3.304,0.436V4.521 c0-1.728-0.728-2.476-2.646-2.476c-1.466,0-2.588,0.222-4.148,0.707c-0.25,0.008-0.396-0.182-0.396-0.414V1.37 c0-0.232,0.198-0.457,0.413-0.526c1.114-0.485,2.693-0.788,4.372-0.844c2.188,0,4.788,0.493,4.788,3.858V12.912L108.872,12.912z M106.488,10.432V7.868c-0.833-0.228-2.211-0.322-2.744-0.322c-0.842,0-1.764,0.199-2.246,0.717 c-0.359,0.38-0.522,0.926-0.522,1.454c0,0.682,0.236,1.367,0.787,1.705c0.641,0.435,1.634,0.382,2.567,0.117 C105.228,11.284,106.069,10.833,106.488,10.432L106.488,10.432z M9.566,13.642c-0.16,0.144-0.391,0.153-0.571,0.057 c-0.804-0.668-0.948-0.977-1.387-1.612c-1.328,1.353-2.268,1.758-3.988,1.758C1.584,13.844,0,12.587,0,10.074 C0,8.11,1.063,6.775,2.58,6.121C3.892,5.544,5.725,5.44,7.127,5.283V4.969c0-0.577,0.046-1.257-0.293-1.754 C6.539,2.769,5.973,2.586,5.476,2.586c-0.923,0-1.744,0.473-1.944,1.452C3.49,4.256,3.331,4.472,3.111,4.483L0.767,4.229 C0.568,4.184,0.349,4.025,0.406,3.724c0.531-2.805,3.036-3.679,5.313-3.703h0.179c1.166,0.015,2.654,0.334,3.56,1.204 c1.176,1.1,1.063,2.566,1.063,4.163v3.768c0,1.134,0.471,1.631,0.913,2.241c0.154,0.221,0.19,0.482-0.008,0.644 c-0.494,0.414-1.372,1.176-1.855,1.606L9.566,13.642L9.566,13.642z M7.127,7.744c0,0.942,0.023,1.728-0.453,2.566 C6.291,10.99,5.68,11.409,5,11.409c-0.927,0-1.47-0.707-1.47-1.754c0-2.061,1.848-2.435,3.598-2.435V7.744L7.127,7.744z M41.275,13.642c-0.16,0.144-0.39,0.153-0.571,0.057c-0.803-0.668-0.947-0.977-1.387-1.612c-1.328,1.353-2.268,1.758-3.988,1.758 c-2.036,0-3.62-1.257-3.62-3.77c0-1.964,1.064-3.299,2.58-3.954c1.313-0.576,3.145-0.681,4.548-0.838V4.969 c0-0.577,0.045-1.257-0.294-1.754c-0.294-0.446-0.859-0.629-1.357-0.629c-0.923,0-1.742,0.473-1.944,1.452 c-0.042,0.218-0.201,0.434-0.419,0.445l-2.345-0.254c-0.198-0.045-0.417-0.204-0.361-0.506c0.532-2.805,3.037-3.679,5.313-3.703 h0.18c1.165,0.015,2.653,0.334,3.56,1.204c1.177,1.1,1.063,2.566,1.063,4.163v3.768c0,1.134,0.471,1.631,0.913,2.241 c0.155,0.221,0.189,0.482-0.008,0.644c-0.494,0.414-1.372,1.176-1.854,1.606L41.275,13.642L41.275,13.642z M38.837,7.744 c0,0.942,0.022,1.728-0.453,2.566c-0.385,0.68-0.996,1.099-1.674,1.099c-0.927,0-1.471-0.707-1.471-1.754 c0-2.061,1.848-2.435,3.598-2.435V7.744L38.837,7.744z M71.066,13.672h-2.41c-0.242-0.015-0.434-0.207-0.434-0.445L68.218,0.808 c0.021-0.228,0.222-0.406,0.466-0.406l2.243,0c0.212,0.011,0.386,0.155,0.43,0.347v1.899h0.046 c0.678-1.699,1.625-2.508,3.296-2.508c1.084,0,2.146,0.392,2.822,1.463c0.633,0.993,0.633,2.664,0.633,3.866v7.813 c-0.026,0.221-0.225,0.391-0.464,0.391h-2.425c-0.224-0.014-0.404-0.179-0.431-0.391v-6.74c0-1.358,0.158-3.345-1.513-3.345 c-0.587,0-1.129,0.392-1.399,0.993c-0.34,0.758-0.385,1.516-0.385,2.352v6.685C71.533,13.473,71.324,13.672,71.066,13.672 L71.066,13.672z M60.9,2.674c-1.783,0-1.896,2.429-1.896,3.944c0,1.515-0.022,4.755,1.875,4.755c1.874,0,1.965-2.612,1.965-4.206 c0-1.044-0.046-2.299-0.362-3.292C62.211,3.013,61.668,2.674,60.9,2.674L60.9,2.674z M60.879,0.14c3.59,0,5.531,3.084,5.531,7.002 c0,3.787-2.145,6.792-5.531,6.792c-3.523,0-5.442-3.083-5.442-6.922C55.437,3.144,57.378,0.14,60.879,0.14L60.879,0.14z M16.172,13.672h-2.418c-0.23-0.015-0.415-0.188-0.434-0.408l0.002-12.416c0-0.248,0.209-0.446,0.467-0.446l2.253,0 c0.235,0.012,0.424,0.19,0.439,0.417v1.621h0.045c0.587-1.567,1.693-2.299,3.184-2.299c1.513,0,2.461,0.732,3.139,2.299 c0.587-1.567,1.919-2.299,3.341-2.299c1.016,0,2.123,0.418,2.799,1.359c0.768,1.045,0.611,2.56,0.611,3.892l-0.003,7.834 c0,0.247-0.208,0.446-0.466,0.446h-2.416c-0.244-0.015-0.435-0.207-0.435-0.445l0-6.582c0-0.522,0.045-1.828-0.068-2.324 c-0.181-0.837-0.722-1.072-1.421-1.072c-0.588,0-1.198,0.392-1.446,1.019c-0.248,0.628-0.225,1.672-0.225,2.378v6.581 c0,0.247-0.209,0.446-0.467,0.446h-2.416c-0.243-0.015-0.435-0.207-0.435-0.445l-0.002-6.582c0-1.385,0.226-3.421-1.49-3.421 c-1.739,0-1.671,1.984-1.671,3.421l-0.001,6.581C16.639,13.473,16.43,13.672,16.172,13.672L16.172,13.672z M45.175,2.592V0.818 c0.001-0.27,0.205-0.45,0.449-0.449l7.951-0.001c0.254,0,0.459,0.185,0.459,0.448v1.521c-0.003,0.255-0.218,0.588-0.599,1.117 l-4.119,5.88c1.529-0.035,3.146,0.194,4.535,0.974c0.313,0.176,0.397,0.437,0.422,0.692v1.893c0,0.262-0.286,0.563-0.586,0.406 c-2.446-1.282-5.694-1.422-8.4,0.016c-0.276,0.146-0.565-0.151-0.565-0.412v-1.799c0-0.287,0.006-0.78,0.296-1.219l4.771-6.846 l-4.155,0C45.38,3.039,45.176,2.858,45.175,2.592L45.175,2.592z" />
                         </g>
                     </svg>
-                </div>
+                </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
                     <img src="{{ asset('assets/images/flexpay.webp') }}" alt="Flexpay" class="img-fluid"
                         style="max-height: 50px;">
-                </div>
+                </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
 
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
-                    <img src="{{ asset('assets/images/NET_BIG.png') }}" alt="Cloudflare" class="img-fluid"
+                    <img src="{{ asset('assets/images/cloudflare.webp') }}" alt="Cloudflare" class="img-fluid"
                         style="max-height: 50px;">
-                </div>
+                </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
                     <img src="{{ asset('assets/images/digicert.webp') }}" alt="DigiCert" class="img-fluid"
                         style="max-height: 50px;">
-                </div>
-            </div>
+                </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
+            </div><!-- row justify-content-center align-items-center mb-5 -->
             <!-- Bottom Text -->
             <div class="text-center mb-5">
                 <p class="text-muted small">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
                     nibh euismod tincidunt ut laoreet dolore</p>
-            </div>
-            <div class="row">
+            </div><!-- text-center mb-5 -->
+            <div class="row px-3">
                 <!-- Logo Column -->
                 <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
                     <h2 class="mb-3" style="color: #6f42c1; font-weight: bold;">LOGO</h2>
                     <p class="text-muted">About the website</p>
-                </div>
+                </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
 
                 <!-- Quick Links Column -->
-                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-secondary mb-3">Quick links</h5>
+                <div class="col-lg-2 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
+                    <h5 class="text-secondary mb-3 fw-bold">Quick links</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Home</a></li>
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">About Us</a></li>
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
                     </ul>
-                </div>
+                </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
 
 
 
                 <!-- Legal Column -->
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-secondary mb-3">Legal</h5>
+                <div class="col-lg-3 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
+                    <h5 class="text-secondary mb-3 fw-bold">Legal</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Important Guidelines</a>
                         </li>
@@ -1866,20 +2029,20 @@
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Cancellation Policy</a>
                         </li>
                     </ul>
-                </div>
+                </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->
 
                 <!-- keep in touch Column -->
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-secondary mb-3">Keep In Touch</h5>
+                <div class="col-lg-3 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
+                    <h5 class="text-secondary mb-3 fw-bold">Keep In Touch</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="tel:+" class="text-decoration-none text-muted"><img
-                                    src="{{ asset('assets/images/phone-call-purple.webp') }}" width="30px" height="30px"
-                                    alt="">
-                                <span class="mx-2">+1-111-111-1111</span></a>
+                                    src="{{ asset('assets/images/phone-call-purple.webp') }}"
+                                    class="footer-contact-icons" alt="">
+                                <span class="mx-2 footer-contact-res">+1-111-111-1111</span></a>
                         </li>
                         <li class="mb-2"><a href="mailto:" class="text-decoration-none text-muted"><svg fill="#7042c1"
                                     viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg"
-                                    style="width: 30px; height: 30px;">
+                                    class="footer-contact-icons">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                     <g id="SVGRepo_iconCarrier">
@@ -1888,15 +2051,15 @@
                                             fill-rule="evenodd"></path>
                                     </g>
                                 </svg>
-                                <span class="mx-2">email@gmail.com</span></a></li>
+                                <span class="mx-2 footer-contact-res">email@gmail.com</span></a></li>
 
                     </ul>
-                </div>
+                </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->
 
                 <!-- Contact Column -->
-                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                <div class="col-lg-2 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
 
-                    <h5 class="text-secondary mb-3">Follow Us</h5>
+                    <h5 class="text-secondary mb-3 fw-bold">Follow Us</h5>
                     <div class="d-flex gap-3">
                         <a href="#" class="text-decoration-none text-muted">
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
@@ -1958,25 +2121,21 @@
                             </svg>
                         </a>
                     </div>
-                </div>
-            </div>
-        </div>
+                </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
+            </div><!-- row -->
+        </div><!-- container -->
 
         <!-- Divider -->
         <div class="container">
             <hr class="my-4">
-        </div>
+        </div><!-- container -->
 
         <!-- Copyright Section -->
         <div class="container">
             <div class="text-center mb-4">
                 <p class="text-muted">© 2025 Logo incorporated</p>
-            </div>
-
-
-
-
-        </div>
+            </div><!-- text-center mb-4 -->
+        </div><!-- container -->
     </footer>
 
 
@@ -1990,226 +2149,6 @@
 
 
     <script>
-        // $(document).ready(function() {
-        // // Collect unique airline names and stop counts from the rendered flight cards
-        // let airlines = new Set();
-        // let stopCounts = new Map(); // Map to store stop counts and their occurrences
-
-        // // Process each flight card to extract data
-        // $('.flight-card').each(function() {
-        // // Extract airline name
-        // const airlineName = $(this).find('.flight-header .d-flex > div:nth-child(2)').text().trim();
-        // if (airlineName && airlineName !== 'Unknown Airline') {
-        // airlines.add(airlineName);
-        // }
-
-        // // Extract stop information
-        // const outboundStopText = $(this).find('.flight-duration:contains("stop")').text().trim();
-        // const directFlightText = $(this).find('.flight-duration:contains("Direct Flight")').text().trim();
-
-        // let stopCount;
-        // if (directFlightText.includes("Direct Flight")) {
-        // stopCount = "0";
-        // if (!stopCounts.has("0")) {
-        // stopCounts.set("0", 1);
-        // } else {
-        // stopCounts.set("0", stopCounts.get("0") + 1);
-        // }
-        // } else if (outboundStopText) {
-        // // Extract the number before "stop(s)"
-        // const match = outboundStopText.match(/(\d+)\s+stop/);
-        // if (match && match[1]) {
-        // stopCount = match[1];
-        // if (!stopCounts.has(stopCount)) {
-        // stopCounts.set(stopCount, 1);
-        // } else {
-        // stopCounts.set(stopCount, stopCounts.get(stopCount) + 1);
-        // }
-        // }
-        // }
-        // });
-
-        // // Populate the airline filter checkboxes
-        // const airlinesContainer = $('#airlines-filter');
-        // airlinesContainer.empty(); // Clear existing options
-
-        // airlines.forEach(airline => {
-        // const checkboxId = 'airline-' + airline.replace(/\s+/g, '-').toLowerCase();
-        // const checkbox = `
-        // <div class="filter-option">
-        //     <div class="form-check">
-        //         <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="airline"
-        //             data-value="${airline}">
-        //         <label class="form-check-label" for="${checkboxId}">${airline}</label>
-        //     </div>
-        // </div>
-        // `;
-        // airlinesContainer.append(checkbox);
-        // });
-
-        // // Populate the stop filter checkboxes
-        // const stopsContainer = $('#stops-filter');
-        // stopsContainer.empty(); // Clear existing options
-
-        // // Sort stops by count (0, 1, 2+)
-        // const sortedStops = [...stopCounts.entries()].sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
-
-        // sortedStops.forEach(([stopCount, count]) => {
-        // let label;
-        // if (stopCount === "0") {
-        // label = `Nonstop (${count})`;
-        // } else if (stopCount === "1") {
-        // label = `1 Stop (${count})`;
-        // } else {
-        // label = `${stopCount} Stops (${count})`;
-        // }
-
-        // const checkboxId = 'stop-' + stopCount;
-        // const checkbox = `
-        // <div class="filter-option">
-        //     <div class="form-check">
-        //         <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="stop"
-        //             data-value="${stopCount}">
-        //         <label class="form-check-label" for="${checkboxId}">${label}</label>
-        //     </div>
-        // </div>
-        // `;
-        // stopsContainer.append(checkbox);
-        // });
-
-        // // Handle filter changes
-        // $('.filter-checkbox').on('change', applyFilters);
-
-        // // Time sliders for departure and arrival
-        // initTimeSlider('#departure-time-slider', 'departure');
-        // initTimeSlider('#arrival-time-slider', 'arrival');
-
-        // // Apply and Reset buttons
-        // $('#apply-filters').on('click', applyFilters);
-        // $('#reset-filters').on('click', resetFilters);
-
-        // // Function to initialize time sliders
-        // function initTimeSlider(selector, timeType) {
-        // $(selector).slider({
-        // range: true,
-        // min: 0,
-        // max: 1440, // 24 hours in minutes
-        // step: 15,
-        // values: [0, 1440],
-        // slide: function(event, ui) {
-        // // Update the displayed times
-        // updateTimeLabels(selector + '-values', ui.values[0], ui.values[1]);
-        // },
-        // change: function(event, ui) {
-        // // Store the values as data attributes
-        // $(selector).data('start', ui.values[0]);
-        // $(selector).data('end', ui.values[1]);
-        // }
-        // });
-        // // Initialize labels
-        // updateTimeLabels(selector + '-values', 0, 1440);
-        // }
-
-        // // Function to update time labels
-        // function updateTimeLabels(selector, startMinutes, endMinutes) {
-        // const formatTime = (minutes) => {
-        // const hours = Math.floor(minutes / 60);
-        // const mins = minutes % 60;
-        // return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-        // };
-
-        // $(selector).html(`${formatTime(startMinutes)} - ${formatTime(endMinutes)}`);
-        // }
-
-        // // Function to apply filters
-        // function applyFilters() {
-        // // Get selected airlines
-        // const selectedAirlines = [];
-        // $('input[data-filter="airline"]:checked').each(function() {
-        // selectedAirlines.push($(this).data('value'));
-        // });
-
-        // // Get selected stop counts
-        // const selectedStops = [];
-        // $('input[data-filter="stop"]:checked').each(function() {
-        // selectedStops.push($(this).data('value'));
-        // });
-
-        // // Get time range values if sliders are initialized
-        // const departureStart = $('#departure-time-slider').data('start') || 0;
-        // const departureEnd = $('#departure-time-slider').data('end') || 1440;
-        // const arrivalStart = $('#arrival-time-slider').data('start') || 0;
-        // const arrivalEnd = $('#arrival-time-slider').data('end') || 1440;
-
-        // // Prepare the AJAX request with filter data
-        // $.ajax({
-        // url: {{ route('flight.search') }},
-        // type: 'GET',
-        // data: {
-        // airlines: selectedAirlines.length > 0 ? selectedAirlines : null,
-        // stops: selectedStops.length > 0 ? selectedStops : null,
-        // departureTime: [departureStart, departureEnd],
-        // arrivalTime: [arrivalStart, arrivalEnd]
-        // },
-        // headers: {
-        // 'X-Requested-With': 'XMLHttpRequest'
-        // },
-        // success: function(response) {
-        // // If it's an AJAX request, we expect HTML content to replace
-        // if (response.html) {
-        // $('#flight-results-container').html(response.html);
-        // } else if ($(response).find('#flight-results-container').length) {
-        // // If we received full HTML page, extract the flight results
-        // $('#flight-results-container').html($(response).find('#flight-results-container').html());
-        // }
-        // // Reinitialize any event handlers for the new content
-        // initFlightCardEvents();
-        // },
-        // error: function(xhr, status, error) {
-        // console.error("Filter request failed:", error);
-        // alert("Failed to apply filters. Please try again.");
-        // }
-        // });
-        // }
-
-        // // Function to reset all filters
-        // function resetFilters() {
-        // // Uncheck all checkboxes
-        // $('.filter-checkbox').prop('checked', false);
-
-        // // Reset time sliders
-        // $('#departure-time-slider').slider('values', [0, 1440]);
-        // $('#arrival-time-slider').slider('values', [0, 1440]);
-
-        // // Update time labels
-        // updateTimeLabels('#departure-time-slider-values', 0, 1440);
-        // updateTimeLabels('#arrival-time-slider-values', 0, 1440);
-
-        // // Apply the reset filters (which effectively shows all flights)
-        // applyFilters();
-        // }
-
-        // // Initialize events for flight cards (for toggles, etc.)
-        // function initFlightCardEvents() {
-        // // Toggle outbound stops details
-        // $('.outbound-stops-toggle').on('click', function() {
-        // const flightId = $(this).data('flight-id');
-        // $('#outbound-stops-' + flightId).slideToggle();
-        // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-        // });
-
-        // // Toggle inbound stops details
-        // $('.inbound-stops-toggle').on('click', function() {
-        // const flightId = $(this).data('flight-id');
-        // $('#inbound-stops-' + flightId).slideToggle();
-        // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-        // });
-        // }
-
-        // // Initialize events for the initial load
-        // initFlightCardEvents();
-        // });
-
         document.addEventListener('DOMContentLoaded', function() {
         // Countdown timer functionality
         function startCountdown() {
@@ -2277,110 +2216,329 @@
         toggleFlightStops('.inbound-stops-toggle', 'inbound');
         });
 
-        // Define these variables outside your event handler
-        // تعريف المتغيرات خارج معالج الحدث
-        let offset = 0;
-        const limit = 10;
-        let loading = false;
-        let hasMoreResults = true; // لتتبع ما إذا كان هناك المزيد من النتائج
+    //      // Define these variables outside your event handler
+    //      // تعريف المتغيرات خارج معالج الحدث
+    //      let offset = 0;
+    //      const limit = 10;
+    //      let loading = false;
+    //      let hasMoreResults = true; // لتتبع ما إذا كان هناك المزيد من النتائج
 
-        function loadMoreFlights() {
-        if (loading || !hasMoreResults) return;
+    //     function loadMoreFlights() {
+    //     if (loading || !hasMoreResults) return;
 
-        loading = true;
-        $('#loading').show();
+    //     loading = true;
+    //     $('#loading').show();
 
-        $.ajax({
-        url: "{{ route('flight.search') }}",
-        type: "GET",
-        data: {
-        offset: offset,
-        limit: limit,
-        origin_city: "{{ $flightData['originCityName'] ?? '' }}",
-        destination_city: "{{ $flightData['destinationCityName'] ?? '' }}",
-        origin_city_name: "{{ $flightData['originCity'] ?? '' }}",
-        destination_city_name: "{{ $flightData['destinationCity'] ?? '' }}",
-        departureDate: "{{ $flightData['departureDate'] ?? '' }}",
-        returnDate: "{{ $flightData['returnDate'] ?? '' }}",
-        adults: "{{ $flightData['adults'] ?? '1' }}",
-        cabin: "{{ $flightData['cabin'] ?? 'ECONOMY' }}",
-        tripType: "{{ ($flightData['returnDate']) ? 'roundTrip' : 'oneWay' }}"
-        // أضف أي معايير تصفية أخرى هنا
-        },
-        dataType: "json",
-        success: function(response) {
-        if (response.error) {
-        $('#loading').hide();
-        loading = false;
-        console.error('Server Error:', response.error);
-        alert("حدث خطأ أثناء تحميل البيانات: " + response.error);
-        return;
-        }
+    //      $.ajax({
+    //      url: "{{ route('flight.search') }}",
+    //      type: "GET",
+    //      data: {
+    //      offset: offset,
+    //      limit: limit,
+    //      origin_city: "{{ $flightData['originCityName'] ?? '' }}",
+    //      destination_city: "{{ $flightData['destinationCityName'] ?? '' }}",
+    //      origin_city_name: "{{ $flightData['originCity'] ?? '' }}",
+    //      destination_city_name: "{{ $flightData['destinationCity'] ?? '' }}",
+    //      departureDate: "{{ $flightData['departureDate'] ?? '' }}",
+    //      returnDate: "{{ $flightData['returnDate'] ?? '' }}",
+    //      adults: "{{ $flightData['adults'] ?? '1' }}",
+    //      cabin: "{{ $flightData['cabin'] ?? 'ECONOMY' }}",
+    //      tripType: "{{ ($flightData['returnDate']) ? 'roundTrip' : 'oneWay' }}"
+    //      // أضف أي معايير تصفية أخرى هنا
+    //      },
+    //      dataType: "json",
+    //      success: function(response) {
+    //      if (response.error) {
+    //      $('#loading').hide();
+    //      loading = false;
+    //      console.error('Server Error:', response.error);
+    //      alert("حدث خطأ أثناء تحميل البيانات: " + response.error);
+    //      return;
+    //      }
 
-        // إضافة نتائج البحث إلى الحاوية
-        $('#flight-results-container').append(response.html);
+    //      // إضافة نتائج البحث إلى الحاوية
+    //      $('#flight-results-container').append(response.html);
 
-        // تحديث متغيرات التتبع
-        hasMoreResults = response.hasMore;
+    //      // تحديث متغيرات التتبع
+    //      hasMoreResults = response.hasMore;
 
-        if (hasMoreResults) {
-        offset += limit;
-        } else {
-        // إخفاء زر "تحميل المزيد" أو مؤشر التمرير اللانهائي
-        $('#load-more-container').hide();
-        }
+    //      if (hasMoreResults) {
+    //      offset += limit;
+    //      } else {
+    //      // إخفاء زر "تحميل المزيد" أو مؤشر التمرير اللانهائي
+    //      $('#load-more-container').hide();
+    //      }
 
-        $('#loading').hide();
-        loading = false;
-        },
-        error: function(xhr, status, error) {
-        $('#loading').hide();
-        loading = false;
+    //      $('#loading').hide();
+    //      loading = false;
+    //      },
+    //      error: function(xhr, status, error) {
+    //      $('#loading').hide();
+    //      loading = false;
 
-        // تسجيل معلومات الخطأ المفصلة
-        console.error('AJAX Error:', error);
-        console.error('Status:', status);
-        console.error('Response:', xhr.responseText);
+    //      // تسجيل معلومات الخطأ المفصلة
+    //      console.error('AJAX Error:', error);
+    //      console.error('Status:', status);
+    //      console.error('Response:', xhr.responseText);
 
-        try {
-        const response = JSON.parse(xhr.responseText);
-        if (response.error) {
-        alert("حدث خطأ: " + response.error);
-        } else {
-        alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
-        }
-        } catch(e) {
-        alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
-        }
-        },
-        timeout: 60000 // مهلة 60 ثانية (زيادة القيمة لأن API أماديوس قد يكون بطيئًا)
-        });
-        }
+    //  try {
+    //      const response = JSON.parse(xhr.responseText);
+    //      if (response.error) {
+    //      alert("حدث خطأ: " + response.error);
+    //      } else {
+    //      alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
+    //      }
+    //      } catch(e) {
+    //      alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
+    //      }
+    //      },
+    //      timeout: 60000 // مهلة 60 ثانية (زيادة القيمة لأن API أماديوس قد يكون بطيئًا)
+    //      });
+    //      }
 
-        // استدعاء هذه الدالة عند تحميل الصفحة للحصول على أول مجموعة من النتائج
-        $(document).ready(function() {
-        // التحقق من وجود نتائج مسبقة على الصفحة
-        const initialResultsCount = $('#flight-results-container .flight-result-item').length;
-        if (initialResultsCount > 0) {
-        offset = initialResultsCount; // تعيين الإزاحة إلى عدد النتائج الموجودة
-        } else {
-        loadMoreFlights(); // تحميل الدفعة الأولى من النتائج
-        }
+    //      // استدعاء هذه الدالة عند تحميل الصفحة للحصول على أول مجموعة من النتائج
+    //      $(document).ready(function() {
+    //     // التحقق من وجود نتائج مسبقة على الصفحة
+    //      const initialResultsCount = $('#flight-results-container .flight-result-item').length;
+    //      if (initialResultsCount > 0) {
+    //      offset = initialResultsCount; // تعيين الإزاحة إلى عدد النتائج الموجودة
+    //      } else {
+    //      loadMoreFlights(); // تحميل الدفعة الأولى من النتائج
+    //      }
 
-        // تنفيذ التمرير اللانهائي
-        $(window).scroll(function() {
-        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300 && !loading && hasMoreResults) {
-        loadMoreFlights();
-        }
-        });
+    //  // تنفيذ التمرير اللانهائي
+    //      $(window).scroll(function() {
+    //      if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300 && !loading && hasMoreResults) {
+    //      loadMoreFlights();
+    //      }
+    //      });
 
-        // أو زر تحميل المزيد
-        $('#load-more-btn').click(function() {
-        loadMoreFlights();
-        });
-        });
+    //      // أو زر تحميل المزيد
+    //      $('#load-more-btn').click(function() {
+    //      loadMoreFlights();
+    //      });
+    //      });
 
 
+
+//  $(document).ready(function() {
+//  // Collect unique airline names and stop counts from the rendered flight cards
+//  let airlines = new Set();
+//  let stopCounts = new Map(); // Map to store stop counts and their occurrences
+
+//  // Process each flight card to extract data
+//  $('.flight-card').each(function() {
+//  // Extract airline name
+//  const airlineName = $(this).find('.flight-header .d-flex > div:nth-child(1)').text().trim();
+//  if (airlineName && airlineName !== 'Unknown Airline') {
+//  airlines.add(airlineName);
+//  }
+
+//  // Extract stop information
+//  const outboundStopText = $(this).find('.flight-duration:contains("stop")').text().trim();
+//  const directFlightText = $(this).find('.flight-duration:contains("Direct Flight")').text().trim();
+
+//  let stopCount;
+// if (directFlightText.includes("Direct Flight")) {
+// stopCount = "0";
+// if (!stopCounts.has("0")) {
+// stopCounts.set("0", 1);
+// } else {
+// stopCounts.set("0", stopCounts.get("0") + 1);
+//  }
+// } else if (outboundStopText) {
+// // Extract the number before "stop(s)"
+// const match = outboundStopText.match(/(\d+)\s+stop/);
+// if (match && match[1]) {
+// stopCount = match[1];
+// if (!stopCounts.has(stopCount)) {
+// stopCounts.set(stopCount, 1);
+// } else {
+// stopCounts.set(stopCount, stopCounts.get(stopCount) + 1);
+// }
+// }
+// }
+// });
+
+// // Populate the airline filter checkboxes
+// const airlinesContainer = $('#airlines-filter');
+// airlinesContainer.empty(); // Clear existing options
+
+// airlines.forEach(airline => {
+// const checkboxId = 'airline-' + airline.replace(/\s+/g, '-').toLowerCase();
+// const checkbox = `
+// <div class="filter-option">
+//     <div class="form-check">
+//         <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="airline"
+//             data-value="${airline}">
+//         <label class="form-check-label" for="${checkboxId}">${airline}</label>
+//     </div>
+// </div>
+// `;
+// airlinesContainer.append(checkbox);
+// });
+
+// // Populate the stop filter checkboxes
+// const stopsContainer = $('#stops-filter');
+// stopsContainer.empty(); // Clear existing options
+
+// // Sort stops by count (0, 1, 2+)
+// const sortedStops = [...stopCounts.entries()].sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+
+// sortedStops.forEach(([stopCount, count]) => {
+// let label;
+// if (stopCount === "0") {
+// label = `Nonstop (${count})`;
+// } else if (stopCount === "1") {
+// label = `1 Stop (${count})`;
+// } else {
+// label = `${stopCount} Stops (${count})`;
+// }
+
+// const checkboxId = 'stop-' + stopCount;
+// const checkbox = `
+// <div class="filter-option">
+//     <div class="form-check">
+//         <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="stop"
+//             data-value="${stopCount}">
+//         <label class="form-check-label" for="${checkboxId}">${label}</label>
+//     </div>
+// </div>
+// `;
+// stopsContainer.append(checkbox);
+// });
+
+// // Initialize time sliders for departure and arrival
+// initTimeSlider('#departure-time-slider', 'departure');
+// initTimeSlider('#arrival-time-slider', 'arrival');
+
+// // Apply and Reset buttons
+// $('#apply-filters').on('click', applyFilters);
+// $('#reset-filters').on('click', resetFilters);
+
+// // Function to initialize time sliders
+// function initTimeSlider(selector, timeType) {
+// $(selector).slider({
+// range: true,
+// min: 0,
+// max: 1440, // 24 hours in minutes
+// step: 15,
+// values: [0, 1440],
+// slide: function(event, ui) {
+// // Update the displayed times
+// updateTimeLabels(selector + '-values', ui.values[0], ui.values[1]);
+// },
+// change: function(event, ui) {
+// // Store the values as data attributes
+// $(selector).data('start', ui.values[0]);
+// $(selector).data('end', ui.values[1]);
+// }
+// });
+// // Initialize labels
+// updateTimeLabels(selector + '-values', 0, 1440);
+// }
+
+// // Function to update time labels
+// function updateTimeLabels(selector, startMinutes, endMinutes) {
+// const formatTime = (minutes) => {
+// const hours = Math.floor(minutes / 60);
+// const mins = minutes % 60;
+// return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+// };
+
+// $(selector).html(`${formatTime(startMinutes)} - ${formatTime(endMinutes)}`);
+// }
+
+// // Function to apply filters
+// function applyFilters() {
+// // Show loading indicator
+// $('#loading').show();
+// $('#flight-results-container').hide();
+
+// // Get selected airlines
+// const selectedAirlines = [];
+// $('input[data-filter="airline"]:checked').each(function() {
+// selectedAirlines.push($(this).data('value'));
+// });
+
+// // Get selected stop counts
+// const selectedStops = [];
+// $('input[data-filter="stop"]:checked').each(function() {
+// selectedStops.push($(this).data('value'));
+// });
+
+// // Get time range values
+// const departureStart = $('#departure-time-slider').data('start') || 0;
+// const departureEnd = $('#departure-time-slider').data('end') || 1440;
+// const arrivalStart = $('#arrival-time-slider').data('start') || 0;
+// const arrivalEnd = $('#arrival-time-slider').data('end') || 1440;
+
+// // Prepare the AJAX request with filter data
+// $.ajax({
+// url: window.location.href,
+// type: 'GET',
+// data: {
+// airlines: selectedAirlines.length > 0 ? selectedAirlines : null,
+// stops: selectedStops.length > 0 ? selectedStops : null,
+// departureTime: [departureStart, departureEnd],
+// arrivalTime: [arrivalStart, arrivalEnd]
+// },
+// success: function(response) {
+// if (response.html) {
+// $('#flight-results-container').html(response.html);
+// $('#loading').hide();
+// $('#flight-results-container').show();
+
+// // Reinitialize event handlers for the new content
+// initFlightCardEvents();
+// }
+// },
+// error: function(xhr, status, error) {
+// console.error("Filter request failed:", error);
+// $('#loading').hide();
+// $('#flight-results-container').show();
+// alert("Failed to apply filters. Please try again.");
+// }
+// });
+// }
+
+// // Function to reset all filters
+// function resetFilters() {
+// // Uncheck all checkboxes
+// $('.filter-checkbox').prop('checked', false);
+
+// // Reset time sliders
+// $('#departure-time-slider').slider('values', [0, 1440]);
+// $('#arrival-time-slider').slider('values', [0, 1440]);
+
+// // Update time labels
+// updateTimeLabels('#departure-time-slider-values', 0, 1440);
+// updateTimeLabels('#arrival-time-slider-values', 0, 1440);
+
+// // Apply the reset filters
+// applyFilters();
+// }
+
+// // Initialize events for flight cards
+// function initFlightCardEvents() {
+// // Toggle outbound stops details
+// $('.outbound-stops-toggle').on('click', function() {
+// const flightId = $(this).data('flight-id');
+// $('#outbound-stops-' + flightId).slideToggle();
+// $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+// });
+
+// // Toggle inbound stops details
+// $('.inbound-stops-toggle').on('click', function() {
+// const flightId = $(this).data('flight-id');
+// $('#inbound-stops-' + flightId).slideToggle();
+// $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+// });
+// }
+
+// // Initialize events for the initial load
+// initFlightCardEvents();
+// });
 
 
     </script>

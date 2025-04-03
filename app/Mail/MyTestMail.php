@@ -9,20 +9,31 @@ class MyTestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $details;
+    public $selectedFlight;
+    public $flightData;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($details)
+    public function __construct($data)
     {
-        $this->details = $details;
+        // If $data is already the selectedFlight (for backward compatibility)
+        if (isset($data['itineraries']) || isset($data['passengers'])) {
+            $this->selectedFlight = $data;
+            $this->flightData     = session('flight_search', []);
+        } else {
+            // If $data is the structured array with both selectedFlight and flightData
+            $this->selectedFlight = $data['selectedFlight'] ?? $data;
+            $this->flightData     = $data['flightData'] ?? session('flight_search', []);
+        }
+
     }
 
     public function build()
     {
-        return $this->subject('Booking with us')
-            ->view('emails.testMail');
+        return $this->subject('Flight Booking Confirmation')
+            ->view('emails.booking-confirmation');
+
     }
 
 }

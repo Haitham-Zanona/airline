@@ -814,6 +814,15 @@ class FlightController extends Controller
                 return $arrivalMinutes >= $arrivalRange[0] && $arrivalMinutes <= $arrivalRange[1];
             });
         }
+
+        // تأكد من أن كل رحلة تحتوي على معرّف فريد (أضف هذا الكود هنا)
+        $flightsCollection = $flightsCollection->map(function ($flight, $index) {
+            if (! isset($flight['id'])) {
+                $flight['id'] = uniqid('flight_'); // إضافة معرّف فريد إذا لم يكن موجوداً
+            }
+            return $flight;
+        });
+
 // تخزين النتائج في ذاكرة التخزين المؤقت - بداية التعديل
         $cacheData = [
             'flightsCollection' => $flightsCollection->toArray(),
@@ -857,6 +866,8 @@ class FlightController extends Controller
                 return response()->json(['error' => 'Internal Server Error: ' . $e->getMessage()], 500);
             }
         }
+
+        session(['flightsArraySubset' => $flightsCollection->slice(0, 10)->toArray()]);
 
 // للطلبات العادية، عرض الصفحة الكاملة
         return view('flights.new-flight', [
@@ -1026,40 +1037,398 @@ class FlightController extends Controller
         })->values()->toArray();
     }
 
+    /**
+     * اختيار الرحلة المحددة وتخزينها في جلسة المستخدم
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function selectFlight(Request $request)
+    {
+        // الحصول على معرف الرحلة من النموذج
+        $flightId = $request->input('flight_id');
+        if (! $flightId) {
+            Log::error('Flight ID is missing in the request');
+            return redirect()->route('index')->with('error', 'معرف الرحلة غير موجود في الطلب');
+        }
+
+        // الحصول على بيانات الرحلات من الجلسة
+        $flightOffers = session('flightsArraySubset', []);
+
+        // تسجيل معلومات تشخيصية (مفيد لتتبع الأخطاء)
+        Log::info('Flight ID from request: ' . $flightId);
+        Log::info('Number of flights in session: ' . count($flightOffers));
+
+        // البحث عن الرحلة المطلوبة
+        $selectedFlight = null;
+        foreach ($flightOffers as $flight) {
+            if (isset($flight['id']) && $flight['id'] == $flightId) {
+                $selectedFlight = $flight;
+                Log::info('Found matching flight with ID: ' . $flightId);
+                break;
+            }
+        }
+
+        // إذا لم يتم العثور على الرحلة
+        if (! $selectedFlight) {
+            Log::error('Selected flight not found in session data');
+            return redirect()->route('index')->with('error', 'لم يتم العثور على الرحلة المحددة');
+        }
+
+        // تخزين الرحلة المختارة في الجلسة
+        $this->storeSelectedFlightInSession($selectedFlight);
+
+        // التوجيه إلى صفحة تفاصيل المسافرين
+        return redirect()->route('flight.passengers');
+    }
+
+/**
+ * تخزين بيانات الرحلة المحددة في جلسة المستخدم
+ *
+ * @param array $selectedFlight بيانات الرحلة المحددة
+ * @return void
+ */
+    private function storeSelectedFlightInSession(array $selectedFlight)
+    {
+        $flightSearchData                    = session('flight_search', []);
+        $flightSearchData['selected_flight'] = $selectedFlight;
+        session(['flight_search' => $flightSearchData]);
+    }
+
+/**
+ * إضافة بيانات إضافية إلى الرحلة المحددة في الجلسة
+ *
+ * @param array $additionalData البيانات الإضافية المراد إضافتها
+ * @param bool $merge ما إذا كان سيتم دمج البيانات الجديدة مع القديمة (true) أو استبدالها (false)
+ * @return void
+ */
+    public function addDataToSelectedFlight(array $additionalData, bool $merge = true)
+    {
+        $flightSearchData = session('flight_search', []);
+
+        if (! isset($flightSearchData['selected_flight'])) {
+            $flightSearchData['selected_flight'] = $additionalData;
+        } else {
+            if ($merge) {
+                $flightSearchData['selected_flight'] = array_replace_recursive(
+                    $flightSearchData['selected_flight'],
+                    $additionalData
+                );
+            } else {
+                foreach ($additionalData as $key => $value) {
+                    $flightSearchData['selected_flight'][$key] = $value;
+                }
+            }
+        }
+
+        session(['flight_search' => $flightSearchData]);
+    }
+
+/**
+ * الحصول على بيانات الرحلة المحددة من الجلسة
+ *
+ * @return array|null بيانات الرحلة المحددة أو null إذا لم تكن موجودة
+ */
+    public function getSelectedFlight()
+    {
+        return session('flight_search.selected_flight', null);
+    }
+
     public function passengers(Request $request)
     {
+        // الحصول على الرحلة المختارة من الجلسة
+        $selectedFlight = $this->getSelectedFlight();
 
+        // تسجيل معلومات تشخيصية (اختياري)
+        Log::info('Retrieved selected flight for passengers page: ' . json_encode(['id' => $selectedFlight['id'] ?? 'not found']));
+
+        // التحقق من وجود رحلة محددة
+        if (! $selectedFlight) {
+            return redirect()->route('index')->with('error', 'الرجاء اختيار رحلة أولاً');
+        }
+
+        // الحصول على قائمة البلدان للقائمة المنسدلة
         $countries = (new CountryList())->getList('en');
-        // dd($countries);
-        // $countries = CountryList::getList('en');
-        // $request->validate([
-        //     'phone' => ['required', 'phone:AUTO,SA,EG,US,AE'],
-        // ]);
 
-        return view('flights.new-passengers', compact('countries'));
+        // الحصول على عدد المسافرين من بيانات البحث
+        $flightSearchData = session('flight_search', []);
+        $adults           = $flightSearchData['adults'] ?? 1;
+        $children         = $flightSearchData['children'] ?? 0;
+        $infants          = $flightSearchData['held_infants'] ?? 0;
 
+        // استرجاع بيانات المسافرين المخزنة مسبقاً (إن وجدت)
+        $savedPassengers = $selectedFlight['passengers'] ?? [];
+        $contactInfo     = $selectedFlight['contact'] ?? [];
+
+        // تمرير البيانات للعرض
+        return view('flights.new-passengers', compact(
+            'selectedFlight',
+            'countries',
+            'adults',
+            'children',
+            'infants',
+            'savedPassengers',
+            'contactInfo'
+        ));
     }
+
+    /**
+     * معالجة بيانات المسافرين وتخزينها في الجلسة
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storePassengers(Request $request)
+    {
+        try {
+            // Log the incoming request data
+            Log::info('Passenger form submission:', $request->all());
+
+            $flightSearchData        = session('flight_search', []);
+            $expectedAdults          = $flightSearchData['adults'] ?? 1;
+            $expectedChildren        = $flightSearchData['children'] ?? 0;
+            $expectedInfants         = $flightSearchData['held_infants'] ?? 0;
+            $totalExpectedPassengers = $expectedAdults + $expectedChildren + $expectedInfants;
+
+            // Validate the request data
+            $validated = $request->validate([
+                'passengers'                   => 'required|array',
+                'passengers.*.type'            => 'required|string|in:ADULT,CHILD,HELD_INFANT',
+                'passengers.*.title'           => 'required|string',
+                'passengers.*.firstName'       => 'required|string',
+                'passengers.*.middleName'      => 'required|string',
+                'passengers.*.lastName'        => 'required|string',
+                'passengers.*.birthDate'       => 'required|date',
+                'passengers.*.gender'          => 'required|string|in:M,F',
+                'passengers.*.nationality'     => 'required|string',
+                'passengers.*.associatedAdult' => 'required_if:passengers.*.type,HELD_INFANT',
+                'contact.email'                => 'required|email',
+                'contact.phone'                => 'required|string',
+            ]);
+
+            // Verify passenger count
+            if (count($validated['passengers']) !== $totalExpectedPassengers) {
+                Log::warning('Passenger count mismatch', [
+                    'expected' => $totalExpectedPassengers,
+                    'received' => count($validated['passengers']),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['error' => 'The number of passengers does not match the booking requirements.'])
+                    ->withInput();
+            }
+
+            // Store data in session
+            $this->addDataToSelectedFlight([
+                'passengers' => $validated['passengers'],
+                'contact'    => $validated['contact'],
+            ]);
+
+            Log::info('Passengers data stored successfully');
+            return redirect()->route('flight.payment');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation error:', ['errors' => $e->errors()]);
+            return redirect()->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error storing passengers:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect()->back()
+                ->withErrors(['error' => 'An error occurred while processing your request. Please try again.'])
+                ->withInput();
+        }
+    }
+
     public function payment()
     {
+        // الحصول على الرحلة المختارة من الجلسة
+        $selectedFlight = $this->getSelectedFlight();
+
+// التحقق من اختيار رحلة وإدخال بيانات المسافرين
+        if (! $selectedFlight) {
+            return redirect()->route('index')->with('error', 'الرجاء اختيار رحلة أولاً');
+        }
+
+        if (! isset($selectedFlight['passengers'])) {
+            return redirect()->route('flight.passengers')->with('error', 'الرجاء إدخال بيانات المسافرين أولاً');
+        }
+
         $countries = $this->getCountries();
 
-        return view('flights.payment', compact('countries'));
+// استرجاع بيانات الدفع المخزنة مسبقاً (إن وجدت)
+        $paymentInfo = $selectedFlight['payment'] ?? [];
+
+// حساب المبلغ الإجمالي
+        $totalAmount = $selectedFlight['price']['grandTotal'] ?? 0;
+
+// تمرير البيانات للعرض
+        return view('flights.new-payment', compact(
+            'selectedFlight',
+            'countries',
+            'paymentInfo',
+            'totalAmount'
+        ));
     }
+
+    /**
+     * معالجة بيانات الدفع وتخزينها في الجلسة وإرسال إيميل التأكيد
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storePayment(Request $request)
+    {
+        // التحقق من البيانات المدخلة
+        $validated = $request->validate([
+            'cardType'       => 'required|in:visa,mastercard,amex,discover',
+            'cardNumber'     => 'required',
+            'expiryMonth'    => 'required|numeric|min:1|max:12',
+            'expiryYear'     => 'required|numeric|min:' . date('Y'),
+            'cvv'            => 'required|numeric',
+            'cardHolderName' => 'required|min:3',
+        ]);
+
+        // إضافة بيانات الدفع إلى الجلسة
+        $this->addDataToSelectedFlight([
+            'payment'        => $validated,
+            'payment_status' => 'pending',
+            'payment_date'   => now()->toDateTimeString(),
+        ]);
+
+        // إنشاء رقم مرجعي للحجز
+        $bookingReference = 'BOOK-' . strtoupper(substr(uniqid(), -8));
+
+        // إضافة رقم الحجز والتاريخ إلى بيانات الرحلة
+        $this->addDataToSelectedFlight([
+            'booking_reference' => $bookingReference,
+            'booking_date'      => now()->toDateTimeString(),
+            'booking_status'    => 'confirmed',
+        ]);
+
+        // الحصول على البيانات المحدثة بعد إضافة معلومات الحجز
+        $selectedFlight = $this->getSelectedFlight();
+
+        try {
+            // إرسال إيميل التأكيد
+            $recipientEmail = $selectedFlight['contact']['email'] ?? 'recipient@example.com';
+            Mail::to($recipientEmail)->send(new MyTestMail($selectedFlight));
+
+            // التوجيه إلى صفحة تأكيد الحجز مع رسالة نجاح
+            return redirect()->route('flight.confirm')->with('success', 'Booking confirmed and confirmation email sent successfully!');
+        } catch (\Exception $e) {
+            // تسجيل الخطأ
+            Log::error('Email sending failed: ' . $e->getMessage());
+
+            // التوجيه إلى صفحة تأكيد الحجز مع رسالة تحذير
+            return redirect()->route('flight.confirm')->with('warning', 'Booking confirmed but we could not send the confirmation email. Please check your email address.');
+        }
+    }
+
+    /**
+     * عرض صفحة تأكيد الحجز
+     *
+     * @return \Illuminate\View\View
+     */
     public function confirm()
     {
-        return view('flights.confirm');
+        // الحصول على بيانات الرحلة المحددة
+        $selectedFlight = $this->getSelectedFlight();
+
+        // التحقق من وجود رحلة محددة وبيانات المسافرين والدفع
+        if (! $selectedFlight) {
+            return redirect()->route('index')->with('error', 'Please select a flight first');
+        }
+
+        if (! isset($selectedFlight['passengers'])) {
+            return redirect()->route('flight.passengers')->with('error', 'Please Enter Passengers first');
+        }
+
+        if (! isset($selectedFlight['payment'])) {
+            return redirect()->route('flight.payment')->with('error', 'Please Enter Payment first');
+        }
+
+        // إنشاء رقم مرجعي للحجز
+        $bookingReference = 'BOOK-' . strtoupper(substr(uniqid(), -8));
+
+        // إضافة رقم الحجز والتاريخ إلى بيانات الرحلة
+        $this->addDataToSelectedFlight([
+            'booking_reference' => $bookingReference,
+            'booking_date'      => now()->toDateTimeString(),
+            'booking_status'    => 'confirmed',
+        ]);
+
+        // الحصول على البيانات المحدثة بعد إضافة معلومات الحجز
+        $selectedFlight = $this->getSelectedFlight();
+
+        return view('flights.confirm', [
+            'bookingReference' => $bookingReference,
+            'selectedFlight'   => $selectedFlight,
+        ]);
     }
 
-    public function sendMail()
+    public function explorePlaces()
     {
-        $details = [
-            'name'    => 'أحمد',
-            'message' => 'هذا هو محتوى البريد التجريبي من Laravel.',
-        ];
+        return view('explore-places');
+    }
 
-        Mail::to('recipient@example.com')->send(new MyTestMail($details));
+    public function sendMail(Request $request)
+    {
+        // Get the selected flight data from session
+        $selectedFlight = $this->getSelectedFlight();
 
-        return "The email sent successfuly!";
+        // Check if we have the necessary data
+        if (! $selectedFlight) {
+            // Return a direct response instead of redirecting
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Cannot send email: Missing booking information'], 400);
+            }
+            return back()->with('error', 'Cannot send email: Missing booking information');
+        }
+
+        // Get recipient email from the booking data or use a default
+        $recipientEmail = $selectedFlight['contact']['email'] ?? 'recipient@example.com';
+
+        try {
+            // Log what we're about to do
+            Log::info('Attempting to send email to: ' . $recipientEmail);
+
+            // Send email with the selected flight data directly
+            Mail::to($recipientEmail)->send(new MyTestMail($selectedFlight));
+
+            // Return a direct response instead of redirecting
+            if ($request->ajax()) {
+                return response()->json(['success' => 'Booking confirmation email sent successfully!']);
+            }
+
+            // If this is the confirmation page, add a flash message but don't redirect
+            if ($request->is('*/confirm') || $request->is('*/confirm/*')) {
+                session()->flash('success', 'Booking confirmation email sent successfully!');
+                return view('flights.confirm', [
+                    'bookingReference' => $selectedFlight['booking_reference'] ?? 'UNKNOWN',
+                    'selectedFlight'   => $selectedFlight,
+                    'emailSent'        => true,
+                ]);
+            }
+
+            return back()->with('success', 'Booking confirmation email sent successfully!');
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Email sending failed: ' . $e->getMessage());
+
+            // Return a direct response instead of redirecting
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
+            }
+            return back()->with('error', 'Failed to send email: ' . $e->getMessage());
+        }
+    }
+
+    public function aboutUs()
+    {
+        return view('about-us');
     }
 
 }

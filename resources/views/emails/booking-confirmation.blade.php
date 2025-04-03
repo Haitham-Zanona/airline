@@ -527,131 +527,15 @@
         }
 
         /* Print styles */
-        @media print {
-
-            /* Hide elements you don't want to print */
-            .btn {
-                display: none !important;
-            }
-
-            /* Ensure the content is properly displayed */
-            body {
-                background-color: white;
-                padding: 0;
-                margin: 0;
-            }
-
-            .container {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            /* Make sure text is black for better printing */
-            * {
-                color: black !important;
-            }
-
-            /* Ensure backgrounds are printed */
-            .card,
-            .reference-no,
-            .flight-details {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-        }
     </style>
 </head>
-@dd(session('flight_search'))
 
 <body>
-    <!-- Header -->
-    <header class="py-3">
-        <div class="container">
-            <!-- Desktop View -->
-            <div class="row align-items-center d-none d-md-flex">
-                <div class="col-md-3">
-                    <div class="logo">LOGO</div>
-                </div>
-                <div class="col-md-6">
-                    <ul class="nav justify-content-center">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact us</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-3 text-end">
-                    <div class="contact-info d-flex align-items-center justify-content-end">
-                        <img src="{{ asset('assets/images/phone-call.webp') }}" width="40px" height="40px" alt="">
-                        <div class="text-start mx-2">
-                            <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
-                            <span class="fw-bold"><a href="tel:+1-111-111-1111"
-                                    style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Mobile View -->
-            <div class="d-md-none">
-                <div class="d-flex justify-content-between align-items-center">
-                    <!-- Logo on Left -->
-                    <div class="logo">LOGO</div>
-
-                    <!-- Menu Button on Right -->
-                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon d-flex align-items-center justify-content-center">
-                            <i class="fas fa-bars"></i>
-                        </span>
-                    </button>
-                </div>
-
-                <!-- Collapsible Content -->
-                <div class="collapse mt-3" id="navbarMobile">
-                    <div class="bg-light p-3 rounded">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact us</a>
-                            </li>
-
-                        </ul>
-
-                        <!-- Contact Info in Menu -->
-                        <div class="contact-info-mobile mt-3 pt-3 border-top">
-                            <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/images/phone-call.webp') }}" width="30px" height="30px"
-                                    alt="">
-                                <div class="text-start mx-2">
-                                    <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
-                                    <span class="fw-bold"><a href="tel:+1-111-111-1111"
-                                            style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
 
     <!-- Booking Confirmation -->
-    <div class="container my-4">
-        <div class="d-flex align-items-center mb-4">
+    <div class="container my-4 py-5">
+        <div class="d-flex align-items-center justify-content-between mb-4">
             <div style="margin-right: 10px;">
                 <img src="{{ asset('assets/images/check-mark.png') }}" width="60px" height="60px" class="mr-1" alt="">
             </div>
@@ -659,9 +543,7 @@
                 <h1 class="success-message mb-0">Your Booking Successfully Complete</h1>
                 <p class="text-muted mb-0">Congratulations! Your Booking has been confirm. Thank you!</p>
             </div>
-            <div class="ms-auto">
-                <button id="download-btn" class="btn btn-outline-primary me-2">Download Ticket</button>
-            </div>
+
         </div>
 
         <div class="row">
@@ -738,25 +620,27 @@
                             <div class="flight-segment">
                                 <div class="departure">
                                     <?php
-                                        $departureTime = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
-                                        $datetime = \Carbon\Carbon::parse($departureTime);
+                                                                                            $departureTime = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
+                                                                                            $datetime = \Carbon\Carbon::parse($departureTime);
 
-                                        $originCity = session('flight_search.origin_city_name') ?? '';
-                                        $cityName = '';
-                                        $cityCode = '';
-                                        $countryName = '';
+                                                                                            $originCity = session('flight_search.origin_city_name') ?? '';
+                                                                                            $cityName = '';
+                                                                                            $cityCode = '';
+                                                                                            $countryName = '';
 
-                                        // Extract city name (text in parentheses)
-                                        if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-                                            preg_match('/\((.*?)\)/', $originCity, $matches);
-                                            $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
+                                                                                            // Extract city name (text in parentheses)
+                                                                                            if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+                                                                                                preg_match('/\((.*?)\)/', $originCity, $matches);
+                                                                                                $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
+
+                                                                                                // استخراج اسم المدينة والبلد
+                                                                                                $parts = explode(',', $originCity);
+                                                                                                $cityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
+                                                                                                $countryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
+                                                                                            }
 
 
-                                            $parts = explode(',', $originCity);
-                                            $cityName = isset($parts[0]) ? trim($parts[0]) : '';
-                                            $countryName = isset($parts[1]) ? trim($parts[1]) : '';
-                                        }
-                                    ?>
+                                                                                        ?>
                                     <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
                                     <div class="airport-time">{{ $datetime->translatedFormat('H:i') }}</div>
                                     <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}
@@ -810,10 +694,10 @@
                                             preg_match('/\((.*?)\)/', $destinationCity, $matches);
                                             $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
 
-                                            // extract city and country names
+                                            // استخراج اسم المدينة والبلد
                                             $parts = explode(',', $destinationCity);
-                                            $cityName = isset($parts[0]) ? trim($parts[0]) : '';
-                                            $countryName = isset($parts[1]) ? trim($parts[1]) : '';
+                                            $cityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
+                                            $countryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
                                         }
 
                                     ?>
@@ -1243,118 +1127,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-        <script>
-            //         document.addEventListener('DOMContentLoaded', function() {
-    //     const downloadBtn = document.getElementById('download-btn');
-
-    //     downloadBtn.addEventListener('click', function() {
-
-    //         downloadBtn.disabled = true;
-    //         downloadBtn.innerHTML = 'Generating PDF...';
-
-
-    //         fetch('/generate-pdf', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-    //             }
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.download_url) {
-
-    //                 window.location.href = data.download_url;
-    //             } else {
-    //                 alert('Error generating PDF');
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //             alert('Error generating PDF');
-    //         })
-    //         .finally(() => {
-
-    //             downloadBtn.disabled = false;
-    //             downloadBtn.innerHTML = 'Download Ticket';
-    //         });
-    //     });
-    // });
-
-   document.addEventListener('DOMContentLoaded', function() {
-    const downloadBtn = document.getElementById('download-btn');
-
-    downloadBtn.addEventListener('click', function() {
-    // Change button state
-    downloadBtn.disabled = true;
-    downloadBtn.innerHTML = 'Generating PDF...';
-
-    // Create a new jsPDF instance
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-
-    // Get the content to convert to PDF
-    const contentElement = document.querySelector('.container.my-4');
-
-    // Get booking reference for filename
-    let bookingRef = document.querySelector('.reference-no .fw-bold')?.innerText || 'flight-ticket';
-
-    // Function to handle PDF generation
-    const generatePDF = () => {
-    // Hide elements we don't want in the PDF
-    const btnContainer = document.querySelector('.ms-auto');
-    const originalBtnDisplay = btnContainer.style.display;
-    btnContainer.style.display = 'none';
-
-    // Use a more mobile-friendly approach with lower quality settings
-    const options = {
-    scale: 1, // Lower scale for mobile
-    useCORS: true,
-    allowTaint: true,
-    logging: false,
-    imageTimeout: 15000, // Longer timeout for mobile
-    windowWidth: contentElement.scrollWidth
-    };
-
-    html2canvas(contentElement, options).then(function(canvas) {
-    // Restore hidden elements
-    btnContainer.style.display = originalBtnDisplay;
-
-    try {
-    // Get the canvas data with lower quality for mobile
-    const imgData = canvas.toDataURL('image/jpeg', 0.7);
-
-    // Calculate dimensions
-    const imgWidth = 210; // A4 width in mm
-    const imgHeight = canvas.height * imgWidth / canvas.width;
-
-    // Add image to PDF
-    pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-
-    // Save the PDF
-    pdf.save(bookingRef + '.pdf');
-    } catch (error) {
-    console.error('PDF generation error:', error);
-    alert('Could not generate PDF. Please try on a desktop device.');
-    }
-
-    // Reset button state
-    downloadBtn.disabled = false;
-    downloadBtn.innerHTML = 'Download Ticket';
-    }).catch(function(error) {
-    console.error('Canvas generation error:', error);
-    alert('Could not generate PDF. Please try on a desktop device.');
-    downloadBtn.disabled = false;
-    downloadBtn.innerHTML = 'Download Ticket';
-    });
-    };
-
-    // Small delay to allow UI to update before heavy processing
-    setTimeout(generatePDF, 100);
-    });
-    });
-        </script>
-
 
 </body>
 
