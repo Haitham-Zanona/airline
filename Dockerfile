@@ -20,11 +20,11 @@ COPY . .
 # التحقق من وجود ملف .env، وإذا لم يكن موجودًا ننسخ .env.example إلى .env
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# توليد APP KEY
-RUN php artisan key:generate
-
-# تثبيت الحزم المطلوبة باستخدام Composer
+# تثبيت الحزم المطلوبة باستخدام Composer أولاً
 RUN composer install --no-dev --optimize-autoloader -vvv
+
+# توليد APP KEY بعد تثبيت الحزم
+RUN php artisan key:generate
 
 # تنظيف الكاش للـ Laravel لتفادي مشاكل
 RUN php artisan config:clear && \
