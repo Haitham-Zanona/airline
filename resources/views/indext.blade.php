@@ -143,6 +143,8 @@
             border-color: #3333cc;
         }
 
+
+
         /* Reviews section */
         .reviews {
             margin-top: -50px;
@@ -222,6 +224,30 @@
             background-color: #6f42c1;
             color: white;
             border: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 4px;
+            color: white;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-success {
+            background-color: #28a745;
+        }
+
+        .notification-error {
+            background-color: #dc3545;
         }
 
         .logo {
@@ -339,6 +365,30 @@
         .btn-outline-secondary:focus {
             box-shadow: none;
         }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545' %3e%3ccircle cx='6' cy='6' r='4.5' /%3e%3cpath stroke-linejoin='round' d='M5.83.6h.4L6 6.5z' /%3e%3ccircle cx=' 6' cy=' 8.2' r=' .6' fill=' %23dc3545' stroke=' none' /%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        .validation-alert {
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -356,13 +406,13 @@
                     <div class="col-md-6">
                         <ul class="nav justify-content-center">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Home</a>
+                                <a class="nav-link" href="{{ route('index') }}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">About us</a>
+                                <a class="nav-link" href="{{ route('about_us') }}">About us</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Contact us</a>
+                                <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
                             </li>
                         </ul>
                     </div>
@@ -400,13 +450,13 @@
                         <div class="nav-background p-3">
                             <ul class="nav flex-column">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Home</a>
+                                    <a class="nav-link" href="{{ route('index') }}">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">About us</a>
+                                    <a class="nav-link" href="{{ route('about_us') }}">About us</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Contact us</a>
+                                    <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
                                 </li>
 
                             </ul>
@@ -445,7 +495,7 @@
                                 <label for="origin_city" class="form-label"><i class="fas fa-plane-departure me-2"></i>
                                     From</label>
                                 <input type="text" id="search1" class="form-select" placeholder="Enter City Name"
-                                    autocomplete="off">
+                                    autocomplete="off" required>
                                 <input type="hidden" name="origin_city" value="">
                                 <input type="hidden" name="origin_city_name" id="origin_city_name">
                                 <div id="result1" style="width: 60%;"></div>
@@ -455,7 +505,7 @@
                                         class="fas fa-plane-arrival me-2"></i>
                                     To</label>
                                 <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off"
-                                    class="form-select">
+                                    class="form-select" required>
                                 <input type="hidden" name="destination_city" value="">
 
                                 <input type="hidden" name="destination_city_name" id="destination_city_name">
@@ -467,7 +517,8 @@
                             <div class="col-6 mb-3 mb-md-0">
                                 <label for="departureDate" class="form-label"><i class="far fa-calendar-alt me-2"></i>
                                     Check-In</label>
-                                <input type="date" id="departureDate" name="departureDate" class="form-control">
+                                <input type="date" id="departureDate" name="departureDate" class="form-control"
+                                    required>
                             </div>
                             <div class="col-6">
                                 <div id="returnDateContainer" style="display:none;">
@@ -478,10 +529,7 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            {{-- <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="adults" class="form-label"><i class="fas fa-user me-2"></i> Tickets</label>
-                                <input type="number" id="adults" name="adults" class="form-control" value="1" min="1">
-                            </div>--}}
+
                             <div class="col-6 mb-3 mb-md-0">
                                 <label for="travelers" class="form-label"><i class="fas fa-user me-2"></i>
                                     Tickets</label>
@@ -532,25 +580,7 @@
                                             </div>
                                             <input type="hidden" name="children" id="childrenInput" value="0">
                                         </div>
-                                        {{-- <div class="mb-3" id="infants">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <label class="form-label mb-0">Infants</label>
-                                                <div class="d-flex align-items-center">
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                                        data-type="infants" data-action="decrease">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
-                                                    <span class="mx-3" id="infantsCount">0</span>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                                        data-type="infants" data-action="increase">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" name="infants" id="infantsInput" value="0">
-                                        </div> --}}
+
                                         <div class="mb-3" id="heldInfants">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <label class="form-label mb-0">Infants</label>
@@ -767,7 +797,7 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="mb-0">Explore unique <span class="text-accent">places to stay</span></h2>
-                <a href="#" class="text-accent d-flex align-items-center">All <i
+                <a href="{{ route('explore_places') }}" class="text-accent d-flex align-items-center">All <i
                         class="fas fa-arrow-right ms-2"></i></a>
             </div>
             <div class="row">
@@ -813,7 +843,7 @@
                 </div>
             </div>
             <div class="text-center mt-4">
-                <a href="#" class="btn btn-primary px-4 explore-more">Explore more stays</a>
+                <a href="{{ route('explore_places') }}" class="btn btn-primary px-4 explore-more">Explore more stays</a>
             </div>
         </div>
     </section>
@@ -965,15 +995,15 @@
 
 
     <div class="d-flex justify-content-end mx-5 my-3 subscribe-section">
-        <input type="email" class="form-control d-inline-block" placeholder="Email Address" style="width: 250px;">
-        <select class="form-select d-inline-block" style="width: 250px;">
-            <option>United States</option>
-        </select>
+        <input type="email" id="subscribeEmail" class="form-control d-inline-block mx-3" placeholder="Email Address"
+            style="width: 250px;">
 
 
-        <button class="btn subscribe-btn d-inline-block">Subscribe</button>
+
+        <button id="subscribeBtn" class="btn subscribe-btn d-inline-block">Subscribe</button>
 
     </div><!-- subscribe-section -->
+    <div id="notification" class="notification" style="display: none;"></div>
 
     <!-- Footer Section -->
     <footer class="footer pt-5 pb-3 bg-light">
@@ -1031,9 +1061,12 @@
                 <div class="col-lg-2 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
                     <h5 class="text-secondary mb-3 fw-bold">Quick links</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Home</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">About Us</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
+                        <li class="mb-2"><a href="{{ route('index') }}" class="text-decoration-none text-muted">Home</a>
+                        </li>
+                        <li class="mb-2"><a href="{{ route('about_us') }}" class="text-decoration-none text-muted">About
+                                Us</a></li>
+                        <li class="mb-2"><a href="{{ route('contact_us') }}"
+                                class="text-decoration-none text-muted">Contact Us</a></li>
                     </ul>
                 </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
 
@@ -1168,7 +1201,7 @@
     <!-- Custom JavaScript -->
 
     <script>
-        // ===== الكود الأساسي (البحث عن المدن واختيار نوع الرحلة) =====
+        // ===== Main code to search for City & Airport =====
     $(document).ready(function() {
         $("#result1, #result2").hide();
 
@@ -1262,30 +1295,77 @@
         $('input[name="tripType"]:checked').trigger('change');
 
 
-        $('form.search-form').on('submit', function(e) {
-        // Check if origin and destination are selected
-        if ($('input[name="origin_city"]').val() === '' || $('input[name="destination_city"]').val() === '') {
-        e.preventDefault();
-        alert('Please select both origin and destination cities');
-        return false;
-        }
+       // Form validation
+    $('form.search-form').on('submit', function(e) {
+    let isValid = true;
+    let errorMessage = '';
 
-        // Check if departure date is selected
-        if ($('#departureDate').val() === '') {
-        e.preventDefault();
-        alert('Please select a departure date');
-        return false;
-        }
+    // Origin city validation
+    if ($('input[name="origin_city"]').val() === '') {
+    isValid = false;
+    errorMessage = 'Please select departure city';
+    $('#search1').addClass('is-invalid');
+    } else {
+    $('#search1').removeClass('is-invalid');
+    }
 
-        // Check if return date is selected for round trip
-        if ($('#roundTrip').is(':checked') && $('#returnDate').val() === '') {
-        e.preventDefault();
-        alert('Please select a return date');
-        return false;
-        }
-        });
+    // Destination city validation
+    if ($('input[name="destination_city"]').val() === '') {
+    isValid = false;
+    errorMessage = errorMessage || 'Please select destination city';
+    $('#search2').addClass('is-invalid');
+    } else {
+    $('#search2').removeClass('is-invalid');
+    }
 
+    // Departure date validation
+    if ($('#departureDate').val() === '') {
+    isValid = false;
+    errorMessage = errorMessage || 'Please select a departure date';
+    $('#departureDate').addClass('is-invalid');
+    } else {
+    $('#departureDate').removeClass('is-invalid');
+    }
 
+    // Return date validation for round trips
+    if ($('#roundTrip').is(':checked') && $('#returnDate').val() === '') {
+    isValid = false;
+    errorMessage = errorMessage || 'Please select a return date';
+    $('#returnDate').addClass('is-invalid');
+    } else {
+    $('#returnDate').removeClass('is-invalid');
+    }
+
+    // Show error message and prevent form submission if validation fails
+    if (!isValid) {
+    e.preventDefault();
+
+    // Create or update validation feedback element
+    showValidationError(errorMessage);
+    }
+    });
+
+    // Function to show validation error message
+    function showValidationError(message) {
+    // Remove any existing alert
+    $('.validation-alert').remove();
+
+    // Create new alert
+    const alertHtml = `
+    <div class="validation-alert alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    `;
+
+    // Insert alert before the submit button
+    $('.search-btn').before(alertHtml);
+
+    // Scroll to the error message
+    $('html, body').animate({
+    scrollTop: $('.validation-alert').offset().top - 100
+    }, 200);
+    }
         function setupCounter(parentId,spanEle,inputEle) {
 
         const parentElement = document.getElementById(parentId);
@@ -1323,16 +1403,7 @@
                 input.value = currentValue;
             }
 
-            // function updateTotalTravelers() {
-            // const totalTravelers =
-            // parseInt(document.getElementById('adultsCount').textContent) +
-            // parseInt(document.getElementById('childrenCount').textContent) +
-            // parseInt(document.getElementById('infantsCount').textContent) +
-            // parseInt(document.getElementById('heldInfantsCount').textContent);
 
-            // document.getElementById('totalTravelers').textContent =
-            // `${totalTravelers} Traveler${totalTravelers !== 1 ? 's' : ''}`;
-            // }
 
 
         }
@@ -1361,199 +1432,65 @@
         setTimeout(updateTotalTravelersDisplay, 50);
         });
 
+
+        $('#subscribeBtn').click(function() {
+        const email = $('#subscribeEmail').val();
+        const btn = $(this);
+        const notification = $('#notification');
+
+        if (!email) {
+        showNotification('Please enter your email address', 'error');
+        return;
+        }
+
+        // Disable button and show loading state
+        btn.prop('disabled', true).html('Subscribing...');
+
+        $.ajax({
+        url: '{{ route("subscribe") }}',
+        type: 'POST',
+        data: {
+        email: email,
+        _token: '{{ csrf_token() }}'
+        },
+        success: function(response) {
+        if (response.success) {
+        showNotification(response.message, 'success');
+        $('#subscribeEmail').val('');
+        }
+        },
+        error: function(xhr) {
+        showNotification('Failed to subscribe. Please try again.', 'error');
+        },
+        complete: function() {
+        // Re-enable button and restore text
+        btn.prop('disabled', false).html('Subscribe');
+        }
+        });
+
+        // Add this function to handle notifications
+        function showNotification(message, type) {
+        const notification = $('#notification');
+        notification.removeClass('notification-success notification-error')
+        .addClass('notification-' + type)
+        .html(message)
+        .css('display', 'block')
+        .addClass('show');
+
+        // Hide notification after 3 seconds
+        setTimeout(function() {
+        notification.removeClass('show');
+        setTimeout(function() {
+        notification.css('display', 'none');
+        }, 300);
+        }, 3000);
+        }
+
+        });
+
         });
     </script>
 
-    {{-- <script>
-        $(document).ready(function() {
-        $("#result1, #result2").hide();
-
-        $("#search1").on("input", function() {
-        let query = $(this).val();
-
-        if (query.length > 2) {
-        $.ajax({
-        url: "{{route('search_city')}}",
-        method: "GET",
-        data: { q: query },
-        success: function(response) {
-        $("#result1").empty();
-        if (response.data.length > 0) {
-        $("#result1").show(); // إظهار القائمة عند وجود نتائج
-        response.data.forEach(element => {
-        $("#result1").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;"
-            onmouseover="this.style.backgroundColor='#fff;'; this.style.color='#4444ff';"
-            onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';">${element.address.cityName},
-            ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>
-        `);
-        });
-        } else {
-        $("#result1").hide(); // إخفاء القائمة عند عدم وجود نتائج
-        }
-        }
-        });
-        } else {
-        $("#result1").hide(); // إخفاء القائمة عند حذف الإدخال
-        }
-        });
-
-        $("#search2").on("input", function() {
-        let query = $(this).val();
-        if (query.length > 2) {
-        $.ajax({
-        url: "{{route('search_city')}}",
-        method: "GET",
-        data: { q: query },
-        success: function(response) {
-        $("#result2").empty();
-        if (response.data.length > 0) {
-        $("#result2").show(); // إظهار القائمة عند وجود نتائج
-        response.data.forEach(element => {
-        $("#result2").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;"
-            onmouseover="this.style.backgroundColor='#fff'; this.style.color='#4444ff';"
-            onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';">${element.address.cityName},
-            ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>
-        `);});
-        } else {
-        $("#result2").hide(); // إخفاء القائمة عند عدم وجود نتائج
-        }
-        }
-        });
-        } else {
-        $("#result2").hide(); // إخفاء القائمة عند حذف الإدخال
-        }
-        });
-        $('body').on('click','#result1 p',function () {
-        $("#search1").val($(this).text())
-        $("#result1").empty()
-        var code = $(this).attr('data-city-code');
-        var cityName = $(this).text();
-        $("[name='origin_city']").val(code);
-        $("#origin_city_name").val(cityName);
-        })
-        $('body').on('click','#result2 p',function () {
-        $("#search2").val($(this).text())
-        $("#result2").empty()
-        var code = $(this).attr('data-city-code');
-        var code = $(this).attr('data-city-code');
-        var cityName = $(this).text();
-        $("[name='destination_city']").val(code);
-        $("#destination_city_name").val(cityName);
-        })
-        $(document).click(function(event) {
-        if (!$(event.target).closest("#result1").length) {
-        $("#result1").empty(); // يخفي العنصر
-        }
-        if (!$(event.target).closest("#result2").length) {
-        $("#result2").empty(); // يخفي العنصر
-        }
-        });
-
-
-        $('input[name="tripType"]').change(function() {
-        var tripType = $('input[name="tripType"]:checked').val();
-        var returnDateContainer = $('#returnDateContainer');
-
-        if (tripType === 'roundTrip') {
-        returnDateContainer.show(); // إظهار تاريخ العودة
-        } else {
-        returnDateContainer.hide(); // إخفاء تاريخ العودة
-        }
-        });
-
-        // ✅ تشغيل الدالة عند تحميل الصفحة لأول مرة للتحقق من الحالة الافتراضية
-        $('input[name="tripType"]:checked').trigger('change');
-
-        // document.addEventListener('DOMContentLoaded', function() {
-        // // Initialize the dropdown
-        // updateTravelersText();
-
-        // // Handle dropdown toggle
-        // const dropdownToggle = document.getElementById('travelersDropdown');
-        // const dropdownMenu = document.querySelector('.dropdown-menu');
-
-        // dropdownToggle.addEventListener('click', function(e) {
-        // e.preventDefault();
-        // e.stopPropagation();
-        // dropdownMenu.classList.toggle('show');
-        // });
-
-        // // Add event listeners to all traveler buttons
-        // const travelerBtns = document.querySelectorAll('.traveler-btn');
-        // travelerBtns.forEach(btn => {
-        // btn.addEventListener('click', function(e) {
-        // e.preventDefault();
-        // e.stopPropagation();
-
-        // const type = this.getAttribute('data-type');
-        // const action = this.getAttribute('data-action');
-
-        // if (action === 'increase') {
-        // increaseCount(type);
-        // } else if (action === 'decrease') {
-        // decreaseCount(type);
-        // }
-        // });
-        // });
-
-        // // Close dropdown when clicking outside
-        // document.addEventListener('click', function(e) {
-        // if (!dropdownMenu.contains(e.target) && e.target !== dropdownToggle) {
-        // dropdownMenu.classList.remove('show');
-        // }
-        // });
-
-        // // Prevent dropdown from closing when clicking inside
-        // dropdownMenu.addEventListener('click', function(e) {
-        // e.stopPropagation();
-        // });
-        // });
-
-        // function increaseCount(type) {
-        // const countElement = document.getElementById(type + 'Count');
-        // const inputElement = document.getElementById(type + 'Input');
-        // let count = parseInt(countElement.textContent);
-
-        // // Apply limits
-        // if (type === 'adults' && count >= 9) return;
-        // if ((type === 'children' || type === 'infants') && count >= 8) return;
-        // if (type === 'infants' && count >= parseInt(document.getElementById('adultsCount').textContent)) return;
-
-        // count++;
-        // countElement.textContent = count;
-        // inputElement.value = count;
-        // updateTravelersText();
-        // }
-
-        // function decreaseCount(type) {
-        // const countElement = document.getElementById(type + 'Count');
-        // const inputElement = document.getElementById(type + 'Input');
-        // let count = parseInt(countElement.textContent);
-
-        // // Apply limits
-        // if (type === 'adults' && count <= 1) return; if ((type==='children' || type==='infants' ) && count <=0) return; count--;
-        //     countElement.textContent=count; inputElement.value=count; // If infants are more than adults, reduce infants if
-        //     (type==='adults' ) { const infantsCount=parseInt(document.getElementById('infantsCount').textContent); if
-        //     (infantsCount> count) {
-        //     document.getElementById('infantsCount').textContent = count;
-        //     document.getElementById('infantsInput').value = count;
-        //     }
-        //     }
-
-        //     updateTravelersText();
-        //     }
-
-        //     function updateTravelersText() {
-        //     const adults = parseInt(document.getElementById('adultsCount').textContent);
-        //     const children = parseInt(document.getElementById('childrenCount').textContent);
-        //     const infants = parseInt(document.getElementById('infantsCount').textContent);
-        //     const total = adults + children + infants;
-
-        //     document.getElementById('totalTravelers').textContent =
-        //     total === 1 ? '1 Traveler' : total + ' Travelers';
-        //     }
-        });
-    </script> --}}
 
 </body>
 

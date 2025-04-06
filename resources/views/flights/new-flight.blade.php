@@ -272,7 +272,7 @@
 
         .filter-card {
             background-color: white;
-            padding: 20px;
+            padding-bottom: 20px;
             border-radius: 5px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
@@ -281,10 +281,47 @@
         .filter-title {
             font-weight: bold;
             margin-bottom: 15px;
+            cursor: pointer;
+            background-color: #6c3eff;
+            color: white;
+            position: relative;
+            padding: 15px;
+            border-radius: 5px;
+
+        }
+
+        .filter-title::before {
+            content: '\25BC';
+            /* Unicode character for a down-pointing triangle */
+            position: absolute;
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+            /* Smooth transition for rotation */
+        }
+
+        .filter-title.collapsed::before {
+            transform: translateY(-50%) rotate(-90deg);
+            /* Rotate the arrow 90 degrees when collapsed */
         }
 
         .filter-option {
             margin-bottom: 10px;
+        }
+
+        .filter-content {
+            /* display: block; */
+            overflow: hidden;
+            transition: height 0.3s ease;
+            padding: 0 20px;
+            /* Smooth transition for the height change */
+        }
+
+        .filter-subtitle {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4444ff;
         }
 
         .pricing-tabs {
@@ -510,7 +547,7 @@
 
         .banner-container {
             display: flex;
-            flex-wrap: wrap;
+            /* flex-wrap: wrap; */
             /* justify-content: space-between; */
             align-items: center;
             background-color: #4285f4;
@@ -526,7 +563,7 @@
         .right-side-banner {
             display: flex;
             /* flex-direction: column; */
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             width: 70%;
             gap: 5%;
@@ -537,6 +574,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 10%;
+            width: 100%;
         }
 
         .icon-circle {
@@ -742,6 +781,19 @@
             }
         }
 
+        @media (min-width: 768px) {
+            .filter-content.collapse {
+                display: block;
+                /* Override Bootstrap's collapse class */
+                height: auto !important;
+                /* Override Bootstrap's height */
+            }
+
+            .filter-section .col-md-3 {
+                display: block;
+            }
+        }
+
         @media (max-width: 768px) {
 
 
@@ -797,16 +849,62 @@
                 /* margin-top: 10px; */
             }
 
+            .filter-section .col-md-3 {
+                /* display: none; */
+                /* Hide the filter column by default */
+            }
+
+            .filter-section .col-md-9 {
+                width: 100%;
+            }
+
+            .filter-title {
+                display: block;
+
+                border: none;
+                padding: 8px 15px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-bottom: 15px;
+                /* Add margin to separate from content */
+            }
+
+            .filter-title::before {
+                content: '\25BC';
+                /* Unicode character for a down-pointing triangle */
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                transition: transform 0.3s ease;
+                /* Smooth transition for rotation */
+            }
+
+            .filter-title.collapsed::before {
+                transform: translateY(-50%) rotate(-90deg);
+                /* Rotate the arrow 90 degrees when collapsed */
+            }
+
+            .filter-content {
+                display: none;
+                /* Hide the filter content by default */
+            }
+
+            .filter-content.show {
+                display: block;
+                /* Show the filter content when the title is clicked */
+            }
+
             .banner-container {
                 display: flex;
-                flex-direction: row;
+                flex-direction: column;
                 align-items: center;
                 /* gap: 10px; */
                 padding: 15px;
             }
 
             .right-side-banner {
-                flex-direction: column;
+                /* flex-direction: row; */
                 align-items: self-start;
             }
 
@@ -899,7 +997,8 @@
 
 <body>
 
-
+    {{-- @dd($flightsArraySubset) --}}
+    {{-- @dd(session('flight_search')) --}}
     <!-- Popup -->
     <div class="popup-overlay" id="specialFarePopup">
         <div class="popup-container">
@@ -977,13 +1076,13 @@
                 <div class="col-md-6">
                     <ul class="nav justify-content-center">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Home</a>
+                            <a class="nav-link" href="{{ route('index') }}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">About us</a>
+                            <a class="nav-link" href="{{ route('about_us') }}">About us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact us</a>
+                            <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
                         </li>
                     </ul>
                 </div>
@@ -1021,13 +1120,13 @@
                     <div class="bg-light p-3 rounded">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Home</a>
+                                <a class="nav-link" href="{{ route('index') }}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">About us</a>
+                                <a class="nav-link" href="{{ route('about_us') }}">About us</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Contact us</a>
+                                <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
                             </li>
 
                         </ul>
@@ -1203,162 +1302,65 @@
     <!-- Filter and Results Section -->
     <section class="container filter-section">
         <div class="row">
+
             <!-- Filters Column -->
             <div class="col-md-3">
-                {{-- <div class="filter-card">
-                    <div class="filter-title">Filter By</div>
 
-                    <!-- Stop Filter -->
-                    <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Stop</div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="nonstop">
-                                <label class="form-check-label" for="nonstop">Nonstop(23)</label>
-                            </div>
-                        </div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="1stop">
-                                <label class="form-check-label" for="1stop">1 Stop (4)</label>
-                            </div>
-                        </div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="2stops">
-                                <label class="form-check-label" for="2stops">2+ Stops (2)</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Airlines Filter -->
-                    <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Airlines</div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="abcTech">
-                                <label class="form-check-label" for="abcTech">ABC Air Technologies</label>
-                            </div>
-                        </div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="abcAir">
-                                <label class="form-check-label" for="abcAir">ABC Airlines</label>
-                            </div>
-                        </div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="xyzAir">
-                                <label class="form-check-label" for="xyzAir">XYZ Airways</label>
-                            </div>
-                        </div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="bopLink">
-                                <label class="form-check-label" for="bopLink">BOP Links</label>
-                            </div>
-                        </div>
-                        <div class="filter-option">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="edfExpress">
-                                <label class="form-check-label" for="edfExpress">EDF Express</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Departure Time Filter -->
-                    <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Departure Time</div>
-                        <div class="time-slider-container">
-                            <div class="time-labels">
-                                <span>Mon 5:00 AM</span>
-                                <span>Tue 12:00 AM</span>
-                            </div>
-                            <div class="time-slider">
-                                <div class="time-slider-range" style="left: 25%; width: 30%;"></div>
-                                <div class="time-slider-handle" style="left: 25%;"></div>
-                                <div class="time-slider-handle" style="left: 55%;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Arrival Time Filter -->
-                    <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Arrival Time</div>
-                        <div class="time-slider-container">
-                            <div class="time-labels">
-                                <span>Mon 5:00 AM</span>
-                                <span>Tue 12:00 AM</span>
-                            </div>
-                            <div class="time-slider">
-                                <div class="time-slider-range" style="left: 25%; width: 30%;"></div>
-                                <div class="time-slider-handle" style="left: 25%;"></div>
-                                <div class="time-slider-handle" style="left: 55%;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-                    <!-- Filter Buttons -->
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-outline-secondary">Reset</button>
-                        <button class="btn btn-primary">Apply Filters</button>
-                    </div>
-                </div> --}}
                 <div class="filter-card">
-                    <div class="filter-title">Filter By</div>
-
-                    <!-- Stop Filter -->
-                    <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Stop</div>
-                        <div id="stops-filter">
-                            <!-- This will be populated dynamically by JavaScript -->
-                        </div>
+                    <div class="filter-title collapsed" data-bs-toggle="collapse" data-bs-target="#filterContent">
+                        Filter By
                     </div>
-
-                    <!-- Airlines Filter -->
-                    <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Airlines</div>
-                        <div id="airlines-filter">
-                            <!-- This will be populated dynamically by JavaScript -->
-                        </div>
-                    </div>
-
-                    <!-- Departure Time Filter -->
-                    <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Departure Time</div>
-                        <div class="time-slider-container">
-                            <div id="departure-time-slider-values" class="time-labels">
-                                <span>00:00 - 24:00</span>
-                            </div>
-                            <div id="departure-time-slider" class="time-slider">
-                                <!-- Slider will be initialized by jQuery UI -->
+                    <div class="filter-content collapse" id="filterContent">
+                        <!-- Stop Filter -->
+                        <div class="mb-4">
+                            <div class="filter-subtitle mb-2">Stop</div>
+                            <div id="stops-filter">
+                                <!-- This will be populated dynamically by JavaScript -->
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Arrival Time Filter -->
-                    <div class="mb-4">
-                        <div class="filter-subtitle mb-2">Arrival Time</div>
-                        <div class="time-slider-container">
-                            <div id="arrival-time-slider-values" class="time-labels">
-                                <span>00:00 - 24:00</span>
-                            </div>
-                            <div id="arrival-time-slider" class="time-slider">
-                                <!-- Slider will be initialized by jQuery UI -->
+                        <!-- Airlines Filter -->
+                        <div class="mb-4">
+                            <div class="filter-subtitle mb-2">Airlines</div>
+                            <div id="airlines-filter">
+                                <!-- This will be populated dynamically by JavaScript -->
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Filter Buttons -->
-                    <div class="d-flex justify-content-between">
-                        <button id="reset-filters" class="btn btn-outline-secondary">Reset</button>
-                        <button id="apply-filters" class="btn btn-primary">Apply Filters</button>
-                    </div>
-                </div>
-            </div>
+                        <!-- Departure Time Filter -->
+                        <div class="mb-4">
+                            <div class="filter-subtitle mb-2">Departure Time</div>
+                            <div class="time-slider-container">
+                                <div id="departure-time-slider-values" class="time-labels">
+                                    <span>00:00 - 24:00</span>
+                                </div>
+                                <div id="departure-time-slider" class="time-slider">
+                                    <!-- Slider will be initialized by jQuery UI -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Arrival Time Filter -->
+                        <div class="mb-4">
+                            <div class="filter-subtitle mb-2">Arrival Time</div>
+                            <div class="time-slider-container">
+                                <div id="arrival-time-slider-values" class="time-labels">
+                                    <span>00:00 - 24:00</span>
+                                </div>
+                                <div id="arrival-time-slider" class="time-slider">
+                                    <!-- Slider will be initialized by jQuery UI -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <button id="reset-filters" class="btn btn-outline-secondary">Reset</button>
+                            <button id="apply-filters" class="btn btn-primary">Apply Filters</button>
+                        </div>
+                    </div><!-- filter-content collapse -->
+                </div><!-- filter-card -->
+            </div><!-- col-md-3 -->
 
             <!-- Results Column -->
             <div class="col-md-9">
@@ -1373,24 +1375,7 @@
                         <div class="flight-card">
                             <div class="flight-header">
                                 <div class="d-flex align-items-center">
-                                    {{-- <div class="airline-logo">
-                                        @php
-                                        $airlineName = $flight['segments_info'][0]['airline_info']['name'] ?? 'UNKNOWN';
 
-
-                                        $logoUrl = \App\Services\AirlineLogoService::getLogoUrl($airlineName);
-                                        // dd($logoUrl);
-                                        // dd($flight['segments_info'][0]['airline_info']['name']);
-                                        $defaultLogo = \App\Services\AirlineLogoService::getDefaultLogo();
-                                        @endphp
-
-                                        @if($airlineName !== 'UNKNOWN')
-                                        <img src="{{ $logoUrl }}" alt="{{ $airlineName }} Logo" class="airline-logo-img"
-                                            onerror="this.onerror=null; this.src='{{ $defaultLogo }}';">
-                                        @else
-                                        <span class="airline-name">{{ $airlineName }}</span>
-                                        @endif
-                                    </div> --}}
                                     <div class="fw-bold">
                                         @if(isset($flight['segments_info'][0]['airline_info']['name']) &&
                                         $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
@@ -1881,16 +1866,15 @@
                             <i class="fa-solid fa-car-side"></i>
                         </div>
                     </div>
+                    <div>
+                        <div class="yellow-pill">Save big on Bundle</div>
+                        <div class="save-text">Add Hotel or Car with Flight and<br>Save Extra 30% on Your Trip</div>
+                    </div>
 
                 </div>
 
                 <!-- Right side with phone button -->
                 <div class="right-side-banner">
-
-                    <div>
-                        <div class="yellow-pill">Save big on Bundle</div>
-                        <div class="save-text">Add Hotel or Car with Flight and<br>Save Extra 30% on Your Trip</div>
-                    </div>
 
 
                     <div>
@@ -1940,18 +1924,19 @@
 
 
 
-        <div id="loading" style="display:none;">
-            <p>Loading...</p>
-
-
-
-        </div><!-- #loading -->
+        <!-- HTML changes for the loading indicator -->
+        <div id="loading" style="display:none; text-align:center; padding: 20px; margin: 20px 0;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading more flights...</p>
+        </div>
         </div><!-- col-md-9 -->
         </div><!-- row -->
         {{-- </div>
         </div> --}}
         <!-- Show More Button -->
-        <button class="show-more-btn">Show more</button>
+        {{-- <button class="show-more-btn">Show more</button> --}}
     </section>
 
     <!-- Footer Section -->
@@ -2010,9 +1995,12 @@
                 <div class="col-lg-2 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
                     <h5 class="text-secondary mb-3 fw-bold">Quick links</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Home</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">About Us</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
+                        <li class="mb-2"><a href="{{ route('index') }}" class="text-decoration-none text-muted">Home</a>
+                        </li>
+                        <li class="mb-2"><a href="{{ route('about_us') }}" class="text-decoration-none text-muted">About
+                                Us</a></li>
+                        <li class="mb-2"><a href="{{ route('contact_us') }}"
+                                class="text-decoration-none text-muted">Contact Us</a></li>
                     </ul>
                 </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
 
@@ -2152,24 +2140,24 @@
         document.addEventListener('DOMContentLoaded', function() {
         // Countdown timer functionality
         function startCountdown() {
-        let minutes = 15;
-        let seconds = 30;
+            let minutes = 15;
+            let seconds = 30;
 
-        const countdownInterval = setInterval(() => {
-        if (seconds === 0) {
-        if (minutes === 0) {
-        clearInterval(countdownInterval);
-        document.getElementById('specialFarePopup').style.display = 'none';
-        return;
-        }
-        minutes--;
-        seconds = 59;
-        } else {
-        seconds--;
-        }
+            const countdownInterval = setInterval(() => {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(countdownInterval);
+                        document.getElementById('specialFarePopup').style.display = 'none';
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
+                } else {
+                        seconds--;
+                }
 
-        document.getElementById('countdown').textContent = `${minutes}m ${seconds}s`;
-        }, 1000);
+                document.getElementById('countdown').textContent = `${minutes}m ${seconds}s`;
+            }, 1000);
         }
 
         // Close popup functionality
@@ -2190,25 +2178,15 @@
 
         // Toggle function for outbound and inbound stops
         function toggleFlightStops(toggleSelector, prefix) {
-        const toggles = document.querySelectorAll(toggleSelector);
-        toggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-        const flightId = this.getAttribute('data-flight-id');
-        const detailsDiv = document.getElementById(prefix + '-stops-' + flightId);
+            $(toggleSelector).on('click', function() {
+                const flightId = $(this).data('flight-id');
+                const detailsDiv = $(`#${prefix}-stops-${flightId}`);
 
-        if (detailsDiv) {
-        if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-        detailsDiv.style.display = 'block';
-        this.querySelector('i').classList.remove('fa-chevron-down');
-        this.querySelector('i').classList.add('fa-chevron-up');
-        } else {
-        detailsDiv.style.display = 'none';
-        this.querySelector('i').classList.remove('fa-chevron-up');
-        this.querySelector('i').classList.add('fa-chevron-down');
-        }
-        }
-        });
-        });
+                if (detailsDiv.length) {
+                    detailsDiv.slideToggle();
+                    $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+                }
+            });
         }
 
         // Apply toggle for both outbound and inbound
@@ -2216,329 +2194,496 @@
         toggleFlightStops('.inbound-stops-toggle', 'inbound');
         });
 
-    //      // Define these variables outside your event handler
-    //      // تعريف المتغيرات خارج معالج الحدث
-    //      let offset = 0;
-    //      const limit = 10;
-    //      let loading = false;
-    //      let hasMoreResults = true; // لتتبع ما إذا كان هناك المزيد من النتائج
+    // Global Variables Definition
+    const searchFlightUrl = "{{ route('flight.search') }}";
+    const originCity = "{{ $flightData['originCityName'] ?? '' }}";
+    const destinationCity = "{{ $flightData['destinationCityName'] ?? '' }}";
+    const departureDate = "{{ $flightData['departureDate'] ?? '' }}";
+    const returnDate = "{{ $flightData['returnDate'] ?? '' }}";
+    const adults = "{{ $flightData['adults'] ?? '1' }}";
+    const cabin = "{{ $flightData['cabin'] ?? 'ECONOMY' }}";
+    const tripType = "{{ ($flightData['returnDate']) ? 'roundTrip' : 'oneWay' }}";
 
-    //     function loadMoreFlights() {
-    //     if (loading || !hasMoreResults) return;
+       document.addEventListener('DOMContentLoaded', function() {
+    // Class definition
+    class FlightFilter {
+        constructor() {
+        this.filters = {
+            stops: [],
+            airlines: [],
+            departureTime: [0, 1440],
+            arrivalTime: [0, 1440]
+        };
+        this.isLoading = false;
+        this.initializeEventListeners();
+        this.initializePopup();
+        this.initializeInfiniteScroll();
+        }
 
-    //     loading = true;
-    //     $('#loading').show();
+    initializeEventListeners() {
+    // فلتر التوقفات
+    // $('.filter-checkbox[data-filter="stop"]').on('change', (e) => {
+    //     this.updateFilter('stops', this.collectCheckboxValues('stop'));
+    // });
 
-    //      $.ajax({
-    //      url: "{{ route('flight.search') }}",
-    //      type: "GET",
-    //      data: {
-    //      offset: offset,
-    //      limit: limit,
-    //      origin_city: "{{ $flightData['originCityName'] ?? '' }}",
-    //      destination_city: "{{ $flightData['destinationCityName'] ?? '' }}",
-    //      origin_city_name: "{{ $flightData['originCity'] ?? '' }}",
-    //      destination_city_name: "{{ $flightData['destinationCity'] ?? '' }}",
-    //      departureDate: "{{ $flightData['departureDate'] ?? '' }}",
-    //      returnDate: "{{ $flightData['returnDate'] ?? '' }}",
-    //      adults: "{{ $flightData['adults'] ?? '1' }}",
-    //      cabin: "{{ $flightData['cabin'] ?? 'ECONOMY' }}",
-    //      tripType: "{{ ($flightData['returnDate']) ? 'roundTrip' : 'oneWay' }}"
-    //      // أضف أي معايير تصفية أخرى هنا
-    //      },
-    //      dataType: "json",
-    //      success: function(response) {
-    //      if (response.error) {
-    //      $('#loading').hide();
-    //      loading = false;
-    //      console.error('Server Error:', response.error);
-    //      alert("حدث خطأ أثناء تحميل البيانات: " + response.error);
-    //      return;
-    //      }
+    // فلتر شركات الطيران
+    $('.filter-checkbox[data-filter="airline"]').on('change', (e) => {
+        this.updateFilter('airlines', this.collectCheckboxValues('airline'));
+    });
 
-    //      // إضافة نتائج البحث إلى الحاوية
-    //      $('#flight-results-container').append(response.html);
+    // Attach event listeners for stops filter checkboxes
+    //  $('.filter-checkbox[data-filter="stop"]').on('change', (e) => {
+    //     flightFilter.updateFilter('stops', flightFilter.collectCheckboxValues('stop'));
+    //  });
 
-    //      // تحديث متغيرات التتبع
-    //      hasMoreResults = response.hasMore;
+    // أزرار التطبيق وإعادة التعيين
+    $('#apply-filters').on('click', () => this.applyFilters());
+    $('#reset-filters').on('click', () => this.reset());
 
-    //      if (hasMoreResults) {
-    //      offset += limit;
-    //      } else {
-    //      // إخفاء زر "تحميل المزيد" أو مؤشر التمرير اللانهائي
-    //      $('#load-more-container').hide();
-    //      }
+    // Toggle buttons for flight details
+    this.initializeToggleButtons();
 
-    //      $('#loading').hide();
-    //      loading = false;
-    //      },
-    //      error: function(xhr, status, error) {
-    //      $('#loading').hide();
-    //      loading = false;
+    // Show more button
+    $('.show-more-btn').on('click', () => this.loadMore());
 
-    //      // تسجيل معلومات الخطأ المفصلة
-    //      console.error('AJAX Error:', error);
-    //      console.error('Status:', status);
-    //      console.error('Response:', xhr.responseText);
-
-    //  try {
-    //      const response = JSON.parse(xhr.responseText);
-    //      if (response.error) {
-    //      alert("حدث خطأ: " + response.error);
-    //      } else {
-    //      alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
-    //      }
-    //      } catch(e) {
-    //      alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
-    //      }
-    //      },
-    //      timeout: 60000 // مهلة 60 ثانية (زيادة القيمة لأن API أماديوس قد يكون بطيئًا)
-    //      });
-    //      }
-
-    //      // استدعاء هذه الدالة عند تحميل الصفحة للحصول على أول مجموعة من النتائج
-    //      $(document).ready(function() {
-    //     // التحقق من وجود نتائج مسبقة على الصفحة
-    //      const initialResultsCount = $('#flight-results-container .flight-result-item').length;
-    //      if (initialResultsCount > 0) {
-    //      offset = initialResultsCount; // تعيين الإزاحة إلى عدد النتائج الموجودة
-    //      } else {
-    //      loadMoreFlights(); // تحميل الدفعة الأولى من النتائج
-    //      }
-
-    //  // تنفيذ التمرير اللانهائي
-    //      $(window).scroll(function() {
-    //      if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300 && !loading && hasMoreResults) {
-    //      loadMoreFlights();
-    //      }
-    //      });
-
-    //      // أو زر تحميل المزيد
-    //      $('#load-more-btn').click(function() {
-    //      loadMoreFlights();
-    //      });
-    //      });
+    // فلتر الوقت
+    this.initializeTimeSliders();
+    }
 
 
+    // Add this new method for infinite scrolling
+    initializeInfiniteScroll() {
+    // Hide the "Show more" button as we'll use automatic scrolling
+    $('.show-more-btn').hide();
 
-//  $(document).ready(function() {
-//  // Collect unique airline names and stop counts from the rendered flight cards
-//  let airlines = new Set();
-//  let stopCounts = new Map(); // Map to store stop counts and their occurrences
+    // Function to check if we need to load more content
+        const checkScroll = () => {
+        // If we're already loading, don't trigger another request
+        if (this.isLoading) return;
 
-//  // Process each flight card to extract data
-//  $('.flight-card').each(function() {
-//  // Extract airline name
-//  const airlineName = $(this).find('.flight-header .d-flex > div:nth-child(1)').text().trim();
-//  if (airlineName && airlineName !== 'Unknown Airline') {
-//  airlines.add(airlineName);
-//  }
+        // Calculate if we're near the bottom of the page
+        const scrollPosition = $(window).scrollTop() + $(window).height();
+        const threshold = $(document).height() - 200; // 200px before the bottom
 
-//  // Extract stop information
-//  const outboundStopText = $(this).find('.flight-duration:contains("stop")').text().trim();
-//  const directFlightText = $(this).find('.flight-duration:contains("Direct Flight")').text().trim();
+        if (scrollPosition >= threshold) {
+        // We're near the bottom, load more content if available
+        this.loadMoreOnScroll();
+        }
+        };
 
-//  let stopCount;
-// if (directFlightText.includes("Direct Flight")) {
-// stopCount = "0";
-// if (!stopCounts.has("0")) {
-// stopCounts.set("0", 1);
-// } else {
-// stopCounts.set("0", stopCounts.get("0") + 1);
-//  }
-// } else if (outboundStopText) {
-// // Extract the number before "stop(s)"
-// const match = outboundStopText.match(/(\d+)\s+stop/);
-// if (match && match[1]) {
-// stopCount = match[1];
-// if (!stopCounts.has(stopCount)) {
-// stopCounts.set(stopCount, 1);
-// } else {
-// stopCounts.set(stopCount, stopCounts.get(stopCount) + 1);
-// }
-// }
-// }
-// });
+        // Attach scroll event with throttling to improve performance
+        let scrollTimeout;
+        $(window).on('scroll', () => {
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(checkScroll, 100);
+        });
 
-// // Populate the airline filter checkboxes
-// const airlinesContainer = $('#airlines-filter');
-// airlinesContainer.empty(); // Clear existing options
+        // Initial check in case the page isn't tall enough to scroll
+        setTimeout(checkScroll, 500);
+        }
 
-// airlines.forEach(airline => {
-// const checkboxId = 'airline-' + airline.replace(/\s+/g, '-').toLowerCase();
-// const checkbox = `
-// <div class="filter-option">
-//     <div class="form-check">
-//         <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="airline"
-//             data-value="${airline}">
-//         <label class="form-check-label" for="${checkboxId}">${airline}</label>
-//     </div>
-// </div>
-// `;
-// airlinesContainer.append(checkbox);
-// });
+        // Add this method to load more flights on scroll
+        loadMoreOnScroll() {
+        // Get the current number of displayed flights
+        const displayedFlights = $('.flight-card').length;
+        const totalResults = {{ $totalResults ?? 0 }}; // This will be replaced with the actual count
 
-// // Populate the stop filter checkboxes
-// const stopsContainer = $('#stops-filter');
-// stopsContainer.empty(); // Clear existing options
+        // If we've displayed all flights, don't try to load more
+        if (displayedFlights >= totalResults) {
+        return;
+        }
 
-// // Sort stops by count (0, 1, 2+)
-// const sortedStops = [...stopCounts.entries()].sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+        // Show loading indicator
+        $('#loading').show();
 
-// sortedStops.forEach(([stopCount, count]) => {
-// let label;
-// if (stopCount === "0") {
-// label = `Nonstop (${count})`;
-// } else if (stopCount === "1") {
-// label = `1 Stop (${count})`;
-// } else {
-// label = `${stopCount} Stops (${count})`;
-// }
+        // Set loading flag
+        this.isLoading = true;
 
-// const checkboxId = 'stop-' + stopCount;
-// const checkbox = `
-// <div class="filter-option">
-//     <div class="form-check">
-//         <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="stop"
-//             data-value="${stopCount}">
-//         <label class="form-check-label" for="${checkboxId}">${label}</label>
-//     </div>
-// </div>
-// `;
-// stopsContainer.append(checkbox);
-// });
+        // Make AJAX request to get more flights
+        $.ajax({
+        url: searchFlightUrl,
+        type: 'GET',
+        data: {
+        offset: displayedFlights,
+        limit: 10, // Load 10 more flights
+        ...this.filters,
+        origin_city: originCity,
+        destination_city: destinationCity,
+        departureDate: departureDate,
+        returnDate: returnDate,
+        adults: adults,
+        cabin: cabin,
+        tripType: tripType
+        },
+        headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        'Accept': 'application/json'
+        },
+        success: (response) => {
+        // Hide loading indicator
+        $('#loading').hide();
 
-// // Initialize time sliders for departure and arrival
-// initTimeSlider('#departure-time-slider', 'departure');
-// initTimeSlider('#arrival-time-slider', 'arrival');
+        // Reset loading flag
+        this.isLoading = false;
 
-// // Apply and Reset buttons
-// $('#apply-filters').on('click', applyFilters);
-// $('#reset-filters').on('click', resetFilters);
+        if (response.html) {
+        // Append new flights to the container
+        $('#flight-results-container').append(response.html);
 
-// // Function to initialize time sliders
-// function initTimeSlider(selector, timeType) {
-// $(selector).slider({
-// range: true,
-// min: 0,
-// max: 1440, // 24 hours in minutes
-// step: 15,
-// values: [0, 1440],
-// slide: function(event, ui) {
-// // Update the displayed times
-// updateTimeLabels(selector + '-values', ui.values[0], ui.values[1]);
-// },
-// change: function(event, ui) {
-// // Store the values as data attributes
-// $(selector).data('start', ui.values[0]);
-// $(selector).data('end', ui.values[1]);
-// }
-// });
-// // Initialize labels
-// updateTimeLabels(selector + '-values', 0, 1440);
-// }
+        // Initialize toggle buttons for the new flights
+        this.initializeToggleButtons();
+        }
+        },
+        error: () => {
+        // Hide loading indicator
+        $('#loading').hide();
 
-// // Function to update time labels
-// function updateTimeLabels(selector, startMinutes, endMinutes) {
-// const formatTime = (minutes) => {
-// const hours = Math.floor(minutes / 60);
-// const mins = minutes % 60;
-// return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-// };
+        // Reset loading flag
+        this.isLoading = false;
 
-// $(selector).html(`${formatTime(startMinutes)} - ${formatTime(endMinutes)}`);
-// }
+        // Show error message
+        console.error('Failed to load more flights');
+        }
+        });
+    }
 
-// // Function to apply filters
-// function applyFilters() {
-// // Show loading indicator
-// $('#loading').show();
-// $('#flight-results-container').hide();
 
-// // Get selected airlines
-// const selectedAirlines = [];
-// $('input[data-filter="airline"]:checked').each(function() {
-// selectedAirlines.push($(this).data('value'));
-// });
+    initializePopup() {
+    // Countdown timer functionality
+    this.startCountdown();
 
-// // Get selected stop counts
-// const selectedStops = [];
-// $('input[data-filter="stop"]:checked').each(function() {
-// selectedStops.push($(this).data('value'));
-// });
+    // Close popup functionality
+    document.getElementById('closePopup').addEventListener('click', () => {
+    document.getElementById('specialFarePopup').style.display = 'none';
+    });
 
-// // Get time range values
-// const departureStart = $('#departure-time-slider').data('start') || 0;
-// const departureEnd = $('#departure-time-slider').data('end') || 1440;
-// const arrivalStart = $('#arrival-time-slider').data('start') || 0;
-// const arrivalEnd = $('#arrival-time-slider').data('end') || 1440;
+    // Show popup after delay
+    setTimeout(() => {
+    document.getElementById('specialFarePopup').style.display = 'flex';
+    }, 3000);
+    }
 
-// // Prepare the AJAX request with filter data
-// $.ajax({
-// url: window.location.href,
-// type: 'GET',
-// data: {
-// airlines: selectedAirlines.length > 0 ? selectedAirlines : null,
-// stops: selectedStops.length > 0 ? selectedStops : null,
-// departureTime: [departureStart, departureEnd],
-// arrivalTime: [arrivalStart, arrivalEnd]
-// },
-// success: function(response) {
-// if (response.html) {
-// $('#flight-results-container').html(response.html);
-// $('#loading').hide();
-// $('#flight-results-container').show();
+    startCountdown() {
+    let minutes = 15;
+    let seconds = 30;
 
-// // Reinitialize event handlers for the new content
-// initFlightCardEvents();
-// }
-// },
-// error: function(xhr, status, error) {
-// console.error("Filter request failed:", error);
-// $('#loading').hide();
-// $('#flight-results-container').show();
-// alert("Failed to apply filters. Please try again.");
-// }
-// });
-// }
+    const countdownInterval = setInterval(() => {
+    if (seconds === 0) {
+    if (minutes === 0) {
+    clearInterval(countdownInterval);
+    document.getElementById('specialFarePopup').style.display = 'none';
+    return;
+    }
+    minutes--;
+    seconds = 59;
+    } else {
+    seconds--;
+    }
 
-// // Function to reset all filters
-// function resetFilters() {
-// // Uncheck all checkboxes
-// $('.filter-checkbox').prop('checked', false);
+    document.getElementById('countdown').textContent = `${minutes}m ${seconds}s`;
+    }, 1000);
+    }
 
-// // Reset time sliders
-// $('#departure-time-slider').slider('values', [0, 1440]);
-// $('#arrival-time-slider').slider('values', [0, 1440]);
+    collectCheckboxValues(filterType) {
+        const values = [];
+            $(`.filter-checkbox[data-filter="${filterType}"]:checked`).each(function() {
+                values.push($(this).data('value'));
+            });
+        console.log(`Collected ${filterType} values:`, values);
+        return values;
+    }
 
-// // Update time labels
-// updateTimeLabels('#departure-time-slider-values', 0, 1440);
-// updateTimeLabels('#arrival-time-slider-values', 0, 1440);
+    initializeTimeSliders() {
+    const timeSliderOptions = {
+    range: true,
+    min: 0,
+    max: 1440,
+    step: 15,
+    values: [0, 1440],
+    slide: (event, ui) => {
+    this.updateTimeLabels(event.target.id, ui.values);
+    },
+    change: (event, ui) => {
+    const filterType = event.target.id.includes('departure') ? 'departureTime' : 'arrivalTime';
+    this.updateFilter(filterType, ui.values);
+    }
+    };
 
-// // Apply the reset filters
-// applyFilters();
-// }
+    $('#departure-time-slider').slider(timeSliderOptions);
+    $('#arrival-time-slider').slider(timeSliderOptions);
 
-// // Initialize events for flight cards
-// function initFlightCardEvents() {
-// // Toggle outbound stops details
-// $('.outbound-stops-toggle').on('click', function() {
-// const flightId = $(this).data('flight-id');
-// $('#outbound-stops-' + flightId).slideToggle();
-// $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-// });
+    // Initialize labels
+    this.updateTimeLabels('departure-time-slider', [0, 1440]);
+    this.updateTimeLabels('arrival-time-slider', [0, 1440]);
+    }
 
-// // Toggle inbound stops details
-// $('.inbound-stops-toggle').on('click', function() {
-// const flightId = $(this).data('flight-id');
-// $('#inbound-stops-' + flightId).slideToggle();
-// $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-// });
-// }
+    initializeToggleButtons() {
+        const toggleFlightStops = (toggleSelector, prefix) => {
+            $(toggleSelector).off('click').on('click', function(event) {
 
-// // Initialize events for the initial load
-// initFlightCardEvents();
-// });
+                event.preventDefault();
+                event.stopPropagation();
+
+                const flightId = $(this).data('flight-id');
+                const detailsDiv = $(`#${prefix}-stops-${flightId}`);
+
+                if (detailsDiv.length) {
+                    detailsDiv.slideToggle();
+                    $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+                }
+            });
+        };
+
+        toggleFlightStops('.outbound-stops-toggle', 'outbound');
+        toggleFlightStops('.inbound-stops-toggle', 'inbound');
+    }
+
+    updateTimeLabels(sliderId, values) {
+    const formatTime = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+    };
+
+    $(`#${sliderId}-values`).html(
+    `${formatTime(values[0])} - ${formatTime(values[1])}`
+    );
+    }
+
+  updateFilter(filterType, values) {
+    // تجنب التحديث إذا كانت القيم نفسها
+    if (JSON.stringify(this.filters[filterType]) === JSON.stringify(values)) {
+    return;
+    }
+
+    this.filters[filterType] = values;
+
+    // إضافة تأخير قصير لتجنب الطلبات المتكررة
+    if (this.filterTimeout) {
+    clearTimeout(this.filterTimeout);
+    }
+
+    this.filterTimeout = setTimeout(() => {
+    console.log('Applying filter:', {
+    type: filterType,
+    values: values,
+    allFilters: this.filters
+    });
+    this.applyFilters();
+    }, 300);
+    }
+
+   applyFilters() {
+        $('#loading').show();
+        $('#flight-results-container').hide();
+
+        // Collect the selected airline names
+        this.filters.airlines = this.collectCheckboxValues('airline');
+
+        // تنسيق البيانات قبل الإرسال
+        const filterData = {
+            stops: this.filters.stops || [],
+            airlines: this.filters.airlines || [],
+            departureTime: this.filters.departureTime,
+            arrivalTime: this.filters.arrivalTime,
+            origin_city: originCity,
+            destination_city: destinationCity,
+            departureDate: departureDate,
+            returnDate: returnDate,
+            adults: adults,
+            cabin: cabin,
+            tripType: tripType,
+            refresh_cache: true
+        };
+
+        console.log('Sending filter request:', filterData);
+        console.log('Airlines being sent in filter:', filterData.airlines);
+
+        $.ajax({
+        url: searchFlightUrl,
+        type: 'GET',
+        data: filterData,
+        headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        'Accept': 'application/json'
+        },
+        success: (response) => {
+        console.log('Raw response:', response);
+        if (response.error) {
+        this.handleFilterError(null, 'error', response.error);
+        return;
+        }
+        this.handleFilterSuccess(response);
+        },
+        error: (xhr, status, error) => {
+        console.error('Filter request failed:', {
+        status: xhr.status,
+        error: error,
+        response: xhr.responseText
+        });
+        this.handleFilterError(xhr, status, error);
+        }
+        });
+        }
+
+    handleFilterSuccess(response) {
+    $('#loading').hide();
+
+    console.log('Processing response:', response);
+
+    if (!response || !response.html) {
+    $('#flight-results-container').html(`
+    <div class="alert alert-warning">
+        Invalid response received from server.
+    </div>
+    `).show();
+    return;
+    }
+
+    $('#flight-results-container')
+    .html(response.html)
+    .show();
+
+    // إعادة تهيئة الأحداث
+    this.initializeToggleButtons();
+
+    // تحديث عدد النتائج إذا كان متوفراً
+    if (response.totalResults !== undefined) {
+    console.log(`Found ${response.totalResults} results`);
+    }
+    }
+
+   handleFilterError(xhr, status, error) {
+    $('#loading').hide();
+    $('#flight-results-container').show();
+
+    let errorMessage = 'Failed to apply filters. ';
+
+    if (xhr.responseJSON && xhr.responseJSON.message) {
+    errorMessage += xhr.responseJSON.message;
+    } else if (error) {
+    errorMessage += error;
+    }
+
+    console.error('Filter Error:', {
+    status: status,
+    error: error,
+    response: xhr.responseText
+    });
+
+    // عرض رسالة خطأ للمستخدم
+    $('#flight-results-container').html(`
+    <div class="alert alert-danger">
+        ${errorMessage}
+    </div>
+    `);
+    }
+
+   loadMore() {
+    this.loadMoreOnScroll();
+    }
+
+    reset() {
+    // إعادة تعيين جميع الفلاتر
+    $('.filter-checkbox').prop('checked', false);
+    $('#departure-time-slider').slider('values', [0, 1440]);
+    $('#arrival-time-slider').slider('values', [0, 1440]);
+
+    this.filters = {
+    stops: [],
+    airlines: [],
+    departureTime: [0, 1440],
+    arrivalTime: [0, 1440]
+    };
+
+    this.updateTimeLabels('departure-time-slider', [0, 1440]);
+    this.updateTimeLabels('arrival-time-slider', [0, 1440]);
+
+    this.applyFilters();
+    }
+
+
+    } //class FlightFilter
+
+    // Initialize the filter
+    const flightFilter = new FlightFilter();
+
+    // Collect initial data
+    const collectInitialData = () => {
+    let airlines = new Set();
+    let stopCounts = new Map();
+
+    $('.flight-card').each(function() {
+
+    const airlineInfo = $(this).find('.flight-header .fw-bold').first();
+    const airlineName = airlineInfo.clone()
+    .children()
+    .remove()
+    .end()
+    .text()
+    .trim();
+
+    if (airlineName && airlineName !== 'Unknown Airline') {
+    airlines.add(airlineName);
+    }
+
+
+    const segments = $(this).find('.flight-details').first();
+    const stopsCount = segments.find('.flight-duration').filter(function() {
+    return $(this).text().includes('stop') || $(this).text().includes('Direct Flight');
+    }).first();
+
+    if (stopsCount.length) {
+    const isDirectFlight = stopsCount.text().includes('Direct Flight');
+    const count = isDirectFlight ? "0" : stopsCount.text().match(/(\d+)\s+stop/)[1];
+    stopCounts.set(count, (stopCounts.get(count) || 0) + 1);
+    }
+    });
+
+    return { airlines, stopCounts };
+    };
+    // Populate filters
+    const { airlines, stopCounts } = collectInitialData();
+
+    // Populate airline filters
+    const airlinesContainer = $('#airlines-filter');
+    airlines.forEach(airline => {
+    const checkboxId = 'airline-' + airline.replace(/\s+/g, '-').toLowerCase();
+    airlinesContainer.append(`
+    <div class="filter-option">
+        <div class="form-check">
+            <input class="form-check-input filter-checkbox" type="checkbox" id="${checkboxId}" data-filter="airline"
+                data-value="${airline}">
+            <label class="form-check-label" for="${checkboxId}">${airline}</label>
+        </div>
+    </div>
+    `);
+    console.log('Airline checkbox value:', airline);
+    });
+
+    // Populate stops filters
+    const stopsContainer = $('#stops-filter');
+    [...stopCounts.entries()].sort((a, b) => parseInt(a[0]) - parseInt(b[0])).forEach(([stopCount, count]) => {
+    const label = stopCount === "0" ? `Nonstop (${count})` :
+    stopCount === "1" ? `1 Stop (${count})` :
+    `${stopCount} Stops (${count})`;
+
+    stopsContainer.append(`
+    <div class="filter-option">
+        <div class="form-check">
+            <input class="form-check-input filter-checkbox" type="checkbox" id="stop-${stopCount}" data-filter="stop"
+                data-value="${stopCount}">
+            <label class="form-check-label" for="stop-${stopCount}">${label}</label>
+        </div>
+    </div>
+    `);
+    });
+    // Attach event listeners for stops filter checkboxes
+    $('.filter-checkbox[data-filter="stop"]').on('change', (e) => {
+    flightFilter.updateFilter('stops', flightFilter.collectCheckboxValues('stop'));
+    });
+
+    });
 
 
     </script>

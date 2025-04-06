@@ -185,8 +185,16 @@ class FlightController extends Controller
             $airlines = json_decode($response, true);
 
             if (! empty($airlines['data'][0])) {
+
+                // Get the airline name
+                $airlineName = $airlines['data'][0]['businessName'] ?? $airlines['data'][0]['commonName'] ?? 'Unknown';
+
+// Remove any travel class information (like "economy", "business", etc.)
+                $airlineName = preg_replace('/(economy|business|first|premium)/i', '', $airlineName);
+                $airlineName = trim($airlineName);
+
                 return [
-                    'name' => $airlines['data'][0]['businessName'] ?? $airlines['data'][0]['commonName'] ?? 'Unknown',
+                    'name' => $airlineName,
                     'code' => $carrierCode,
                 ];
             }
@@ -287,7 +295,7 @@ class FlightController extends Controller
                 ],
             ]);
         }
-        //  dd(session('flight_search'));
+        // dd(session('flight_search'));
 
         $searchData = session('flight_search', []);
 
@@ -763,56 +771,53 @@ class FlightController extends Controller
         }
 
         // dd($flightData);
-// Filter by airlines if specified
-        if ($request->has('airlines') && is_array($request->airlines) && count($request->airlines) > 0) {
-            $flightsCollection = $flightsCollection->filter(function ($flight) use ($request) {
-                if (isset($flight['segments_info'][0]['airline_info']['name']) &&
-                    $flight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN') {
-                    return in_array($flight['segments_info'][0]['airline_info']['name'], $request->airlines);
-                } else {
-                    return in_array($flight['validatingAirlineCodes'][0] ?? 'Unknown Airline', $request->airlines);
-                }
+// Fix the Filter Function: Ensure the filter function properly handles empty arrays
+
+        try {
+            // تحويل البيانات المستلمة إلى الصيغة المناسبة
+            $filters = [
+                'stops'         => is_array($request->stops) ? $request->stops : [],
+                'airlines'      => is_array($request->airlines) ? $request->airlines : [],
+                'departureTime' => $request->input('departureTime', [0, 1440]),
+                'arrivalTime'   => $request->input('arrivalTime', [0, 1440]),
+            ];
+
+            Log::info('Applying filters:', $filters);
+
+            // تطبيق الفلاتر على المجموعة
+            $filteredFlights = $flightsCollection->filter(function ($flight) use ($filters) {
+                return $this->matchesFilters($flight, $filters);
             });
-        }
 
-        // Filter by stops if specified
-        if ($request->has('stops') && is_array($request->stops) && count($request->stops) > 0) {
-            $flightsCollection = $flightsCollection->filter(function ($flight) use ($request) {
-                $outboundStops = isset($flight['outbound_stops_text'])
-                ? $flight['outbound_stops_text']
-                : (isset($flight['itineraries'][0]['segments']) ? (count($flight['itineraries'][0]['segments']) - 1) : '0');
+            Log::info('Filtered results count:', ['count' => $filteredFlights->count()]);
 
-                // For inbound (return) flights if they exist
-                $inboundStops = 0;
-                if (isset($flight['itineraries'][1]) && isset($flight['itineraries'][1]['segments'])) {
-                    $inboundStops = isset($flight['inbound_stops_text'])
-                    ? $flight['inbound_stops_text']
-                    : (count($flight['itineraries'][1]['segments']) - 1);
-                }
+            if ($request->ajax()) {
+                $view = $filteredFlights->isEmpty()
+                ? view('flights.partials.no_results')->render()
+                : view('flights.partials.flight_results', [
+                    'flightsArraySubset' => $filteredFlights,
+                    'flightData'         => $flightData,
+                ])->render();
 
-                return in_array($outboundStops, $request->stops) || in_array($inboundStops, $request->stops);
-            });
-        }
+                return response()->json([
+                    'html'         => $view,
+                    'hasMore'      => false,
+                    'totalResults' => $filteredFlights->count(),
+                ]);
+            }
 
-        // Filter by departure time if specified
-        if ($request->has('departureTime') && is_array($request->departureTime) && count($request->departureTime) == 2) {
-            $departureRange    = $request->departureTime;
-            $flightsCollection = $flightsCollection->filter(function ($flight) use ($departureRange) {
-                $departureDateTime = Carbon::parse($flight['itineraries'][0]['segments'][0]['departure']['at']);
-                $departureMinutes  = $departureDateTime->hour * 60 + $departureDateTime->minute;
-                return $departureMinutes >= $departureRange[0] && $departureMinutes <= $departureRange[1];
-            });
-        }
+        } catch (\Exception $e) {
+            Log::error('Filter error:', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
 
-        // Filter by arrival time if specified
-        if ($request->has('arrivalTime') && is_array($request->arrivalTime) && count($request->arrivalTime) == 2) {
-            $arrivalRange      = $request->arrivalTime;
-            $flightsCollection = $flightsCollection->filter(function ($flight) use ($arrivalRange) {
-                $lastSegmentIndex = count($flight['itineraries'][0]['segments']) - 1;
-                $arrivalDateTime  = Carbon::parse($flight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at']);
-                $arrivalMinutes   = $arrivalDateTime->hour * 60 + $arrivalDateTime->minute;
-                return $arrivalMinutes >= $arrivalRange[0] && $arrivalMinutes <= $arrivalRange[1];
-            });
+            if ($request->ajax()) {
+                return response()->json([
+                    'error'   => 'Failed to apply filters',
+                    'message' => $e->getMessage(),
+                ], 500);
+            }
         }
 
         // تأكد من أن كل رحلة تحتوي على معرّف فريد (أضف هذا الكود هنا)
@@ -838,11 +843,9 @@ class FlightController extends Controller
                 $offset = (int) $request->input('offset', 0);
                 $limit  = (int) $request->input('limit', 10);
 
-                // استخدام مجموعة البيانات التي تم تصفيتها
+                // تحضير البيانات المفلترة
                 $paginatedFlights = $flightsCollection->slice($offset, $limit);
-
-                // التحقق مما إذا كان هناك المزيد من النتائج
-                $hasMore = $flightsCollection->count() > ($offset + $limit);
+                $hasMore          = $flightsCollection->count() > ($offset + $limit);
 
                 if ($paginatedFlights->isEmpty()) {
                     return response()->json([
@@ -851,27 +854,27 @@ class FlightController extends Controller
                     ]);
                 }
 
-                // إرجاع البيانات كاستجابة JSON
                 return response()->json([
-                    'html'    => view('flights.flight-results', [
-                        'flightOffers' => $paginatedFlights,
-                        'flightData'   => $flightData,
+                    'html'    => view('flights.partials.flight_results', [
+                        'flightsArraySubset' => $paginatedFlights,
+                        'flightData'         => $flightData,
+                        'searchData'         => $searchData ?? [],
                     ])->render(),
-                    'hasMore' => $hasMore,
+                    'hasMore' => $hasMore
                 ]);
             } catch (\Exception $e) {
-                // تسجيل الخطأ للتصحيح
                 Log::error('Flight search error: ' . $e->getMessage());
-
-                return response()->json(['error' => 'Internal Server Error: ' . $e->getMessage()], 500);
+                return response()->json([
+                    'error' => 'Internal Server Error: ' . $e->getMessage(),
+                ], 500);
             }
         }
 
-        session(['flightsArraySubset' => $flightsCollection->slice(0, 10)->toArray()]);
+        session(['flightsArraySubset' => $flightsCollection->toArray()]);
 
 // للطلبات العادية، عرض الصفحة الكاملة
         return view('flights.new-flight', [
-            'flightsArraySubset' => $flightsCollection->slice(0, 10),
+            'flightsArraySubset' => $flightsCollection,
             'flightData'         => $flightData,
             'totalResults'       => $flightsCollection->count(),
             'searchData'         => $searchData,
@@ -956,6 +959,135 @@ class FlightController extends Controller
 
     //     return response()->json($responseData['data']);
     // }
+
+    // Helper methods
+
+    private function matchesFilters($flight, $filters)
+    {
+        // فلتر التوقفات
+        if (! empty($filters['stops'])) {
+            $outboundStops = $this->getStopsCount($flight, 'outbound');
+            if (! in_array((string) $outboundStops, $filters['stops'])) {
+                return false;
+            }
+        }
+
+        // فلتر شركات الطيران
+        if (! empty($filters['airlines'])) {
+            $airlineName = $this->getAirlineName($flight);
+            if (! in_array($airlineName, $filters['airlines'])) {
+                return false;
+            }
+        }
+
+        // فلتر وقت المغادرة
+        if (! empty($filters['departureTime'])) {
+            $departureTime = $this->getFlightTime($flight, 'departure');
+            if (! $this->isTimeInRange($departureTime, $filters['departureTime'][0], $filters['departureTime'][1])) {
+                return false;
+            }
+        }
+
+        // فلتر وقت الوصول
+        if (! empty($filters['arrivalTime'])) {
+            $arrivalTime = $this->getFlightTime($flight, 'arrival');
+            if (! $this->isTimeInRange($arrivalTime, $filters['arrivalTime'][0], $filters['arrivalTime'][1])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // في FlightController
+    private function applyFilters($flightsCollection, $filters)
+    {
+        return $flightsCollection->filter(function ($flight) use ($filters) {
+            $matchesAllFilters = true;
+
+            // فلتر التوقفات
+            if (! empty($filters['stops'])) {
+                $outboundStops = $this->getStopsCount($flight, 'outbound');
+                $matchesStops  = in_array((string) $outboundStops, $filters['stops']);
+                $matchesAllFilters &= $matchesStops;
+
+                // تسجيل للتحقق
+                Log::info('Stops Filter', [
+                    'flight_stops' => $outboundStops,
+                    'filter_stops' => $filters['stops'],
+                    'matches'      => $matchesStops,
+                ]);
+            }
+
+            // فلتر شركات الطيران
+            if (! empty($filters['airlines'])) {
+                $airlineName    = $this->getAirlineName($flight);
+                $matchesAirline = in_array($airlineName, $filters['airlines']);
+                $matchesAllFilters &= $matchesAirline;
+
+                // تسجيل للتحقق
+                Log::info('Airline Filter', [
+                    'flight_airline'  => $airlineName,
+                    'filter_airlines' => $filters['airlines'],
+                    'matches'         => $matchesAirline,
+                ]);
+            }
+
+            return $matchesAllFilters;
+        });
+    }
+
+    private function getStopsCount($flight, $direction = 'outbound')
+    {
+        $itineraryIndex = $direction === 'outbound' ? 0 : 1;
+        if (isset($flight['itineraries'][$itineraryIndex]['segments'])) {
+            return count($flight['itineraries'][$itineraryIndex]['segments']) - 1;
+        }
+        return 0;
+    }
+
+    private function getAirlineName($flight)
+    {
+        // تحسين استخراج اسم شركة الطيران
+        if (isset($flight['segments_info'][0]['airline_info']['name'])) {
+            $airlineName = $flight['segments_info'][0]['airline_info']['name'];
+                                                                  // إزالة معلومات درجة الطيران
+            Log::info('Airline Name Extracted: ' . $airlineName); // Add this line
+
+            return preg_replace('/(economy|business|first|premium)/i', '', $airlineName);
+        }
+        $airlineName = $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline';
+
+        Log::info('Airline Name Extracted: ' . $airlineName); // Also log this case
+
+        return $airlineName;
+    }
+
+    private function getFlightTime($flight, $type = 'departure')
+    {
+        $segment = $flight['itineraries'][0]['segments'][0];
+        $time    = $type === 'departure' ? $segment['departure']['at'] : $segment['arrival']['at'];
+        return \Carbon\Carbon::parse($time)->format('H:i');
+    }
+
+    private function isTimeInRange($time, $start, $end)
+    {
+        $flightTime = \Carbon\Carbon::parse($time);
+        $flightDate = $flightTime->copy()->startOfDay(); // Get the date of the flight time
+        $startTime  = $flightDate->copy()->addMinutes($start);
+        $endTime    = $flightDate->copy()->addMinutes($end);
+
+        // If the end time is before the start time, it means the range spans across midnight
+        if ($end < $start) {
+            // Adjust the end time to be on the next day
+            $endTime->addDay();
+
+            // Check if the flight time is within the range, considering the possibility of spanning midnight
+            return $flightTime->gte($startTime) || $flightTime->lte($endTime);
+        }
+
+        return $flightTime->gte($startTime) && $flightTime->lte($endTime);
+    }
 
     public function search_city()
     {
@@ -1077,6 +1209,7 @@ class FlightController extends Controller
 
         // تخزين الرحلة المختارة في الجلسة
         $this->storeSelectedFlightInSession($selectedFlight);
+        // dd(session('flight_search'));
 
         // التوجيه إلى صفحة تفاصيل المسافرين
         return redirect()->route('flight.passengers');
@@ -1150,6 +1283,8 @@ class FlightController extends Controller
         // الحصول على قائمة البلدان للقائمة المنسدلة
         $countries = (new CountryList())->getList('en');
 
+        // dd(session('flight_search'));
+
         // الحصول على عدد المسافرين من بيانات البحث
         $flightSearchData = session('flight_search', []);
         $adults           = $flightSearchData['adults'] ?? 1;
@@ -1159,6 +1294,8 @@ class FlightController extends Controller
         // استرجاع بيانات المسافرين المخزنة مسبقاً (إن وجدت)
         $savedPassengers = $selectedFlight['passengers'] ?? [];
         $contactInfo     = $selectedFlight['contact'] ?? [];
+
+        // dd(session('flight_search'));
 
         // تمرير البيانات للعرض
         return view('flights.new-passengers', compact(
@@ -1314,6 +1451,7 @@ class FlightController extends Controller
         try {
             // إرسال إيميل التأكيد
             $recipientEmail = $selectedFlight['contact']['email'] ?? 'recipient@example.com';
+            // dd($selectedFlight);
             Mail::to($recipientEmail)->send(new MyTestMail($selectedFlight));
 
             // التوجيه إلى صفحة تأكيد الحجز مع رسالة نجاح
@@ -1366,6 +1504,36 @@ class FlightController extends Controller
         return view('flights.confirm', [
             'bookingReference' => $bookingReference,
             'selectedFlight'   => $selectedFlight,
+        ]);
+    }
+
+    public function confirmation()
+    {
+        $selectedFlight = $this->getSelectedFlight();
+        $departureTime  = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
+        $datetime       = \Carbon\Carbon::parse($departureTime);
+
+        $originCity = $selectedFlight['originCity'] ?? '';
+        $cityName   = '';
+        $cityCode   = '';
+
+// Extract city name (text in parentheses)
+        if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+            preg_match('/\((.*?)\)/', $originCity, $matches);
+            $cityName = isset($matches[1]) ? trim($matches[1]) : '';
+        }
+
+// Extract city code (after comma)
+        if (strpos($originCity, ',') !== false) {
+            $parts    = explode(',', $originCity);
+            $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
+        }
+
+        return view('emails.booking-confirmation', [
+            'selectedFlight' => $selectedFlight,
+            'datetime'       => $datetime,
+            'cityName'       => $cityName,
+            'cityCode'       => $cityCode,
         ]);
     }
 
@@ -1429,6 +1597,34 @@ class FlightController extends Controller
     public function aboutUs()
     {
         return view('about-us');
+    }
+    public function contactUs()
+    {
+        return view('contact-us');
+    }
+
+    public function subscribe(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        try {
+            Mail::to($request->email)->send(new MyTestMail([
+                'type'  => 'subscription',
+                'email' => $request->email,
+            ]));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you for subscribing!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to subscribe. Please try again.',
+            ], 500);
+        }
     }
 
 }

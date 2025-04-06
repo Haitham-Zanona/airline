@@ -170,6 +170,10 @@
                 width: 20px;
                 height: 20px;
             }
+
+            .about-text {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -189,13 +193,13 @@
                     <div class="col-md-6">
                         <ul class="nav justify-content-center">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Home</a>
+                                <a class="nav-link" href="{{ route('index') }}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">About us</a>
+                                <a class="nav-link" href="{{ route('about_us') }}">About us</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Contact us</a>
+                                <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
                             </li>
                         </ul>
                     </div>
@@ -233,13 +237,13 @@
                         <div class="nav-background p-3">
                             <ul class="nav flex-column">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Home</a>
+                                    <a class="nav-link" href="{{ route('index') }}">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">About us</a>
+                                    <a class="nav-link" href="{{ route('about_us') }}">About us</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Contact us</a>
+                                    <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
                                 </li>
 
                             </ul>
@@ -275,7 +279,7 @@
             <div class="row">
                 <div class="col-4">
 
-                    <img src="" alt="">
+                    <img src="{{ asset('assets/images/about-side.webp') }}" class="w-100" alt="">
                 </div><!-- col-4 -->
                 <div class="col-8">
                     <div class="about-us-content">
@@ -355,9 +359,12 @@
                 <div class="col-lg-2 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
                     <h5 class="text-secondary mb-3 fw-bold">Quick links</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Home</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">About Us</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
+                        <li class="mb-2"><a href="{{ route('index') }}" class="text-decoration-none text-muted">Home</a>
+                        </li>
+                        <li class="mb-2"><a href="{{ route('about_us') }}" class="text-decoration-none text-muted">About
+                                Us</a></li>
+                        <li class="mb-2"><a href="{{ route('contact_us') }}"
+                                class="text-decoration-none text-muted">Contact Us</a></li>
                     </ul>
                 </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
 

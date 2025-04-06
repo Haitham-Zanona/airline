@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Destinations</title>
+    <title>Contact Us</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
@@ -74,7 +74,7 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 100vh;
+            height: 50vh;
             background-image: url('{{ asset("assets/images/paris.webp") }}');
             background-size: cover;
             background-position: center;
@@ -124,67 +124,9 @@
             text-align: center;
         }
 
-        .destination-card {
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 30px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .destination-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .destination-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .destination-content {
-            padding: 20px;
-            background-color: white;
-        }
-
-        .destination-title {
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .destination-title a {
-            color: #333;
-            text-decoration: none;
-        }
-
-        .destination-title a:hover {
-            color: #4B45FF;
-        }
-
-        .destination-title .location {
-            color: #4B45FF;
-        }
-
-        .destination-description {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .partner-section {
-            margin: 50px 0;
-        }
-
-        .partner-logos {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .partner-logo {
-            max-height: 40px;
-            margin: 10px;
+        #map {
+            width: 100%;
+            height: 400px;
         }
 
         .footer {
@@ -213,9 +155,7 @@
                 font-size: 2rem;
             }
 
-            .partner-logos {
-                justify-content: center;
-            }
+
 
             .footer .d-flex.flex-column.flex-md-row {
                 gap: 10px;
@@ -230,6 +170,8 @@
                 width: 20px;
                 height: 20px;
             }
+
+
         }
     </style>
 </head>
@@ -325,147 +267,56 @@
         </header>
 
         <div class="container text-center align-items-center">
-            <h1 class="hero-title">Explore more places to stay</h1>
-            <p class="hero-subtitle">Find Your Haven: Unique Stays for Every Journey</p>
+            <h1 class="hero-title">Contact Us</h1>
+
         </div>
     </section>
+    <section class="py-5">
+        <div class="container">
 
-    <!-- Destinations Section -->
-    <section class="container my-5">
-        <div class="row">
-            <!-- First Row -->
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/las-vegas.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/seul.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/tenzania.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <div id="map"></div>
 
-            <!-- Second Row -->
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/las-vegas.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/seul.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/tenzania.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Third Row -->
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/las-vegas.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
+            <div class="row my-5">
+                <div class="col-sm-4 col-xs-12 py-2">
+                    <h4>Administrative Office</h4>
+                    <div class="contact-text">
+                        <address>
+                            <b>OurAgentName</b>
+                            <p>123 Main St, <br>Anytown, <br>USA 12345</p>
+                        </address>
+                    </div><!-- contact-text -->
+
+                </div><!-- col-4 -->
+                <div class="col-sm-4 col-xs-12 py-2">
+                    <h4>Customer Support Center</h4>
+                    <div class="contact-text">
+                        <address>
+                            <b>OurAgentName</b>
+                            <p>123 Main St, <br>Anytown, <br>USA 12345</p>
+                        </address>
+                    </div><!-- contact-text -->
+
+                </div><!-- col-4 -->
+                <div class="col-sm-4 col-xs-12 py-2">
+                    <h4>&nbsp;</h4>
+                    <div class="contact-text">
+                        <address>
+                            <b>Email: </b>
+                            <a href="mailto:info@airline.com">info@airline.com</a>
+                            <br>
+                            <br>
+                            <b>24/7 Helpline: </b>
+                            <a href="tel:+213215153">+213215153</a>
+                        </address>
+                    </div><!-- contact-text -->
+
+                </div><!-- col-4 -->
+
+
             </div>
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/seul.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="destination-card">
-                    <div class="destination-image"
-                        style="background-image: url('{{ asset('assets/images/tenzania.webp') }}');"></div>
-                    <div class="destination-content">
-                        <h3 class="destination-title">Stay among the atolls in <span class="location">Maldives</span>
-                        </h3>
-                        <p class="destination-description">
-                            From the 2nd century AD, the islands were known as the "Money Isles" due to the abundance of
-                            cowry shells, a currency of the early ages.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
+
 
 
 
@@ -658,6 +509,25 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async
+        defer>
+    </script>
+
+    <script>
+        function initMap() {
+                var location = { lat: 31.963158, lng: 35.930359 };
+                var map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 12,
+                    center: location
+                });
+
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: "Welcome to our office!"
+                });
+            }
+    </script>
 </body>
 
 </html>

@@ -1085,3 +1085,222 @@ for (let i = 0; i < itemsToLoad; i++) { if (visibleFlights[loadIndex + i]) { set
 
             // تحديث نص المسافرين
             function updateTravelersText() {
+
+
+
+
+                    {
+                        {
+                        -- <script>$(document).ready(function() {
+                                $("#result1, #result2").hide();
+
+                                $("#search1").on("input", function() {
+                                        let query=$(this).val();
+
+                                        if (query.length > 2) {
+                                            $.ajax({
+
+                                                url: "{{route('search_city')}}",
+                                                method: "GET",
+                                                data: {
+                                                    q: query
+                                                }
+
+                                                ,
+                                                success: function(response) {
+                                                    $("#result1").empty();
+
+                                                    if (response.data.length > 0) {
+                                                        $("#result1").show(); // إظهار القائمة عند وجود نتائج
+
+                                                        response.data.forEach(element=> {
+                                                                $("#result1").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;"
+                                                                    onmouseover="this.style.backgroundColor='#fff;'; this.style.color='#4444ff';"
+                                                                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';" >${element.address.cityName},
+                                                                    ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p> `);
+                                                            });
+                                                    }
+
+                                                    else {
+                                                        $("#result1").hide(); // إخفاء القائمة عند عدم وجود نتائج
+                                                    }
+                                                }
+                                            });
+                                    }
+
+                                    else {
+                                        $("#result1").hide(); // إخفاء القائمة عند حذف الإدخال
+                                    }
+                                });
+
+                            $("#search2").on("input", function() {
+                                    let query=$(this).val();
+
+                                    if (query.length > 2) {
+                                        $.ajax({
+
+                                            url: "{{route('search_city')}}",
+                                            method: "GET",
+                                            data: {
+                                                q: query
+                                            }
+
+                                            ,
+                                            success: function(response) {
+                                                $("#result2").empty();
+
+                                                if (response.data.length > 0) {
+                                                    $("#result2").show(); // إظهار القائمة عند وجود نتائج
+
+                                                    response.data.forEach(element=> {
+                                                            $("#result2").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;"
+                                                                onmouseover="this.style.backgroundColor='#fff'; this.style.color='#4444ff';"
+                                                                onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';" >${element.address.cityName},
+                                                                ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p> `);
+                                                        });
+                                                }
+
+                                                else {
+                                                    $("#result2").hide(); // إخفاء القائمة عند عدم وجود نتائج
+                                                }
+                                            }
+                                        });
+                                }
+
+                                else {
+                                    $("#result2").hide(); // إخفاء القائمة عند حذف الإدخال
+                                }
+                            });
+
+                        $('body').on('click', '#result1 p', function () {
+                                $("#search1").val($(this).text()) $("#result1").empty() var code=$(this).attr('data-city-code');
+                                var cityName=$(this).text();
+                                $("[name='origin_city']").val(code);
+                                $("#origin_city_name").val(cityName);
+
+                            }) $('body').on('click', '#result2 p', function () {
+                                $("#search2").val($(this).text()) $("#result2").empty() var code=$(this).attr('data-city-code');
+                                var code=$(this).attr('data-city-code');
+                                var cityName=$(this).text();
+                                $("[name='destination_city']").val(code);
+                                $("#destination_city_name").val(cityName);
+
+                            }) $(document).click(function(event) {
+                                if ( !$(event.target).closest("#result1").length) {
+                                    $("#result1").empty(); // يخفي العنصر
+                                }
+
+                                if ( !$(event.target).closest("#result2").length) {
+                                    $("#result2").empty(); // يخفي العنصر
+                                }
+                            });
+
+
+                        $('input[name="tripType"]').change(function() {
+                                var tripType=$('input[name="tripType"]:checked').val();
+                                var returnDateContainer=$('#returnDateContainer');
+
+                                if (tripType==='roundTrip') {
+                                    returnDateContainer.show(); // إظهار تاريخ العودة
+                                }
+
+                                else {
+                                    returnDateContainer.hide(); // إخفاء تاريخ العودة
+                                }
+                            });
+
+                        // ✅ تشغيل الدالة عند تحميل الصفحة لأول مرة للتحقق من الحالة الافتراضية
+                        $('input[name="tripType"]:checked').trigger('change');
+
+                        // document.addEventListener('DOMContentLoaded', function() {
+                        // // Initialize the dropdown
+                        // updateTravelersText();
+
+                        // // Handle dropdown toggle
+                        // const dropdownToggle = document.getElementById('travelersDropdown');
+                        // const dropdownMenu = document.querySelector('.dropdown-menu');
+
+                        // dropdownToggle.addEventListener('click', function(e) {
+                        // e.preventDefault();
+                        // e.stopPropagation();
+                        // dropdownMenu.classList.toggle('show');
+                        // });
+
+                        // // Add event listeners to all traveler buttons
+                        // const travelerBtns = document.querySelectorAll('.traveler-btn');
+                        // travelerBtns.forEach(btn => {
+                        // btn.addEventListener('click', function(e) {
+                        // e.preventDefault();
+                        // e.stopPropagation();
+
+                        // const type = this.getAttribute('data-type');
+                        // const action = this.getAttribute('data-action');
+
+                        // if (action === 'increase') {
+                        // increaseCount(type);
+                        // } else if (action === 'decrease') {
+                        // decreaseCount(type);
+                        // }
+                        // });
+                        // });
+
+                        // // Close dropdown when clicking outside
+                        // document.addEventListener('click', function(e) {
+                        // if (!dropdownMenu.contains(e.target) && e.target !== dropdownToggle) {
+                        // dropdownMenu.classList.remove('show');
+                        // }
+                        // });
+
+                        // // Prevent dropdown from closing when clicking inside
+                        // dropdownMenu.addEventListener('click', function(e) {
+                        // e.stopPropagation();
+                        // });
+                        // });
+
+                        // function increaseCount(type) {
+                        // const countElement = document.getElementById(type + 'Count');
+                        // const inputElement = document.getElementById(type + 'Input');
+                        // let count = parseInt(countElement.textContent);
+
+                        // // Apply limits
+                        // if (type === 'adults' && count >= 9) return;
+                        // if ((type === 'children' || type === 'infants') && count >= 8) return;
+                        // if (type === 'infants' && count >= parseInt(document.getElementById('adultsCount').textContent)) return;
+
+                        // count++;
+                        // countElement.textContent = count;
+                        // inputElement.value = count;
+                        // updateTravelersText();
+                        // }
+
+                        // function decreaseCount(type) {
+                        // const countElement = document.getElementById(type + 'Count');
+                        // const inputElement = document.getElementById(type + 'Input');
+                        // let count = parseInt(countElement.textContent);
+
+                        // // Apply limits
+                        // if (type === 'adults' && count <= 1) return; if ((type==='children' || type==='infants' ) && count <=0) return; count--;
+                        //     countElement.textContent=count; inputElement.value=count; // If infants are more than adults, reduce infants if
+                        //     (type==='adults' ) { const infantsCount=parseInt(document.getElementById('infantsCount').textContent); if
+                        //     (infantsCount> count) {
+                        //     document.getElementById('infantsCount').textContent = count;
+                        //     document.getElementById('infantsInput').value = count;
+                        //     }
+                        //     }
+
+                        //     updateTravelersText();
+                        //     }
+
+                        //     function updateTravelersText() {
+                        //     const adults = parseInt(document.getElementById('adultsCount').textContent);
+                        //     const children = parseInt(document.getElementById('childrenCount').textContent);
+                        //     const infants = parseInt(document.getElementById('infantsCount').textContent);
+                        //     const total = adults + children + infants;
+
+                        //     document.getElementById('totalTravelers').textContent =
+                        //     total === 1 ? '1 Traveler' : total + ' Travelers';
+                        //     }
+                    });
+                </script>--
+            }
+            }

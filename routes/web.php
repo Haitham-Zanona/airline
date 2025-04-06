@@ -45,7 +45,7 @@ Route::get('/privacy_policy', function () {
 //     return view('flights.new-payment');
 // });
 // Route::get('/newconfirm', function () {
-//     return view('flights.confirm');
+//     return view('emails.booking-confirmation');
 // });
 
 Route::group([], function () {
@@ -61,11 +61,14 @@ Route::group([], function () {
     Route::get('/flight/confirm', [FlightController::class, 'confirm'])->name('flight.confirm');
     Route::match(['get', 'post'], '/explore_places', [FlightController::class, 'explorePlaces'])->name('explore_places');
     Route::match(['get', 'post'], '/about_us', [FlightController::class, 'aboutUs'])->name('about_us');
+    Route::match(['get', 'post'], '/contact_us', [FlightController::class, 'contactUs'])->name('contact_us');
     // Route::match(['get', 'post'], '/search_flight', [FlightController::class, 'search_flight'])->name('flight.search');
     Route::match(['get', 'post'], '/search_city', [FlightController::class, 'search_city'])->name('search_city');
     Route::get('/search-airlines', [FlightController::class, 'search_airlines'])->name('search_airlines');
 
 });
+
+Route::get('/confirmation', [FlightController::class, 'confirmation'])->name('confirmation');
 
 // Route::get('/', function () {
 //     return view('index');
@@ -76,9 +79,10 @@ Route::group([], function () {
 // Route::get('/flight-search', [FlightController::class, 'searchFlightOffers'])->name('flight.search');
 Route::get('tickets/download/{filename}', [TicketController::class, 'downloadPDF'])->name('tickets.download');
 
-// إضافة مسار لتوليد PDF
 Route::post('/generate-pdf', [TicketController::class, 'generatePDF'])->name('generate.pdf');
 
 Route::get('/send-mail', [FlightController::class, 'sendMail']);
+
+Route::post('/subscribe', [FlightController::class, 'subscribe'])->name('subscribe');
 
 // Route::post('/process-payment', [FlightController::class, 'processPayment'])->name('process.payment');

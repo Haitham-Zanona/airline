@@ -519,13 +519,13 @@
             <div class="col-md-6">
                 <ul class="nav justify-content-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="{{ route('index') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About us</a>
+                        <a class="nav-link" href="{{ route('about_us') }}">About us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact us</a>
+                        <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
                     </li>
                 </ul>
             </div>
@@ -563,13 +563,13 @@
                 <div class="bg-light p-3 rounded">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Home</a>
+                            <a class="nav-link" href="{{ route('index') }}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">About us</a>
+                            <a class="nav-link" href="{{ route('about_us') }}">About us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact us</a>
+                            <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
                         </li>
 
                     </ul>
@@ -616,35 +616,37 @@
                                 height="100" alt="">
                         </div>
                         <div class="flight-route m-0">
-                            @php
-                            $originCity = session('flight_search.origin_city_name') ?? '';
-                            $destinationCity = session('flight_search.destination_city_name') ?? '';
-                            $cityName = '';
-                            $cityCode = '';
-                            $countryName = '';
+                            {{-- @dd(session('flight_search')) --}}
+                            <?php
+                                $originCity = session('flight_search.origin_city_name') ?? '';
+                                $destinationCity = session('flight_search.destination_city_name') ?? '';
+                                $cityName = '';
+                                $cityCode = '';
+                                $countryName = '';
 
-                            // Extract city name (text in parentheses)
-                            if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-                            preg_match('/\((.*?)\)/', $originCity, $matches);
-                            $originAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
+                                // Extract city name (text in parentheses)
+                                if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+                                preg_match('/\((.*?)\)/', $originCity, $matches);
+                                $originAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
 
-                            // استخراج اسم المدينة والبلد
-                            $originParts = explode(',', $originCity);
-                            $originCityName = isset($originParts[0]) ? trim($originParts[0]) : ''; // اسم المدينة
-                            $originCountryName = isset($originParts[1]) ? trim($originParts[1]) : ''; // اسم البلد
-                            }
+                                // استخراج اسم المدينة والبلد
+                                $originParts = explode(',', $originCity);
+                                $originCityName = isset($originParts[0]) ? trim($originParts[0]) : ''; // اسم المدينة
+                                $originCountryName = isset($originParts[1]) ? trim($originParts[1]) : ''; // اسم البلد
+                                }
 
-                            // Extract city name (text in parentheses)
-                            if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false) {
-                            preg_match('/\((.*?)\)/', $destinationCity, $matches);
-                            $destinationAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
+                                // Extract city name (text in parentheses)
+                                if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false) {
+                                preg_match('/\((.*?)\)/', $destinationCity, $matches);
+                                $destinationAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
 
-                            // استخراج اسم المدينة والبلد
-                            $parts = explode(',', $destinationCity);
-                            $destinationCityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
-                            $destinationCountryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
-                            }
-                            @endphp
+                                // استخراج اسم المدينة والبلد
+                                $parts = explode(',', $destinationCity);
+                                $destinationCityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
+                                $destinationCountryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
+                                }
+                            ?>
+
                             <span>{{ $originCityName }} - {{ $originCountryName }}</span>
                             <span class="flight-icon mx-2">
                                 <i class="fas fa-plane"></i>
@@ -1283,9 +1285,12 @@
                 <div class="col-lg-2 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
                     <h5 class="text-secondary mb-3 fw-bold">Quick links</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Home</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">About Us</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
+                        <li class="mb-2"><a href="{{ route('index') }}" class="text-decoration-none text-muted">Home</a>
+                        </li>
+                        <li class="mb-2"><a href="{{ route('about_us') }}" class="text-decoration-none text-muted">About
+                                Us</a></li>
+                        <li class="mb-2"><a href="{{ route('contact_us') }}"
+                                class="text-decoration-none text-muted">Contact Us</a></li>
                     </ul>
                 </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
 
