@@ -1,29 +1,29 @@
 services:
   - type: web
     name: laravel-app
-    env: docker
+    runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_ENV
-        value: production
+        value: "production"
       - key: APP_KEY
         generateValue: true
       - key: APP_DEBUG
-        value: false
+        value: "false"
       - key: APP_URL
-        value: https://your-app-name.onrender.com
+        value: "https://your-app-name.onrender.com"
 
-      # إعداد قاعدة البيانات (حسب اللي راح تستخدمه)
+      # إعداد قاعدة البيانات (اختياري)
       - key: DB_CONNECTION
-        value: mysql
+        value: "mysql"
       - key: DB_HOST
-        value: your-db-host
+        value: "your-db-host"
       - key: DB_PORT
-        value: 3306
+        value: "3306"
       - key: DB_DATABASE
-        value: your-database
+        value: "your-database"
       - key: DB_USERNAME
-        value: your-user
+        value: "your-user"
       - key: DB_PASSWORD
-        value: your-password
+        value: "your-password"
