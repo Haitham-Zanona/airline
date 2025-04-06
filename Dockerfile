@@ -1,5 +1,5 @@
-# استخدم صورة PHP مع Composer مدمجة
-FROM php:8.1-cli
+# استخدم صورة PHP 8.2 مع Composer مدمجة
+FROM php:8.2-cli
 
 # تثبيت الأدوات الأساسية
 RUN apt-get update && apt-get install -y \
