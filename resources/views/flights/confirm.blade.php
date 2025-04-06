@@ -552,12 +552,12 @@
             }
 
             /* Ensure backgrounds are printed */
-            .card,
+            /* .card,
             .reference-no,
             .flight-details {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
-            }
+            } */
         }
     </style>
 </head>

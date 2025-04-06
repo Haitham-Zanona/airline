@@ -1516,7 +1516,7 @@
 
                                                 <!-- For outbound flights -->
                                                 @if($key > 0)
-                                                <div class="d-flex justify-content-between mb-2">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <span><i class="fas fa-clock text-warning me-1"></i> Connection
                                                         time:
                                                         @if($connectionHours > 0){{ $connectionHours }}h @endif
@@ -1536,7 +1536,7 @@
                                                     </span>
                                                 </div><!-- d-flex justify-content-between mb-2 -->
                                                 @else
-                                                <div class="d-flex justify-content-between mb-2">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <span><i class="fas fa-plane-departure text-success me-1"></i>
                                                         Departure</span>
                                                     <span class="badge bg-secondary">
@@ -1549,7 +1549,7 @@
                                                         {{ $flight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
                                                         @endif
                                                     </span>
-                                                </div><!-- /d-flex justify-content-between mb-2 -->
+                                                </div><!-- /d-flex justify-content-between align-items-center mb-2 -->
                                                 @endif
 
                                                 <div class="row">
@@ -1746,7 +1746,7 @@
 
                                             <!-- For Inbound flights -->
                                             @if($key > 0)
-                                            <div class="d-flex justify-content-between mb-2">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span><i class="fas fa-clock text-warning me-1"></i> Connection time:
                                                     @if($connectionHours > 0){{ $connectionHours }}h @endif
                                                     {{ $connectionMinutes }}m at {{ $departureAirport }}
@@ -1761,7 +1761,7 @@
                                                 </span>
                                             </div>
                                             @else
-                                            <div class="d-flex justify-content-between mb-2">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span><i class="fas fa-plane-departure text-success me-1"></i>
                                                     Departure</span>
                                                 <span class="badge bg-secondary">

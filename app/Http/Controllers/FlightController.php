@@ -1180,16 +1180,16 @@ class FlightController extends Controller
         // الحصول على معرف الرحلة من النموذج
         $flightId = $request->input('flight_id');
         if (! $flightId) {
-            Log::error('Flight ID is missing in the request');
-            return redirect()->route('index')->with('error', 'معرف الرحلة غير موجود في الطلب');
+            // Log::error('Flight ID is missing in the request');
+            return redirect()->route('index')->with('error', 'Flight ID is missing in the request');
         }
 
         // الحصول على بيانات الرحلات من الجلسة
         $flightOffers = session('flightsArraySubset', []);
 
         // تسجيل معلومات تشخيصية (مفيد لتتبع الأخطاء)
-        Log::info('Flight ID from request: ' . $flightId);
-        Log::info('Number of flights in session: ' . count($flightOffers));
+        // Log::info('Flight ID from request: ' . $flightId);
+        // Log::info('Number of flights in session: ' . count($flightOffers));
 
         // البحث عن الرحلة المطلوبة
         $selectedFlight = null;
@@ -1204,7 +1204,7 @@ class FlightController extends Controller
         // إذا لم يتم العثور على الرحلة
         if (! $selectedFlight) {
             Log::error('Selected flight not found in session data');
-            return redirect()->route('index')->with('error', 'لم يتم العثور على الرحلة المحددة');
+            return redirect()->route('index')->with('error', 'Selected flight not found');
         }
 
         // تخزين الرحلة المختارة في الجلسة
@@ -1277,7 +1277,7 @@ class FlightController extends Controller
 
         // التحقق من وجود رحلة محددة
         if (! $selectedFlight) {
-            return redirect()->route('index')->with('error', 'الرجاء اختيار رحلة أولاً');
+            return redirect()->route('index')->with('error', 'Please select a flight first');
         }
 
         // الحصول على قائمة البلدان للقائمة المنسدلة
@@ -1286,10 +1286,12 @@ class FlightController extends Controller
         // dd(session('flight_search'));
 
         // الحصول على عدد المسافرين من بيانات البحث
-        $flightSearchData = session('flight_search', []);
-        $adults           = $flightSearchData['adults'] ?? 1;
-        $children         = $flightSearchData['children'] ?? 0;
-        $infants          = $flightSearchData['held_infants'] ?? 0;
+        $flightSearchData    = session('flight_search', []);
+        $originCityName      = $flightSearchData['origin_city_name'] ?? 'Unknown Origin';
+        $destinationCityName = $flightSearchData['destination_city_name'] ?? 'Unknown Destination';
+        $adults              = $flightSearchData['adults'] ?? 1;
+        $children            = $flightSearchData['children'] ?? 0;
+        $infants             = $flightSearchData['held_infants'] ?? 0;
 
         // استرجاع بيانات المسافرين المخزنة مسبقاً (إن وجدت)
         $savedPassengers = $selectedFlight['passengers'] ?? [];
@@ -1305,7 +1307,9 @@ class FlightController extends Controller
             'children',
             'infants',
             'savedPassengers',
-            'contactInfo'
+            'contactInfo',
+            'originCityName',
+            'destinationCityName'
         ));
     }
 

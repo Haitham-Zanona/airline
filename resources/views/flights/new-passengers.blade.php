@@ -617,9 +617,10 @@
                         </div>
                         <div class="flight-route m-0">
                             {{-- @dd(session('flight_search')) --}}
+                            {{-- @dd($originCityName) --}}
                             <?php
-                                $originCity = session('flight_search.origin_city_name') ?? '';
-                                $destinationCity = session('flight_search.destination_city_name') ?? '';
+                                $originCity = $originCityName;
+                                $destinationCity = $destinationCityName;
                                 $cityName = '';
                                 $cityCode = '';
                                 $countryName = '';
@@ -704,11 +705,12 @@
                         <div class="flight-details mb-4">
                             <div class="flight-segment">
                                 <div class="departure">
+                                    {{-- @dd(session('flight_search')) --}}
                                     <?php
                                         $departureTime = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
                                         $datetime = \Carbon\Carbon::parse($departureTime);
 
-                                        $originCity = session('flight_search.origin_city_name') ?? '';
+                                        $originCity = session('flight_search.origin_city_name');
                                         $cityName = '';
                                         $cityCode = '';
                                         $countryName = '';
@@ -771,7 +773,7 @@
                                         $arrivalTime = $selectedFlight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
                                         $datetime = \Carbon\Carbon::parse($arrivalTime);
 
-                                        $destinationCity = session('flight_search.destination_city_name') ?? '';
+                                        $destinationCity = session('flight_search.destination_city_name');
                                         $cityName = '';
                                         $cityCode = '';
                                         $countryName = '';
