@@ -8,21 +8,27 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-
-# تثبيت Composer
+# نسخ composer من صورة Composer الرسمية
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # تحديد مجلد العمل
 WORKDIR /app
 
-# نسخ الملفات
+# نسخ الملفات إلى مجلد العمل
 COPY . .
 
-# تثبيت الحزم المطلوبة
-RUN composer install --no-dev --optimize-autoloader
+# التحقق من وجود ملف .env، وإذا لم يكن موجودًا ننسخ .env.example إلى .env
+RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# توليد APP KEY عند بدء التشغيل
-CMD php artisan config:clear && \
-    php artisan route:clear && \
-    php artisan key:generate && \
-    php artisan serve --host=0.0.0.0 --port=10000
+# توليد APP KEY
+RUN php artisan key:generate
+
+# تثبيت الحزم المطلوبة باستخدام Composer
+RUN composer install --no-dev --optimize-autoloader -vvv
+
+# تنظيف الكاش للـ Laravel لتفادي مشاكل
+RUN php artisan config:clear && \
+    php artisan route:clear
+
+# تشغيل السيرفر بعد بدء الحاوية
+CMD php artisan serve --host=0.0.0.0 --port=10000
