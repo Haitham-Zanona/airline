@@ -1018,9 +1018,9 @@
                 </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
 
-                    <?xml version="1.0" encoding="utf-8"?><svg version="1.1" id="Layer_1"
-                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                        viewBox="0 0 122.873 23.572" enable-background="new 0 0 122.873 23.572" xml:space="preserve">
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.873 23.572"
+                        enable-background="new 0 0 122.873 23.572" xml:space="preserve">
                         <g>
                             <path fill-rule="evenodd" clip-rule="evenodd" fill="#F79C34"
                                 d="M48.485,18.439c-4.541,3.351-11.124,5.133-16.792,5.133 c-7.945,0-15.1-2.938-20.514-7.826c-0.425-0.384-0.046-0.908,0.465-0.611c5.841,3.399,13.065,5.447,20.525,5.447 c5.033,0,10.565-1.045,15.656-3.204C48.593,17.053,49.237,17.884,48.485,18.439L48.485,18.439z" />
