@@ -3,15 +3,11 @@ FROM php:8.1-cli
 
 # تثبيت الأدوات الأساسية
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    zip \
+    git curl zip unzip \
+    libpng-dev libonig-dev libxml2-dev \
     libzip-dev \
-    libonig-dev \
-    libxml2-dev \
-    libpng-dev \
-    curl \
-    && docker-php-ext-install pdo pdo_mysql zip
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
 
 # تثبيت Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
