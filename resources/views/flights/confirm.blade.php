@@ -719,7 +719,7 @@
 
                 <!-- Flight Summary -->
                 <div class="card mb-4 p-4">
-                    <div id="flightSummary" class="collapse show">
+                    <div id="flightSummary" class="">
                         <div class="airline-info mb-3">
 
                             <div class="fw-bold">
@@ -873,8 +873,8 @@
 
             <div class="col-lg-4">
                 <!-- Payment Summary -->
-                <div class="card mb-4 card-payment">
-                    <div class="card-body">
+                <div class="card mb-4 card-payment" style="background-color: #fff !important; width:100% !important;">
+                    <div class="card-body" style="background-color: #fff !important; width:100% !important;">
 
                         <h5>PAYMENT</h5>
 
@@ -942,7 +942,7 @@
                                     <span>Base fare</span>
                                     <i class="fas fa-chevron-down"></i>
                                 </div>
-                                <div id="baseFare" class="collapse show fare-section-content">
+                                <div id="baseFare" class="fare-section-content">
                                     <!-- Adults -->
                                     @php
                                     // Filter adult travelers
@@ -1315,7 +1315,7 @@
     useCORS: true,
     allowTaint: true,
     logging: false,
-    imageTimeout: 15000, // Longer timeout for mobile
+    imageTimeout: 20000, // Longer timeout for mobile
     windowWidth: contentElement.scrollWidth
     };
 
@@ -1353,9 +1353,10 @@
     };
 
     // Small delay to allow UI to update before heavy processing
-    setTimeout(generatePDF, 100);
+    setTimeout(generatePDF, 150);
     });
     });
+
         </script>
 
 
