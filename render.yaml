@@ -44,6 +44,6 @@ services:
       - key: MAIL_ENCRYPTION
         value: "tls"
       - key: MAIL_FROM_ADDRESS
-        value: "you@example.com"
+        value: "hythamzanona@gmail.com"
       - key: MAIL_FROM_NAME
-        value: "Your App Name"
+        value: "Airline Test Sender"

@@ -1641,26 +1641,45 @@ class FlightController extends Controller
     }
     public function subscribe(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-
         try {
-            Mail::to($request->email)->send(new MyTestMail([
-                'type'  => 'subscription',
-                'email' => $request->email,
-            ]));
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Thank you for subscribing!',
+            $validatedData = $request->validate([
+                'email' => 'required|email',
             ]);
-        } catch (\Exception $e) {
-            // dd($e->getMessage());
 
+            Log::info('Attempting to send subscription email to: ' . $validatedData['email']);
+
+            try {
+                Mail::to($validatedData['email'])->send(new MyTestMail([
+                    'type'  => 'subscription',
+                    'email' => $validatedData['email'],
+                ]));
+                Log::info('Subscription email sent successfully to: ' . $validatedData['email']);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Thank you for subscribing!',
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Error sending subscription email to: ' . $validatedData['email'] . ' - ' . $e->getMessage());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send subscription email. Please try again.',
+                    'error'   => $e->getMessage(), // Add the error message for debugging
+                ], 500);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed. Please enter a valid email address.',
+                'errors'  => $e->errors(), // Add the validation errors for debugging
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Error subscribing: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to subscribe. Please try again.',
+                'error'   => $e->getMessage(), // Add the error message for debugging
             ], 500);
         }
     }
