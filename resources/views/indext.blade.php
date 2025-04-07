@@ -1218,7 +1218,7 @@
                     data: { q: query },
                     success: function(response) {
                         $("#result1").empty();
-                        if (response.data.length > 0) {
+                        if (response.data && response.data.length > 0) {
                             $("#result1").show();
                             response.data.forEach(element => {
                                 $("#result1").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;" onmouseover="this.style.backgroundColor='#fff'; this.style.color='#4444ff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
@@ -1242,7 +1242,7 @@
                     data: { q: query },
                     success: function(response) {
                         $("#result2").empty();
-                        if (response.data.length > 0) {
+                        if (response.data &&response.data.length > 0) {
                             $("#result2").show();
                             response.data.forEach(element => {
                                 $("#result2").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;" onmouseover="this.style.backgroundColor='#fff'; this.style.color='#4444ff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
