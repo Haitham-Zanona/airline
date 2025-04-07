@@ -40,8 +40,8 @@ class FlightController extends Controller
                 'Content-Type: application/x-www-form-urlencoded',
             ],
         ]);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         $response = curl_exec($curl);
         if ($response === false) {
             dd(curl_error($curl));
@@ -83,8 +83,8 @@ class FlightController extends Controller
                 ],
             ]);
 
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 
             $response = curl_exec($curl);
             curl_close($curl);
@@ -614,8 +614,8 @@ class FlightController extends Controller
         // }
 
         //لازم نشيل هدول السطرين
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         $response = curl_exec($curl);
 
         curl_close($curl);
@@ -1107,8 +1107,8 @@ class FlightController extends Controller
                 'Authorization: Bearer ' . $token . '',
             ],
         ]);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         $response = curl_exec($curl);
         if ($response === false) {
             dd(curl_error($curl));
