@@ -83,6 +83,6 @@ Route::post('/generate-pdf', [TicketController::class, 'generatePDF'])->name('ge
 
 Route::get('/send-mail', [FlightController::class, 'sendMail']);
 
-Route::post('/subscribe', [FlightController::class, 'subscribe'])->name('subscribe');
+Route::post('/subscribe', [FlightController::class, 'subscribe'])->name('subscription');
 
 // Route::post('/process-payment', [FlightController::class, 'processPayment'])->name('process.payment');

@@ -1440,6 +1440,7 @@
         const email = $('#subscribeEmail').val();
         const btn = $(this);
         const notification = $('#notification');
+        const subscribeUrl = "{{ route("subscription") }}";
 
         if (!email) {
         showNotification('Please enter your email address', 'error');
@@ -1450,7 +1451,7 @@
         btn.prop('disabled', true).html('Subscribing...');
 
         $.ajax({
-        url: '{{ route("subscribe") }}',
+        url: subscribeUrl,
         type: 'POST',
         data: {
         email: email,
