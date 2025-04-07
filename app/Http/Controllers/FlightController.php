@@ -1461,6 +1461,8 @@ class FlightController extends Controller
             // التوجيه إلى صفحة تأكيد الحجز مع رسالة نجاح
             return redirect()->route('flight.confirm')->with('success', 'Booking confirmed and confirmation email sent successfully!');
         } catch (\Exception $e) {
+            dd($e->getMessage());
+
             // تسجيل الخطأ
             Log::error('Email sending failed: ' . $e->getMessage());
 
