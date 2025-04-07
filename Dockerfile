@@ -25,9 +25,6 @@ WORKDIR /app
 # نسخ جميع ملفات المشروع إلى داخل الحاوية
 COPY . .
 
-# التحقق من وجود .env، إذا غير موجود يتم إنشاءه من example
-RUN if [ ! -f .env ]; then cp .env.example .env; fi
-
 # تثبيت الحزم عبر Composer بدون بيئة التطوير
 RUN composer install --no-dev --optimize-autoloader -vvv
 
