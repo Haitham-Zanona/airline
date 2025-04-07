@@ -359,7 +359,7 @@
         .form-control.is-invalid {
             border-color: #dc3545;
             padding-right: calc(1.5em + 0.75rem);
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,%3csvg xmlns='https://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right calc(0.375em + 0.1875rem) center;
             background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
@@ -1244,9 +1244,9 @@
                 </div><!-- col-6 col-md-2 mb-3 mb-md-0 text-center -->
                 <div class="col-6 col-md-2 mb-3 mb-md-0 text-center">
 
-                    <?xml version="1.0" encoding="utf-8"?><svg version="1.1" id="Layer_1"
-                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                        viewBox="0 0 122.873 23.572" enable-background="new 0 0 122.873 23.572" xml:space="preserve">
+                    <svg version="1.1" id="Layer_1" xmlns="https://www.w3.org/2000/svg"
+                        xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.873 23.572"
+                        enable-background="new 0 0 122.873 23.572" xml:space="preserve">
                         <g>
                             <path fill-rule="evenodd" clip-rule="evenodd" fill="#F79C34"
                                 d="M48.485,18.439c-4.541,3.351-11.124,5.133-16.792,5.133 c-7.945,0-15.1-2.938-20.514-7.826c-0.425-0.384-0.046-0.908,0.465-0.611c5.841,3.399,13.065,5.447,20.525,5.447 c5.033,0,10.565-1.045,15.656-3.204C48.593,17.053,49.237,17.884,48.485,18.439L48.485,18.439z" />
@@ -1321,7 +1321,7 @@
                                 <span class="mx-2 footer-contact-res">+1-111-111-1111</span></a>
                         </li>
                         <li class="mb-2"><a href="mailto:" class="text-decoration-none text-muted"><svg fill="#7042c1"
-                                    viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 1920 1920" xmlns="https://www.w3.org/2000/svg"
                                     class="footer-contact-icons">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -1342,7 +1342,7 @@
                     <h5 class="text-secondary mb-3 fw-bold">Follow Us</h5>
                     <div class="d-flex gap-3">
                         <a href="#" class="text-decoration-none text-muted">
-                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                            <svg xmlns="https://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
                                 viewBox="0 0 50 50">
                                 <path
                                     d="M 11 4 C 7.134 4 4 7.134 4 11 L 4 39 C 4 42.866 7.134 46 11 46 L 39 46 C 42.866 46 46 42.866 46 39 L 46 11 C 46 7.134 42.866 4 39 4 L 11 4 z M 13.085938 13 L 21.023438 13 L 26.660156 21.009766 L 33.5 13 L 36 13 L 27.789062 22.613281 L 37.914062 37 L 29.978516 37 L 23.4375 27.707031 L 15.5 37 L 13 37 L 22.308594 26.103516 L 13.085938 13 z M 16.914062 15 L 31.021484 35 L 34.085938 35 L 19.978516 15 L 16.914062 15 z">
@@ -1350,7 +1350,7 @@
                             </svg>
                         </a>
                         <a href="#" class="text-decoration-none text-muted">
-                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                            <svg xmlns="https://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
                                 viewBox="0 0 64 64">
                                 <radialGradient id="TGwjmZMm2W~B4yrgup6jda_119026_gr1" cx="32" cy="32.5" r="31.259"
                                     gradientTransform="matrix(1 0 0 -1 0 64)" gradientUnits="userSpaceOnUse">
@@ -1392,7 +1392,7 @@
                             </svg>
                         </a>
                         <a href="#" class="text-decoration-none text-muted">
-                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
+                            <svg xmlns="https://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30"
                                 viewBox="0 0 48 48">
                                 <path fill="#039be5" d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"></path>
                                 <path fill="#fff"

@@ -14,26 +14,26 @@ return [
     |
     */
 
-    'mailgun'       => [
+    'mailgun'  => [
         'domain'   => env('MAILGUN_DOMAIN'),
         'secret'   => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
         'scheme'   => 'https',
     ],
 
-    'postmark'      => [
+    'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
-    'ses'           => [
+    'ses'      => [
         'key'    => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'aviationstack' => [
-        'api_key'  => env('AVIATIONSTACK_API_KEY'),
-        'base_url' => 'http://api.aviationstack.com/v1/',
-    ],
+    // 'aviationstack' => [
+    //     'api_key'  => env('AVIATIONSTACK_API_KEY'),
+    //     'base_url' => 'http://api.aviationstack.com/v1/',
+    // ],
 
 ];

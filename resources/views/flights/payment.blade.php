@@ -379,7 +379,7 @@
                 <div class="passenger-details-title p-2" style="background-color: #1165a2; color: #fff;">
 
                     <h2 class="m-0 d-inline-block" style="font-size: 20px;"><span><svg
-                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                 <path fill-rule="evenodd"
@@ -413,7 +413,7 @@
                 <div class="payment-title p-2" style="background-color: #1165a2; color: #fff;">
 
                     <h2 class="m-0 d-inline-block p-2" style="font-size: 20px;"><span><svg
-                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-credit-card-2-front-fill mr-1" viewBox="0 0 16 16">
                                 <path
                                     d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm0 3a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1zm3 0a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1zm3 0a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1zm3 0a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z" />
@@ -521,7 +521,7 @@
                     <div class="address-title p-2" style="background-color: #1165a2; color: #fff;">
 
                         <h2 class="m-0 d-inline-block p-2" style="font-size: 20px;"><span><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                     class="bi bi-pin-map-fill mr-1" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd"
                                         d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z" />
@@ -579,7 +579,7 @@
 
                 <div class="price d-flex justify-content-between p-3">
                     <div class="price-left" style="font-size: 18px;">
-                        <span class="font-weight-bold"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        <span class="font-weight-bold"><svg xmlns="https://www.w3.org/2000/svg" width="20" height="20"
                                 fill="currentColor" class="bi bi-tag-fill mr-1" viewBox="0 0 16 16">
                                 <path
                                     d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
@@ -639,7 +639,7 @@
                 <div class="d-flex justify-content-end mt-3 mb-5">
                     <button type="submit" class="btn py-3 px-4"
                         style="background-color:#c72026; color: #fff; font-size: 20px;"><span><svg
-                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-lock-fill" viewBox="0 0 16 16">
                                 <path
                                     d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />

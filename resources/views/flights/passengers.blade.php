@@ -335,7 +335,7 @@
                 <div class="important-note p-2" style="background-color: #1165a2; color: #fff;">
 
                     <h2 class="m-0 d-inline-block" style="font-size: 20px;"><span><svg
-                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-journal-text mr-1" viewBox="0 0 16 16">
                                 <path
                                     d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
@@ -373,7 +373,7 @@
                 <div class="passenger-title p-2" style="background-color: #1165a2; color: #fff;">
 
                     <h2 class="m-0 d-inline-block" style="font-size: 20px;"><span><svg
-                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                 <path fill-rule="evenodd"
@@ -427,7 +427,7 @@
                 <div class="contact-details p-2" style="background-color: #1165a2; color: #fff;">
 
                     <h2 class="m-0 d-inline-block" style="font-size: 20px; color: #fff;"><span><svg width="20"
-                                height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                height="20" viewBox="0 0 24 24" fill="white" xmlns="https://www.w3.org/2000/svg">
                                 <path
                                     d="M6.62 10.79a15.72 15.72 0 006.59 6.59l2.2-2.2a1 1 0 011.06-.23 11.05 11.05 0 003.47.56 1 1 0 011 1v3.65a1 1 0 01-1 1A19 19 0 013 5a1 1 0 011-1h3.65a1 1 0 011 1 11.05 11.05 0 00.56 3.47 1 1 0 01-.23 1.06z" />
                             </svg></span> Contact Details</h2>
