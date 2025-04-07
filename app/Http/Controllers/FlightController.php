@@ -1656,7 +1656,7 @@ class FlightController extends Controller
                 'message' => 'Thank you for subscribing!',
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
 
             return response()->json([
                 'success' => false,
