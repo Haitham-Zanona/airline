@@ -28,9 +28,6 @@ COPY . .
 # تثبيت الحزم عبر Composer بدون بيئة التطوير
 RUN composer install --no-dev --optimize-autoloader -vvv
 
-# توليد مفتاح التطبيق
-RUN php artisan key:generate
-
 # تنظيف الكاش لتفادي مشاكل الإعدادات أو الراوتات القديمة
 RUN php artisan config:clear && \
     php artisan route:clear
