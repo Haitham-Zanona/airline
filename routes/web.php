@@ -68,7 +68,7 @@ Route::group([], function () {
 
 });
 
-Route::get('/confirmation', [FlightController::class, 'confirmation'])->name('confirmation');
+// Route::get('/confirmation', [FlightController::class, 'confirmation'])->name('confirmation');
 
 // Route::get('/', function () {
 //     return view('index');

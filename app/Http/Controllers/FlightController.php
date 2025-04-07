@@ -1453,10 +1453,10 @@ class FlightController extends Controller
         $selectedFlight = $this->getSelectedFlight();
 
         try {
-            // إرسال إيميل التأكيد
-            $recipientEmail = $selectedFlight['contact']['email'] ?? 'recipient@example.com';
-            // dd($selectedFlight);
-            Mail::to($recipientEmail)->send(new MyTestMail($selectedFlight));
+            $data = $this->prepareConfirmationData();
+
+            $recipientEmail = $data['selectedFlight']['contact']['email'] ?? 'recipient@example.com';
+            Mail::to($recipientEmail)->send(new MyTestMail($data));
 
             // التوجيه إلى صفحة تأكيد الحجز مع رسالة نجاح
             return redirect()->route('flight.confirm')->with('success', 'Booking confirmed and confirmation email sent successfully!');
@@ -1511,35 +1511,35 @@ class FlightController extends Controller
         ]);
     }
 
-    public function confirmation()
-    {
-        $selectedFlight = $this->getSelectedFlight();
-        $departureTime  = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
-        $datetime       = \Carbon\Carbon::parse($departureTime);
+//     public function confirmation()
+//     {
+//         $selectedFlight = $this->getSelectedFlight();
+//         $departureTime  = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
+//         $datetime       = \Carbon\Carbon::parse($departureTime);
 
-        $originCity = $selectedFlight['originCity'] ?? '';
-        $cityName   = '';
-        $cityCode   = '';
+//         $originCity = $selectedFlight['originCity'] ?? '';
+//         $cityName   = '';
+//         $cityCode   = '';
 
-// Extract city name (text in parentheses)
-        if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-            preg_match('/\((.*?)\)/', $originCity, $matches);
-            $cityName = isset($matches[1]) ? trim($matches[1]) : '';
-        }
+// // Extract city name (text in parentheses)
+//         if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+//             preg_match('/\((.*?)\)/', $originCity, $matches);
+//             $cityName = isset($matches[1]) ? trim($matches[1]) : '';
+//         }
 
-// Extract city code (after comma)
-        if (strpos($originCity, ',') !== false) {
-            $parts    = explode(',', $originCity);
-            $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
-        }
+// // Extract city code (after comma)
+//         if (strpos($originCity, ',') !== false) {
+//             $parts    = explode(',', $originCity);
+//             $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
+//         }
 
-        return view('emails.booking-confirmation', [
-            'selectedFlight' => $selectedFlight,
-            'datetime'       => $datetime,
-            'cityName'       => $cityName,
-            'cityCode'       => $cityCode,
-        ]);
-    }
+//         return view('emails.booking-confirmation', [
+//             'selectedFlight' => $selectedFlight,
+//             'datetime'       => $datetime,
+//             'cityName'       => $cityName,
+//             'cityCode'       => $cityCode,
+//         ]);
+//     }
 
     public function explorePlaces()
     {
@@ -1607,6 +1607,36 @@ class FlightController extends Controller
         return view('contact-us');
     }
 
+    public function prepareConfirmationData()
+    {
+        $selectedFlight = $this->getSelectedFlight();
+        $departureTime  = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
+        $datetime       = \Carbon\Carbon::parse($departureTime);
+
+        $originCity = $selectedFlight['originCity'] ?? '';
+        $cityName   = '';
+        $cityCode   = '';
+
+// Extract city name (text in parentheses)
+        if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+            preg_match('/\((.*?)\)/', $originCity, $matches);
+            $cityName = isset($matches[1]) ? trim($matches[1]) : '';
+        }
+
+// Extract city code (after comma)
+        if (strpos($originCity, ',') !== false) {
+            $parts    = explode(',', $originCity);
+            $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
+        }
+
+        return [
+            'selectedFlight' => $selectedFlight,
+            'datetime'       => $datetime,
+            'cityName'       => $cityName,
+            'cityCode'       => $cityCode,
+            'flightData'     => session('flight_search', []),
+        ];
+    }
     public function subscribe(Request $request)
     {
         $request->validate([
@@ -1624,6 +1654,8 @@ class FlightController extends Controller
                 'message' => 'Thank you for subscribing!',
             ]);
         } catch (\Exception $e) {
+            dd($e->getMessage());
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to subscribe. Please try again.',
