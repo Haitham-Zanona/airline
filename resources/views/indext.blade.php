@@ -494,10 +494,9 @@
                             <div class="col-6 mb-3 mb-md-0 mb-sm-0">
                                 <label for="origin_city" class="form-label"><i class="fas fa-plane-departure me-2"></i>
                                     From</label>
-                                <input type="text" id="search1" class="form-select" placeholder="Enter City Name"
-                                    autocomplete="off" required>
-                                <small class="text-muted">Please select cities from the suggested list (click on them
-                                    after typing).</small>
+                                <input type="text" id="search1" class="form-select"
+                                    placeholder="select cities from the list after typing" autocomplete="off" required>
+
                                 <input type="hidden" name="origin_city" value="">
                                 <input type="hidden" name="origin_city_name" id="origin_city_name">
                                 <div id="result1" style="width: 60%;"></div>
@@ -506,10 +505,9 @@
                                 <label for="destination_city" class="form-label"><i
                                         class="fas fa-plane-arrival me-2"></i>
                                     To</label>
-                                <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off"
-                                    class="form-select" required>
-                                <small class="text-muted">Please select cities from the suggested list (click on them
-                                    after typing).</small>
+                                <input type="text" id="search2" placeholder="select cities from the list after typing"
+                                    autocomplete="off" class="form-select" required>
+
                                 <input type="hidden" name="destination_city" value="">
 
                                 <input type="hidden" name="destination_city_name" id="destination_city_name">
