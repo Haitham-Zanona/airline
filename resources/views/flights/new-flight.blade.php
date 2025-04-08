@@ -819,7 +819,7 @@
             }
 
             .popup-container {
-                height: 65%;
+                height: 70%;
                 width: 80%;
                 max-width: 500px;
                 max-height: 700px;

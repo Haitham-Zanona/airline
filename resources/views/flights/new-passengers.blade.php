@@ -866,7 +866,7 @@
                                 <h5 class="passengers-type-no">Passengers No:{{ $i + 1 }}</h5>
                                 <div class="row mb-3">
                                     <input type="hidden" name="passengers[{{ $i }}][type]" value="ADULT">
-                                    <div class="col-6 mb-3 mb-md-0">
+                                    <div class="col-sm-6 mb-3 mb-md-0">
                                         <label for="title_{{ $i }}" class="form-label">Title</label>
                                         <select class="form-control form-select" id="title_{{ $i }}"
                                             name="passengers[{{ $i }}][title]" required>
@@ -877,7 +877,7 @@
                                             <option value="miss">Miss</option>
                                         </select>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <label for="firstName_{{ $i }}" class="form-label">First Name</label>
                                         <input type="text" class="form-control" id="firstName_{{ $i }}"
                                             name="passengers[{{ $i }}][firstName]" placeholder="e.g. Smith" required>
@@ -885,13 +885,13 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col-6 mb-3 mb-md-0">
+                                    <div class="col-sm-6 mb-3 mb-md-0">
                                         <label for="middleName_{{ $i }}" class="form-label">Middle Name</label>
                                         <input type="text" class="form-control" id="middleName_{{ $i }}"
                                             name="passengers[{{ $i }}][middleName]" placeholder="e.g. Doe" required>
                                         <div class="invalid-feedback">Please enter your middle name.</div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <label for="lastName_{{ $i }}" class="form-label">last Name</label>
                                         <input type="text" class="form-control" id="lastName_{{ $i }}"
                                             name="passengers[{{ $i }}][lastName]" placeholder="e.g. Smith" required>
@@ -900,7 +900,7 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="col-4 mb-3 mb-md-0">
+                                    <div class="col-sm-4 mb-3 mb-md-0">
                                         <label class="form-label" for="nationality_{{ $i }}">Nationality:</label>
                                         <select name="passengers[{{ $i }}][nationality]" class="form-control" required>
                                             <option value="">Select Nationality</option>
@@ -913,7 +913,7 @@
                                         </select>
                                         <div class="invalid-feedback">Please select your nationality.</div>
                                     </div>
-                                    <div class="col-4 mb-3 mb-md-0">
+                                    <div class="col-sm-4 mb-3 mb-md-0">
                                         <label for="gender_{{ $i }}" class="form-label">Gender</label>
                                         <select class="form-select" name="passengers[{{ $i }}][gender]" id="gender"
                                             required>
@@ -923,7 +923,7 @@
                                         </select>
                                         <div class="invalid-feedback">Please select your gender.</div>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-sm-4">
                                         <label for="dob_{{ $i }}" class="form-label">Date of birth</label>
                                         <input type="date" class="form-control" name="passengers[{{ $i }}][birthDate]"
                                             id="dob_{{ $i }}" required>

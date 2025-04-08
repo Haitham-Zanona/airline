@@ -646,120 +646,102 @@
         <div class="row">
             <div class="col-lg-8">
 
-                {{-- <div class="booking-container">
-                    <h4 class="mb-4">Enter your booking details</h4>
-                    <div class="route-details">
-                        <div class="flight-icon">
-                            <i class="fas fa-plane"></i>
+
+                <div class="booking-container">
+                    <h4 class="section-title mb-4">Enter your booking details</h4>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="mx-4"><img src="{{ asset('assets/images/airplane-pass.webp') }}" width="100"
+                                height="100" alt="">
                         </div>
-                        <div>
-                            <h5>Nairobi (NBI) -> Mombasa (MBO)</h5>
-                            <p class="text-muted">Sunday, 29th Jan • Non stop • 9hr 50min</p>
+                        <div class="flight-route m-0">
+                            @php
+                            $originCity = session('flight_search.origin_city_name') ?? '';
+                            $destinationCity = session('flight_search.destination_city_name') ?? '';
+                            $cityName = '';
+                            $cityCode = '';
+                            $countryName = '';
+
+                            // Extract city name (text in parentheses)
+                            if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
+                            preg_match('/\((.*?)\)/', $originCity, $matches);
+                            $originAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
+
+
+                            $originParts = explode(',', $originCity);
+                            $originCityName = isset($originParts[0]) ? trim($originParts[0]) : '';
+                            $originCountryName = isset($originParts[1]) ? trim($originParts[1]) : '';
+                            }
+
+                            // Extract city name (text in parentheses)
+                            if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !==
+                            false) {
+                            preg_match('/\((.*?)\)/', $destinationCity, $matches);
+                            $destinationAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
+
+                            $parts = explode(',', $destinationCity);
+                            $destinationCityName = isset($parts[0]) ? trim($parts[0]) : '';
+                            $destinationCountryName = isset($parts[1]) ? trim($parts[1]) : '';
+                            }
+                            @endphp
+                            <span>{{ $originCityName }} - {{ $originCountryName }}</span>
+                            <span class="flight-icon mx-2">
+                                <i class="fas fa-plane"></i>
+                            </span>
+                            <span>{{ $destinationCityName }} - {{ $destinationCountryName }}</span>
+                            <div class="flight-date">
+                                {{ session('flight_search.departureDate') }} {{
+                                session('flight_search.returnDate')
+                                ?? ''}}
+                            </div>
                         </div>
+
+
                     </div>
                     <button class="flight-summary-toggle" type="button" data-bs-toggle="collapse"
                         data-bs-target="#flightSummary">
                         Flight Summary
                         <i class="fas fa-chevron-down"></i>
                     </button>
-
-                    <div id="flightSummary" class="collapse show"> --}}
-                        <div class="booking-container">
-                            <h4 class="section-title mb-4">Enter your booking details</h4>
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="mx-4"><img src="{{ asset('assets/images/airplane-pass.webp') }}" width="100"
-                                        height="100" alt="">
-                                </div>
-                                <div class="flight-route m-0">
-                                    @php
-                                    $originCity = session('flight_search.origin_city_name') ?? '';
-                                    $destinationCity = session('flight_search.destination_city_name') ?? '';
-                                    $cityName = '';
-                                    $cityCode = '';
-                                    $countryName = '';
-
-                                    // Extract city name (text in parentheses)
-                                    if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-                                    preg_match('/\((.*?)\)/', $originCity, $matches);
-                                    $originAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
+                    <div id="flightSummary" class="collapse show">
+                        <div class="airline-info mb-3">
+                            {{-- <div class="airline-logo text-center d-flex align-items-center justify-content-center">
+                                <i class="fas fa-plane"></i>
+                            </div> --}}
+                            {{-- <div class="airline-logo ms-2">
+                                @php
+                                $airlineName = $selectedFlight['segments_info'][0]['airline_info']['name'] ??
+                                'UNKNOWN';
 
 
-                                    $originParts = explode(',', $originCity);
-                                    $originCityName = isset($originParts[0]) ? trim($originParts[0]) : '';
-                                    $originCountryName = isset($originParts[1]) ? trim($originParts[1]) : '';
-                                    }
+                                $logoUrl = \App\Services\AirlineLogoService::getLogoUrl($airlineName);
+                                // dd($logoUrl);
+                                // dd($flight['segments_info'][0]['airline_info']['name']);
+                                $defaultLogo = \App\Services\AirlineLogoService::getDefaultLogo();
+                                @endphp
 
-                                    // Extract city name (text in parentheses)
-                                    if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !==
-                                    false) {
-                                    preg_match('/\((.*?)\)/', $destinationCity, $matches);
-                                    $destinationAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
-
-                                    $parts = explode(',', $destinationCity);
-                                    $destinationCityName = isset($parts[0]) ? trim($parts[0]) : '';
-                                    $destinationCountryName = isset($parts[1]) ? trim($parts[1]) : '';
-                                    }
-                                    @endphp
-                                    <span>{{ $originCityName }} - {{ $originCountryName }}</span>
-                                    <span class="flight-icon mx-2">
-                                        <i class="fas fa-plane"></i>
-                                    </span>
-                                    <span>{{ $destinationCityName }} - {{ $destinationCountryName }}</span>
-                                    <div class="flight-date">
-                                        {{ session('flight_search.departureDate') }} {{
-                                        session('flight_search.returnDate')
-                                        ?? ''}}
-                                    </div>
-                                </div>
-
-
+                                @if($airlineName !== 'UNKNOWN')
+                                <img src="{{ $logoUrl }}" alt="{{ $airlineName }} Logo" class="airline-logo-img"
+                                    onerror="this.onerror=null; this.src='{{ $defaultLogo }}';">
+                                @else
+                                <span class="airline-name">{{ $airlineName }}</span>
+                                @endif
+                            </div> --}}
+                            <div class="fw-bold">
+                                @if(isset($selectedFlight['segments_info'][0]['airline_info']['name']) &&
+                                $selectedFlight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
+                                {{ $selectedFlight['segments_info'][0]['airline_info']['name'] }}
+                                @else
+                                {{ $selectedFlight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                                @endif
                             </div>
-                            <button class="flight-summary-toggle" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#flightSummary">
-                                Flight Summary
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                            <div id="flightSummary" class="collapse show">
-                                <div class="airline-info mb-3">
-                                    {{-- <div
-                                        class="airline-logo text-center d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-plane"></i>
-                                    </div> --}}
-                                    {{-- <div class="airline-logo ms-2">
-                                        @php
-                                        $airlineName = $selectedFlight['segments_info'][0]['airline_info']['name'] ??
-                                        'UNKNOWN';
+                            <div class="ms-auto">Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ??
+                                    'Economy' }}</span></div>
+                        </div><!-- airline-info -->
 
-
-                                        $logoUrl = \App\Services\AirlineLogoService::getLogoUrl($airlineName);
-                                        // dd($logoUrl);
-                                        // dd($flight['segments_info'][0]['airline_info']['name']);
-                                        $defaultLogo = \App\Services\AirlineLogoService::getDefaultLogo();
-                                        @endphp
-
-                                        @if($airlineName !== 'UNKNOWN')
-                                        <img src="{{ $logoUrl }}" alt="{{ $airlineName }} Logo" class="airline-logo-img"
-                                            onerror="this.onerror=null; this.src='{{ $defaultLogo }}';">
-                                        @else
-                                        <span class="airline-name">{{ $airlineName }}</span>
-                                        @endif
-                                    </div> --}}
-                                    <div class="fw-bold">
-                                        @if(isset($selectedFlight['segments_info'][0]['airline_info']['name']) &&
-                                        $selectedFlight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                        {{ $selectedFlight['segments_info'][0]['airline_info']['name'] }}
-                                        @else
-                                        {{ $selectedFlight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                        @endif
-                                    </div>
-                                    <div class="ms-auto">Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ??
-                                            'Economy' }}</span></div>
-                                </div><!-- airline-info -->
-
-                                <div class="flight-details mb-4">
-                                    <div class="flight-segment">
-                                        <div class="departure">
-                                            <?php
+                        <div class="flight-details mb-4">
+                            <div class="flight-segment">
+                                <div class="departure">
+                                    <?php
                                                                         $departureTime = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
                                                                         $datetime = \Carbon\Carbon::parse($departureTime);
 
@@ -785,20 +767,20 @@
                                                                         //     $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
                                                                         // }
                                                                     ?>
-                                            <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
-                                            <div class="airport-time">{{ $datetime->translatedFormat('H:i') }}</div>
-                                            <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}
-                                            </div>
-                                            <div class="airport-name">{{ $airportCode }}</div>
-                                            <div class="airport-terminal">Terminal {{
-                                                $selectedFlight['itineraries'][0]['segments'][0]['departure']['terminal']
-                                                ?? ''
-                                                }}
-                                            </div>
-                                        </div>
+                                    <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
+                                    <div class="airport-time">{{ $datetime->translatedFormat('H:i') }}</div>
+                                    <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}
+                                    </div>
+                                    <div class="airport-name">{{ $airportCode }}</div>
+                                    <div class="airport-terminal">Terminal {{
+                                        $selectedFlight['itineraries'][0]['segments'][0]['departure']['terminal']
+                                        ?? ''
+                                        }}
+                                    </div>
+                                </div>
 
-                                        <div class="flight-duration text-center">
-                                            <?php
+                                <div class="flight-duration text-center">
+                                    <?php
                                                                         if(isset($selectedFlight['itineraries'][0]['duration'])) {
                                                                             $duration = $selectedFlight['itineraries'][0]['duration'];
                                                                             // Convert PT2H30M format to 2h 30m
@@ -812,19 +794,19 @@
                                                                         $outboundStops = isset($selectedFlight['outbound_stops_text']) ? $selectedFlight['outbound_stops_text'] :
                                                                                         (isset($selectedFlight['itineraries'][0]['segments']) ? (count($selectedFlight['itineraries'][0]['segments']) - 1) : '0');
                                                                     ?>
-                                            <div>{{ $duration }}</div>
-                                            <div><i class="fas fa-plane"></i></div>
-                                            <div>@if($outboundStops > 0)
-                                                <div>{{ $outboundStops }} stop(s)</div>
+                                    <div>{{ $duration }}</div>
+                                    <div><i class="fas fa-plane"></i></div>
+                                    <div>@if($outboundStops > 0)
+                                        <div>{{ $outboundStops }} stop(s)</div>
 
-                                                @else
-                                                Direct Flight
-                                                @endif
-                                            </div>
-                                        </div>
+                                        @else
+                                        Direct Flight
+                                        @endif
+                                    </div>
+                                </div>
 
-                                        <div class="arrival text-end">
-                                            <?php
+                                <div class="arrival text-end">
+                                    <?php
                                                                         $lastSegmentIndex = count($selectedFlight['itineraries'][0]['segments'] ?? []) - 1;
                                                                         $arrivalTime = $selectedFlight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
                                                                         $datetime = \Carbon\Carbon::parse($arrivalTime);
@@ -846,384 +828,381 @@
                                                                         }
 
                                                                     ?>
-                                            <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
-                                            <div class="airport-time">{{ $datetime->format('H:i')}}</div>
-                                            <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}
-                                            </div>
-                                            <div class="airport-name">{{ $airportCode }}</div>
-                                            <div class="airport-terminal">Terminal {{
-                                                $selectedFlight['itineraries'][0]['segments'][1]['arrival']['terminal']
-                                                ?? ''
-                                                }}</div>
-                                        </div>
+                                    <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
+                                    <div class="airport-time">{{ $datetime->format('H:i')}}</div>
+                                    <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}
                                     </div>
-                                </div><!-- flight-details -->
-                            </div><!-- collapse show -->
-                        </div><!-- booking-container -->
-                        {{--
-                    </div> --}}
-                    {{--
-                </div> --}}
+                                    <div class="airport-name">{{ $airportCode }}</div>
+                                    <div class="airport-terminal">Terminal {{
+                                        $selectedFlight['itineraries'][0]['segments'][1]['arrival']['terminal']
+                                        ?? ''
+                                        }}</div>
+                                </div>
+                            </div>
+                        </div><!-- flight-details -->
+                    </div><!-- collapse show -->
+                </div><!-- booking-container -->
+                {{--
+            </div> --}}
+            {{--
+        </div> --}}
 
-                <!-- Passengers Details -->
-                <div class="card mb-4">
-                    <div class="passengers-details">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="mb-0">
-                                <i class="fas fa-users me-2"></i> Passengers Details
-                            </h4>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="passenger-table">
-                                <thead>
-                                    <tr>
-                                        <th>Sr.</th>
-                                        <th>Title</th>
-                                        <th>First Name</th>
-                                        <th>Middle Name</th>
-                                        <th>Last Name</th>
-                                        <th>Gender</th>
-                                        <th>Date of Birth</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($selectedFlight['passengers'] as $index => $passenger)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $passenger['title'] ?? '' }}</td>
-                                        <td>{{ $passenger['firstName'] ?? '' }}</td>
-                                        <td>{{ $passenger['middleName'] ?? '' }}</td>
-                                        <td>{{ $passenger['lastName'] ?? '' }}</td>
-                                        <td>{{ $passenger['gender'] ?? '' }}</td>
-                                        <td>{{ $passenger['birthDate'] ?? '' }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+        <!-- Passengers Details -->
+        <div class="card mb-4">
+            <div class="passengers-details">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">
+                        <i class="fas fa-users me-2"></i> Passengers Details
+                    </h4>
                 </div>
-                <form action="{{ route('flight.storePayment') }}" method="POST" id="paymentForm" novalidate>
-                    @csrf
-                    <div class="booking-container">
-                        <div class="payment-title d-flex justify-content-between align-items-center">
-                            <h5>Payment & Billing</h5>
-                            <div>
-                                <img src="{{ asset('assets/images/digicert.webp') }}" style="max-height: 50px;" alt="">
-                                <img src="{{ asset('assets/images/godaddy.webp') }}" style="max-height: 50px;" alt="">
-                                <img src="{{ asset('assets/images/pci.webp') }}" style="max-height: 50px;" alt="">
-                            </div>
-                        </div><!-- payment-title -->
-                        <div class="payment-methods">
-                            <p>We accept</p>
-                            <div class="card-logos">
-                                <div class="card-logo">
-                                    <i class="fa-brands fa-cc-visa" style="color: #1565c0; max-height: 20px;"></i>
-                                </div>
-                                <div class="card-logo">
-                                    <img src="{{ asset('assets/images/mastercard.webp') }}" style="max-height: 20px;"
-                                        alt="">
-                                </div>
-                                <div class="card-logo">
-                                    <img src="{{ asset('assets/images/american-express.webp') }}"
-                                        style="max-height: 30px;" alt="">
-                                </div>
-                                <div class="card-logo">
-                                    <img src="{{ asset('assets/images/discover.webp') }}" style="max-height: 30px;"
-                                        alt="">
-                                </div>
-                            </div>
-                        </div><!-- payment-methods -->
-
-
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <label for="cardType">Card Type</label>
-                                <select id="cardType" name="cardType" class="form-select">
-                                    <option value="visa">Visa</option>
-                                    <option value="mastercard">Mastercard</option>
-                                    <option value="amex">American Express</option>
-                                    <option value="discover">Discover</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="cardNumber">Card Number *</label>
-                                <input type="text" class="form-control" id="cardNumber" name="cardNumber"
-                                    placeholder="XXXX XXXX XXXX XXXX" required>
-                                <div class="invalid-feedback" id="cardNumberFeedback">Please enter a valid card number
-                                    (16 digits)</div>
-                            </div><!-- col-md-6 -->
-                        </div><!-- form-group row -->
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="expiryDate">Expiry date *</label>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <select class="form-select" id="expiryMonth" name="expiryMonth" required>
-                                                <option value="">Month</option>
-                                                <option value="01">01</option>
-                                                <option value="02">02</option>
-                                                <option value="03">03</option>
-                                                <option value="04">04</option>
-                                                <option value="05">05</option>
-                                                <option value="06">06</option>
-                                                <option value="07">07</option>
-                                                <option value="08">08</option>
-                                                <option value="09">09</option>
-                                                <option value="10">10</option>
-                                                <option value="11">11</option>
-                                                <option value="12">12</option>
-                                            </select>
-                                            <div class="invalid-feedback">Enter valid month (1-12)</div>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="text" class="form-control" id="expiryYear" name="expiryYear"
-                                                placeholder="Year" required>
-                                            <div class="invalid-feedback">Enter valid year</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="cvv">CVV/CVC *</label>
-                                    <input type="text" class="form-control" id="cvv" name="cvv" placeholder="XXX"
-                                        required>
-                                    <div class="invalid-feedback">Please enter a valid CVV/CVC code (3-4 digits)</div>
-                                </div>
-                            </div>
-                        </div><!-- row -->
-
-                        <div class="form-group">
-                            <label for="cardHolderName">Card holder name *</label>
-                            <input type="text" class="form-control" id="cardHolderName" name="cardHolderName"
-                                placeholder="Name on card" required>
-                            <div class="invalid-feedback">Please enter the name as it appears on card</div>
-                        </div><!-- form-group -->
-
-                    </div><!-- booking-container -->
-
-                    <div class="policy-container my-3">
-                        <div class="policy-header" id="policyHeader">
-                            <h2>Cancellation/Refund Policy</h2>
-                            <span class="dropdown-icon">
-                                <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-chevron-down" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </span>
-                        </div>
-
-                        <div class="policy-content" id="policyContent">
-                            <div class="policy-text">
-                                <p>At GlobGoer, we understand that plans can change unexpectedly. We strive to provide a
-                                    flexible and
-                                    customer-friendly cancellation and refund policy for flight bookings. Please review
-                                    the following policy
-                                    details:</p>
-
-                                <ol>
-                                    <li>Cancellation Requests:
-                                        <ul>
-                                            <li>All cancellation requests must be submitted through our website or by
-                                                contacting our
-                                                customer support team.</li>
-                                            <li>Cancellation requests made through our website should be done by
-                                                accessing your booking and
-                                                following the cancellation process.</li>
-                                        </ul>
-                                    </li>
-                                </ol>
-
-                                <div class="collapse" id="additionalContent">
-                                    <ol start="2">
-                                        <li>Refund Timeline:
-                                            <ul>
-                                                <li>Refunds are processed within 7-10 business days after approval.</li>
-                                                <li>The actual credit may take additional time to appear in your account
-                                                    depending on your
-                                                    payment provider.</li>
-                                            </ul>
-                                        </li>
-                                        <li>Cancellation Fees:
-                                            <ul>
-                                                <li>Cancellations made 48+ hours before departure: Full refund minus a
-                                                    $25 processing fee.
-                                                </li>
-                                                <li>Cancellations made 24-48 hours before departure: 75% refund of the
-                                                    booking amount.</li>
-                                                <li>Cancellations made less than 24 hours before departure: 50% refund
-                                                    of the booking
-                                                    amount.</li>
-                                            </ul>
-                                        </li>
-                                        <li>Special Circumstances:
-                                            <ul>
-                                                <li>For cancellations due to medical emergencies, bereavement, or
-                                                    natural disasters, please
-                                                    contact our customer support with appropriate documentation for
-                                                    special consideration.
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ol>
-                                </div>
-
-                                <a class="read-more" data-bs-toggle="collapse" href="#additionalContent" role="button"
-                                    aria-expanded="false" aria-controls="additionalContent" id="readMoreLink">
-                                    Read more
-                                </a>
-                            </div>
-                        </div>
-
-
-                        <div class="checkbox-container">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="agreeCheckbox">
-                                <label class="form-check-label" for="agreeCheckbox">
-                                    By clicking on <strong style="color: #6742c9">"Confirm & Book"</strong> I agree to
-                                    the cancellation/ Refund
-                                    Policy
-                                </label>
-                            </div>
-                            <button type="submit" class="btn submit-btn" id="submitBtn" disabled>
-                                Confirm and Book
-                                <div class="secure-text">
-                                    <span class="icon-lock">
-                                        <svg xmlns="https://www.w3.org/2000/svg" width="12" height="12"
-                                            fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
-                                        </svg>
-                                    </span>
-                                    Secure Payment
-                                </div>
-                            </button>
-                        </div>
-
-                    </div><!-- policy-container -->
-
-                    {{-- <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-secondary">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Pay $33.00 Now</button>
-                    </div> --}}
-                </form>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="fare-summary">
-                    <div class="fare-header m">
-                        <h5 class="p-3 m-0 text-light">Fare Summary</h5>
-                    </div><!-- fare-header -->
-
-                    <div class="fare-section px-3 mt-1">
-                        <div class="fare-section-title" data-bs-toggle="collapse" data-bs-target="#baseFare">
-                            <span>Base fare</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div id="baseFare" class="collapse show fare-section-content">
-                            <!-- Adults -->
-                            @php
-                            // Filter adult travelers
-                            $adultTravelers = [];
-                            foreach ($selectedFlight['travelerPricings'] as $traveler) {
-                            if ($traveler['travelerType'] == 'ADULT') {
-                            $adultTravelers[] = $traveler;
-                            // dd($adultTravelers);
-                            }
-                            }
-
-                            // Get the first adult's price
-                            $adultPrice = !empty($adultTravelers) ? $adultTravelers[0]['price']['total'] : 0;
-
-                            // Get count from session (without 'flight_search' prefix)
-                            $adultCount = session('flight_search.adults');
-                            $adultTotal = $adultPrice * $adultCount;
-                            @endphp
-
-                            <div class="fare-item">
-                                {{-- @dd($adultTotal) --}}
-                                <span>Adult({{ $adultCount }}) ({{ $adultCount }} × ${{ $adultPrice }})</span>
-                                <span>${{ $adultTotal }}</span>
-                            </div>
-
-                            <!-- Children -->
-                            @php
-                            // Filter child travelers
-                            $childTravelers = [];
-                            foreach ($selectedFlight['travelerPricings'] as $traveler) {
-                            if ($traveler['travelerType'] == 'CHILD') {
-                            $childTravelers[] = $traveler;
-                            }
-                            }
-
-                            // Get the first child's price
-                            $childPrice = !empty($childTravelers) ? $childTravelers[0]['price']['total'] : 0;
-
-                            // Get count from session
-                            $childCount = session('flight_search.children');
-                            $childTotal = $childPrice * $childCount;
-                            @endphp
-
-                            @if($childCount > 0)
-                            <div class="fare-item">
-                                <span>Child({{ $childCount }}) ({{ $childCount }} × ${{ $childPrice }})</span>
-                                <span>${{ $childTotal }}</span>
-                            </div>
-                            @endif
-
-                            <!-- Infants -->
-                            @php
-                            // Filter infant travelers
-                            $infantTravelers = [];
-                            foreach ($selectedFlight['travelerPricings'] as $traveler) {
-                            if ($traveler['travelerType'] == 'HELD_INFANT') {
-                            $infantTravelers[] = $traveler;
-                            }
-                            }
-
-                            // Get the first infant's price
-                            $infantPrice = !empty($infantTravelers) ? $infantTravelers[0]['price']['total'] : 0;
-
-                            // Get count from session
-                            $infantCount = session('flight_search.held_infants');
-                            $infantTotal = $infantPrice * $infantCount;
-                            @endphp
-
-                            @if($infantCount > 0)
-                            <div class="fare-item">
-                                <span>Infant({{ $infantCount }}) ({{ $infantCount }} × ${{ $infantPrice }})</span>
-                                <span>${{ $infantTotal }}</span>
-                            </div>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="fare-section px-3 mt-1">
-                        <div class="fare-section-title" data-bs-toggle="collapse" data-bs-target="#taxes">
-                            <span>Taxes & Fees</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div id="taxes" class="collapse show fare-section-content">
-                            @foreach ($selectedFlight['price']['fees'] as $flight)
-                            <div class="fare-item">
-                                <span>{{ $flight['type'] }}</span>
-                                <span>$ {{ $flight['amount'] }}</span>
-                            </div>
+                <div class="table-responsive">
+                    <table class="passenger-table">
+                        <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Title</th>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Gender</th>
+                                <th>Date of Birth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($selectedFlight['passengers'] as $index => $passenger)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $passenger['title'] ?? '' }}</td>
+                                <td>{{ $passenger['firstName'] ?? '' }}</td>
+                                <td>{{ $passenger['middleName'] ?? '' }}</td>
+                                <td>{{ $passenger['lastName'] ?? '' }}</td>
+                                <td>{{ $passenger['gender'] ?? '' }}</td>
+                                <td>{{ $passenger['birthDate'] ?? '' }}</td>
+                            </tr>
                             @endforeach
-                        </div>
-                    </div>
-
-                    <div class="fare-total fare-item px-3 mt-1 pb-3">
-                        <span>Total Amount</span>
-                        <span>${{ $selectedFlight['price']['total'] }}</span>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+        <form action="{{ route('flight.storePayment') }}" method="POST" id="paymentForm" novalidate>
+            @csrf
+            <div class="booking-container">
+                <div class="payment-title d-flex justify-content-between align-items-center">
+                    <h5>Payment & Billing</h5>
+                    <div>
+                        <img src="{{ asset('assets/images/digicert.webp') }}" style="max-height: 50px;" alt="">
+                        <img src="{{ asset('assets/images/godaddy.webp') }}" style="max-height: 50px;" alt="">
+                        <img src="{{ asset('assets/images/pci.webp') }}" style="max-height: 50px;" alt="">
+                    </div>
+                </div><!-- payment-title -->
+                <div class="payment-methods">
+                    <p>We accept</p>
+                    <div class="card-logos">
+                        <div class="card-logo">
+                            <i class="fa-brands fa-cc-visa" style="color: #1565c0; max-height: 20px;"></i>
+                        </div>
+                        <div class="card-logo">
+                            <img src="{{ asset('assets/images/mastercard.webp') }}" style="max-height: 20px;" alt="">
+                        </div>
+                        <div class="card-logo">
+                            <img src="{{ asset('assets/images/american-express.webp') }}" style="max-height: 30px;"
+                                alt="">
+                        </div>
+                        <div class="card-logo">
+                            <img src="{{ asset('assets/images/discover.webp') }}" style="max-height: 30px;" alt="">
+                        </div>
+                    </div>
+                </div><!-- payment-methods -->
+
+
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label for="cardType">Card Type</label>
+                        <select id="cardType" name="cardType" class="form-select">
+                            <option value="visa">Visa</option>
+                            <option value="mastercard">Mastercard</option>
+                            <option value="amex">American Express</option>
+                            <option value="discover">Discover</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="cardNumber">Card Number *</label>
+                        <input type="text" class="form-control" id="cardNumber" name="cardNumber"
+                            placeholder="XXXX XXXX XXXX XXXX" required>
+                        <div class="invalid-feedback" id="cardNumberFeedback">Please enter a valid card number
+                            (16 digits)</div>
+                    </div><!-- col-md-6 -->
+                </div><!-- form-group row -->
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry date *</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <select class="form-select" id="expiryMonth" name="expiryMonth" required>
+                                        <option value="">Month</option>
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <div class="invalid-feedback">Enter valid month (1-12)</div>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control" id="expiryYear" name="expiryYear"
+                                        placeholder="Year" required>
+                                    <div class="invalid-feedback">Enter valid year</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="cvv">CVV/CVC *</label>
+                            <input type="text" class="form-control" id="cvv" name="cvv" placeholder="XXX" required>
+                            <div class="invalid-feedback">Please enter a valid CVV/CVC code (3-4 digits)</div>
+                        </div>
+                    </div>
+                </div><!-- row -->
+
+                <div class="form-group">
+                    <label for="cardHolderName">Card holder name *</label>
+                    <input type="text" class="form-control" id="cardHolderName" name="cardHolderName"
+                        placeholder="Name on card" required>
+                    <div class="invalid-feedback">Please enter the name as it appears on card</div>
+                </div><!-- form-group -->
+
+            </div><!-- booking-container -->
+
+            <div class="policy-container my-3">
+                <div class="policy-header" id="policyHeader">
+                    <h2>Cancellation/Refund Policy</h2>
+                    <span class="dropdown-icon">
+                        <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-chevron-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="policy-content" id="policyContent">
+                    <div class="policy-text">
+                        <p>At GlobGoer, we understand that plans can change unexpectedly. We strive to provide a
+                            flexible and
+                            customer-friendly cancellation and refund policy for flight bookings. Please review
+                            the following policy
+                            details:</p>
+
+                        <ol>
+                            <li>Cancellation Requests:
+                                <ul>
+                                    <li>All cancellation requests must be submitted through our website or by
+                                        contacting our
+                                        customer support team.</li>
+                                    <li>Cancellation requests made through our website should be done by
+                                        accessing your booking and
+                                        following the cancellation process.</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <div class="collapse" id="additionalContent">
+                            <ol start="2">
+                                <li>Refund Timeline:
+                                    <ul>
+                                        <li>Refunds are processed within 7-10 business days after approval.</li>
+                                        <li>The actual credit may take additional time to appear in your account
+                                            depending on your
+                                            payment provider.</li>
+                                    </ul>
+                                </li>
+                                <li>Cancellation Fees:
+                                    <ul>
+                                        <li>Cancellations made 48+ hours before departure: Full refund minus a
+                                            $25 processing fee.
+                                        </li>
+                                        <li>Cancellations made 24-48 hours before departure: 75% refund of the
+                                            booking amount.</li>
+                                        <li>Cancellations made less than 24 hours before departure: 50% refund
+                                            of the booking
+                                            amount.</li>
+                                    </ul>
+                                </li>
+                                <li>Special Circumstances:
+                                    <ul>
+                                        <li>For cancellations due to medical emergencies, bereavement, or
+                                            natural disasters, please
+                                            contact our customer support with appropriate documentation for
+                                            special consideration.
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <a class="read-more" data-bs-toggle="collapse" href="#additionalContent" role="button"
+                            aria-expanded="false" aria-controls="additionalContent" id="readMoreLink">
+                            Read more
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="checkbox-container">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="agreeCheckbox">
+                        <label class="form-check-label" for="agreeCheckbox">
+                            By clicking on <strong style="color: #6742c9">"Confirm & Book"</strong> I agree to
+                            the cancellation/ Refund
+                            Policy
+                        </label>
+                    </div>
+                    <button type="submit" class="btn submit-btn" id="submitBtn" disabled>
+                        Confirm and Book
+                        <div class="secure-text">
+                            <span class="icon-lock">
+                                <svg xmlns="https://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
+                                    class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+                                </svg>
+                            </span>
+                            Secure Payment
+                        </div>
+                    </button>
+                </div>
+
+            </div><!-- policy-container -->
+
+            {{-- <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Pay $33.00 Now</button>
+            </div> --}}
+        </form>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="fare-summary">
+            <div class="fare-header m">
+                <h5 class="p-3 m-0 text-light">Fare Summary</h5>
+            </div><!-- fare-header -->
+
+            <div class="fare-section px-3 mt-1">
+                <div class="fare-section-title" data-bs-toggle="collapse" data-bs-target="#baseFare">
+                    <span>Base fare</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div id="baseFare" class="collapse show fare-section-content">
+                    <!-- Adults -->
+                    @php
+                    // Filter adult travelers
+                    $adultTravelers = [];
+                    foreach ($selectedFlight['travelerPricings'] as $traveler) {
+                    if ($traveler['travelerType'] == 'ADULT') {
+                    $adultTravelers[] = $traveler;
+                    // dd($adultTravelers);
+                    }
+                    }
+
+                    // Get the first adult's price
+                    $adultPrice = !empty($adultTravelers) ? $adultTravelers[0]['price']['total'] : 0;
+
+                    // Get count from session (without 'flight_search' prefix)
+                    $adultCount = session('flight_search.adults');
+                    $adultTotal = $adultPrice * $adultCount;
+                    @endphp
+
+                    <div class="fare-item">
+                        {{-- @dd($adultTotal) --}}
+                        <span>Adult({{ $adultCount }}) ({{ $adultCount }} × ${{ $adultPrice }})</span>
+                        <span>${{ $adultTotal }}</span>
+                    </div>
+
+                    <!-- Children -->
+                    @php
+                    // Filter child travelers
+                    $childTravelers = [];
+                    foreach ($selectedFlight['travelerPricings'] as $traveler) {
+                    if ($traveler['travelerType'] == 'CHILD') {
+                    $childTravelers[] = $traveler;
+                    }
+                    }
+
+                    // Get the first child's price
+                    $childPrice = !empty($childTravelers) ? $childTravelers[0]['price']['total'] : 0;
+
+                    // Get count from session
+                    $childCount = session('flight_search.children');
+                    $childTotal = $childPrice * $childCount;
+                    @endphp
+
+                    @if($childCount > 0)
+                    <div class="fare-item">
+                        <span>Child({{ $childCount }}) ({{ $childCount }} × ${{ $childPrice }})</span>
+                        <span>${{ $childTotal }}</span>
+                    </div>
+                    @endif
+
+                    <!-- Infants -->
+                    @php
+                    // Filter infant travelers
+                    $infantTravelers = [];
+                    foreach ($selectedFlight['travelerPricings'] as $traveler) {
+                    if ($traveler['travelerType'] == 'HELD_INFANT') {
+                    $infantTravelers[] = $traveler;
+                    }
+                    }
+
+                    // Get the first infant's price
+                    $infantPrice = !empty($infantTravelers) ? $infantTravelers[0]['price']['total'] : 0;
+
+                    // Get count from session
+                    $infantCount = session('flight_search.held_infants');
+                    $infantTotal = $infantPrice * $infantCount;
+                    @endphp
+
+                    @if($infantCount > 0)
+                    <div class="fare-item">
+                        <span>Infant({{ $infantCount }}) ({{ $infantCount }} × ${{ $infantPrice }})</span>
+                        <span>${{ $infantTotal }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="fare-section px-3 mt-1">
+                <div class="fare-section-title" data-bs-toggle="collapse" data-bs-target="#taxes">
+                    <span>Taxes & Fees</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div id="taxes" class="collapse show fare-section-content">
+                    @foreach ($selectedFlight['price']['fees'] as $flight)
+                    <div class="fare-item">
+                        <span>{{ $flight['type'] }}</span>
+                        <span>$ {{ $flight['amount'] }}</span>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="fare-total fare-item px-3 mt-1 pb-3">
+                <span>Total Amount</span>
+                <span>${{ $selectedFlight['price']['total'] }}</span>
+            </div>
+        </div>
+    </div>
+    </div>
     </div>
     <!-- Footer Section -->
     <footer class="footer pt-5 pb-3 bg-light">

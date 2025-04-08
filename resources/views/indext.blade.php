@@ -122,6 +122,15 @@
             backdrop-filter: blur(10px);
             border-radius: 10px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .form-header {
+            margin-bottom: 10px;
+        }
+
+        .city-row {
+            margin-bottom: 8px;
         }
 
         .search-form .form-control,
@@ -274,18 +283,28 @@
         }
 
         @media (max-width: 767px) {
+
             /* .hero-header {
                 font-size: 24px;
             }
 
-            ..search-form {
+
+
+
+        } */
+            .search-form {
                 height: 60%;
+                padding: 10px;
             }
 
             .form-header {
-                 font-size: 14px;
-            margin: 0 !important;
-        } */
+                /* font-size: 14px; */
+                margin-bottom: 5px;
+            }
+
+            .city-row {
+                margin-bottom: 3px;
+            }
 
             .footer .d-flex.flex-column.flex-md-row {
                 gap: 10px;
@@ -487,11 +506,11 @@
                     <h1 class="display-4 fw-bold hero-header">Transforming Travel,<br>One Trip at a Time</h1>
                 </div>
                 <div class="col-lg-6">
-                    <form action="{{ route('flight.search') }}" method="POST" class="search-form p-4">
+                    <form action="{{ route('flight.search') }}" method="POST" class="search-form">
                         @csrf
-                        <h3 class="text-center mb-4 form-header">Find your ticket Now</h3>
-                        <div class="row mb-3">
-                            <div class="col-6 mb-3 mb-md-0 mb-sm-0">
+                        <h3 class="text-center form-header">Find your ticket Now</h3>
+                        <div class="row city-row">
+                            <div class="col-6">
                                 <label for="origin_city" class="form-label"><i class="fas fa-plane-departure me-2"></i>
                                     From</label>
                                 <input type="text" id="search1" class="form-select"
@@ -516,7 +535,7 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-6 mb-3 mb-md-0">
+                            <div class="col-6">
                                 <label for="departureDate" class="form-label"><i class="far fa-calendar-alt me-2"></i>
                                     Check-In</label>
                                 <input type="date" id="departureDate" name="departureDate" class="form-control"
@@ -532,7 +551,7 @@
                         </div>
                         <div class="row mb-3">
 
-                            <div class="col-6 mb-3 mb-md-0">
+                            <div class="col-6">
                                 <label for="travelers" class="form-label"><i class="fas fa-user me-2"></i>
                                     Tickets</label>
                                 <div class="dropdown">
