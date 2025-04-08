@@ -496,6 +496,8 @@
                                     From</label>
                                 <input type="text" id="search1" class="form-select" placeholder="Enter City Name"
                                     autocomplete="off" required>
+                                <small class="text-muted">Please select cities from the suggested list (click on them
+                                    after typing).</small>
                                 <input type="hidden" name="origin_city" value="">
                                 <input type="hidden" name="origin_city_name" id="origin_city_name">
                                 <div id="result1" style="width: 60%;"></div>
@@ -506,6 +508,8 @@
                                     To</label>
                                 <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off"
                                     class="form-select" required>
+                                <small class="text-muted">Please select cities from the suggested list (click on them
+                                    after typing).</small>
                                 <input type="hidden" name="destination_city" value="">
 
                                 <input type="hidden" name="destination_city_name" id="destination_city_name">
@@ -1206,74 +1210,103 @@
 
         const searchCityUrl = "{{ route('search_city') }}";
 
-        $("#result1, #result2").hide();
+        let debounceTimer1;
+        let debounceTimer2;
 
-        $("#search1").on("input", function() {
+        // البحث في الحقل الأول (From)
+        $("#search1").on("input", function () {
+        clearTimeout(debounceTimer1);
+
+        // مسح القيم القديمة إذا كتب يدويًا
+        $("[name='origin_city']").val('');
+        $("#origin_city_name").val('');
+
+        let query = $(this).val();
+
+        debounceTimer1 = setTimeout(() => {
+        if (query.length > 2) {
+        $.ajax({
+        url: searchCityUrl,
+        method: "GET",
+        data: { q: query },
+        success: function (response) {
+        $("#result1").empty().hide();
+        if (response.data && response.data.length > 0) {
+        response.data.forEach(element => {
+        $("#result1").append(
+        `<p data-city-code="${element.address.cityCode}" style="cursor:pointer; color:#4444ff;"
+            onmouseover="this.style.backgroundColor='#fff';" onmouseout="this.style.backgroundColor='transparent';">
+            ${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode}
+            (${element.address.cityCode} - ${element.name})
+        </p>`
+        );
+        });
+        $("#result1").show();
+        }
+        }
+        });
+        } else {
+        $("#result1").hide();
+        }
+        }, 300); // انتظار 300 مللي ثانية
+        });
+
+        // البحث في الحقل الثاني (To)
+        $("#search2").on("input", function () {
+            clearTimeout(debounceTimer2);
+
+            // مسح القيم القديمة إذا كتب يدويًا
+            $("[name='destination_city']").val('');
+            $("#destination_city_name").val('');
+
             let query = $(this).val();
 
-            if (query.length > 2) {
+            debounceTimer2 = setTimeout(() => {
+                if (query.length > 2) {
                 $.ajax({
                     url: searchCityUrl,
                     method: "GET",
                     data: { q: query },
-                    success: function(response) {
-                        $("#result1").empty();
-                        if (response.data && response.data.length > 0) {
-                            $("#result1").show();
-                            response.data.forEach(element => {
-                                $("#result1").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;" onmouseover="this.style.backgroundColor='#fff'; this.style.color='#4444ff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
-                            });
-                        } else {
-                            $("#result1").hide();
-                        }
+                    success: function (response) {
+                    $("#result2").empty().hide();
+                    if (response.data && response.data.length > 0) {
+                    response.data.forEach(element => {
+                    $("#result2").append(
+                    `<p data-city-code="${element.address.cityCode}" style="cursor:pointer; color:#4444ff;"
+                        onmouseover="this.style.backgroundColor='#fff';" onmouseout="this.style.backgroundColor='transparent';">
+                        ${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode}
+                        (${element.address.cityCode} - ${element.name})
+                    </p>`
+                    );
+                    });
+                    $("#result2").show();
+                    }
                     }
                 });
-            } else {
-                $("#result1").hide();
-            }
+                } else {
+                    $("#result2").hide();
+                }
+            }, 300);
         });
 
-        $("#search2").on("input", function() {
-            let query = $(this).val();
-            if (query.length > 2) {
-                $.ajax({
-                    url: searchCityUrl,
-                    method: "GET",
-                    data: { q: query },
-                    success: function(response) {
-                        $("#result2").empty();
-                        if (response.data &&response.data.length > 0) {
-                            $("#result2").show();
-                            response.data.forEach(element => {
-                                $("#result2").append(`<p data-city-code="${element.address.cityCode}" style="color: #4444ff;" onmouseover="this.style.backgroundColor='#fff'; this.style.color='#4444ff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#4444ff';">${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
-                            });
-                        } else {
-                            $("#result2").hide();
-                        }
-                    }
-                });
-            } else {
-                $("#result2").hide();
-            }
-        });
-
-        $('body').on('click','#result1 p',function () {
-            $("#search1").val($(this).text())
-            $("#result1").empty()
-            var code = $(this).attr('data-city-code');
-            var cityName = $(this).text();
+        // عند اختيار المدينة من الحقول
+        $('body').on('click', '#result1 p', function () {
+            const text = $(this).text();
+            const code = $(this).data('city-code');
+            $("#search1").val(text);
+            $("#origin_city_name").val(text);
             $("[name='origin_city']").val(code);
-            $("#origin_city_name").val(cityName);
-        })
+            $("#result1").empty().hide();
+        });
 
-        $('body').on('click','#result2 p',function () {
-            $("#search2").val($(this).text())
-            $("#result2").empty()
-            var code = $(this).attr('data-city-code');
-            var cityName = $(this).text();
+        $('body').on('click', '#result2 p', function () {
+            const text = $(this).text();
+            const code = $(this).data('city-code');
+            $("#search2").val(text);
+            $("#destination_city_name").val(text);
             $("[name='destination_city']").val(code);
-            $("#destination_city_name").val(cityName);
-        })
+            $("#result2").empty().hide();
+        });
 
         $(document).click(function(event) {
             if (!$(event.target).closest("#result1").length) {
@@ -1300,52 +1333,60 @@
 
        // Form validation
     $('form.search-form').on('submit', function(e) {
-    let isValid = true;
-    let errorMessage = '';
+        let isValid = true;
+        let errorMessage = '';
+        const origin = $("[name='origin_city']").val();
+        const dest = $("[name='destination_city']").val();
 
-    // Origin city validation
-    if ($('input[name="origin_city"]').val() === '') {
-    isValid = false;
-    errorMessage = 'Please select departure city';
-    $('#search1').addClass('is-invalid');
-    } else {
-    $('#search1').removeClass('is-invalid');
-    }
+        if (!origin || !dest) {
+        e.preventDefault();
+        alert("Please select cities from the suggested list (click on them after typing).");
+        return false;
+        }
 
-    // Destination city validation
-    if ($('input[name="destination_city"]').val() === '') {
-    isValid = false;
-    errorMessage = errorMessage || 'Please select destination city';
-    $('#search2').addClass('is-invalid');
-    } else {
-    $('#search2').removeClass('is-invalid');
-    }
+        // Origin city validation
+        if ($('input[name="origin_city"]').val() === '') {
+            isValid = false;
+            errorMessage = 'Please select departure city';
+            $('#search1').addClass('is-invalid');
+        } else {
+            $('#search1').removeClass('is-invalid');
+        }
 
-    // Departure date validation
-    if ($('#departureDate').val() === '') {
-    isValid = false;
-    errorMessage = errorMessage || 'Please select a departure date';
-    $('#departureDate').addClass('is-invalid');
-    } else {
-    $('#departureDate').removeClass('is-invalid');
-    }
+        // Destination city validation
+        if ($('input[name="destination_city"]').val() === '') {
+            isValid = false;
+            errorMessage = errorMessage || 'Please select destination city';
+            $('#search2').addClass('is-invalid');
+        } else {
+            $('#search2').removeClass('is-invalid');
+        }
 
-    // Return date validation for round trips
-    if ($('#roundTrip').is(':checked') && $('#returnDate').val() === '') {
-    isValid = false;
-    errorMessage = errorMessage || 'Please select a return date';
-    $('#returnDate').addClass('is-invalid');
-    } else {
-    $('#returnDate').removeClass('is-invalid');
-    }
+        // Departure date validation
+        if ($('#departureDate').val() === '') {
+            isValid = false;
+            errorMessage = errorMessage || 'Please select a departure date';
+            $('#departureDate').addClass('is-invalid');
+        } else {
+            $('#departureDate').removeClass('is-invalid');
+        }
 
-    // Show error message and prevent form submission if validation fails
-    if (!isValid) {
-    e.preventDefault();
+        // Return date validation for round trips
+        if ($('#roundTrip').is(':checked') && $('#returnDate').val() === '') {
+            isValid = false;
+            errorMessage = errorMessage || 'Please select a return date';
+            $('#returnDate').addClass('is-invalid');
+        } else {
+            $('#returnDate').removeClass('is-invalid');
+        }
 
-    // Create or update validation feedback element
-    showValidationError(errorMessage);
-    }
+        // Show error message and prevent form submission if validation fails
+        if (!isValid) {
+            e.preventDefault();
+
+            // Create or update validation feedback element
+            showValidationError(errorMessage);
+        }
     });
 
     // Function to show validation error message
@@ -1451,26 +1492,26 @@
         btn.prop('disabled', true).html('Subscribing...');
 
         $.ajax({
-        url: subscribeUrl,
-        type: 'POST',
-        data: {
-        email: email,
-        _token: '{{ csrf_token() }}'
-        },
-        success: function(response) {
-        if (response.success) {
-        showNotification(response.message, 'success');
-        $('#subscribeEmail').val('');
-        }
-        },
-        error: function(xhr) {
+            url: subscribeUrl,
+            type: 'POST',
+            data: {
+            email: email,
+            _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+            if (response.success) {
+            showNotification(response.message, 'success');
+            $('#subscribeEmail').val('');
+            }
+            },
+            error: function(xhr) {
 
-        showNotification('Failed to subscribe. Please try again.', 'error');
-        },
-        complete: function() {
-        // Re-enable button and restore text
-        btn.prop('disabled', false).html('Subscribe');
-        }
+            showNotification('Failed to subscribe. Please try again.', 'error');
+            },
+            complete: function() {
+            // Re-enable button and restore text
+            btn.prop('disabled', false).html('Subscribe');
+            }
         });
 
         // Add this function to handle notifications
