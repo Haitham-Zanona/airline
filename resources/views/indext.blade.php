@@ -1464,8 +1464,7 @@
         }
         },
         error: function(xhr) {
-            console.error("❌ AJAX error occurred:", xhr);
-            console.log("📥 Response text:", xhr.responseText);
+
         showNotification('Failed to subscribe. Please try again.', 'error');
         },
         complete: function() {
