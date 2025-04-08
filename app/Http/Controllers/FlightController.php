@@ -1223,9 +1223,16 @@ class FlightController extends Controller
  */
     private function storeSelectedFlightInSession(array $selectedFlight)
     {
-        $flightSearchData                    = session('flight_search', []);
-        $flightSearchData['selected_flight'] = $selectedFlight;
-        session(['flight_search' => $flightSearchData]);
+        try {
+            $flightSearchData                    = session('flight_search', []);
+            $flightSearchData['selected_flight'] = $selectedFlight;
+            session(['flight_search' => $flightSearchData]);
+            Log::info('Flight stored in session successfully', ['flight_id' => $selectedFlight['id']]);
+        } catch (\Exception $e) {
+            Log::error('Error storing flight in session: ' . $e->getMessage(), ['flight_id' => $selectedFlight['id'] ?? 'unknown']);
+            throw $e; // Re-throw the exception to trigger the 500 error and see the details
+        }
+
     }
 
 /**
@@ -1272,9 +1279,12 @@ class FlightController extends Controller
         // الحصول على الرحلة المختارة من الجلسة
         $selectedFlight = $this->getSelectedFlight();
 
+        // dd($selectedFlight);
+
         // تسجيل معلومات تشخيصية (اختياري)
         Log::info('Retrieved selected flight for passengers page: ' . json_encode(['id' => $selectedFlight['id'] ?? 'not found']));
 
+        // dd(json_encode(['id' => $selectedFlight['id'] ?? 'not found']));
         // التحقق من وجود رحلة محددة
         if (! $selectedFlight) {
             return redirect()->route('index')->with('error', 'Please select a flight first');

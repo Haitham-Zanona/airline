@@ -737,7 +737,8 @@
                                     <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
                                     <div class="airport-name">{{ $airportCode }}</div>
                                     <div class="airport-terminal">Terminal {{
-                                        $selectedFlight['itineraries'][0]['segments'][0]['departure']['terminal'] }}
+                                        $selectedFlight['itineraries'][0]['segments'][0]['departure']['terminal'] ?? ''
+                                        }}
                                     </div>
                                 </div>
 
@@ -795,7 +796,8 @@
                                     <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
                                     <div class="airport-name">{{ $airportCode }}</div>
                                     <div class="airport-terminal">Terminal {{
-                                        $selectedFlight['itineraries'][0]['segments'][0]['arrival']['terminal'] }}</div>
+                                        $selectedFlight['itineraries'][0]['segments'][1]['arrival']['terminal'] ?? '' }}
+                                    </div>
                                 </div>
                             </div>
                         </div><!-- flight-details -->

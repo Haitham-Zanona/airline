@@ -1211,80 +1211,96 @@
         let debounceTimer1;
         let debounceTimer2;
 
+        let isOriginCitySelected = false;
+        let isDestinationCitySelected = false;
+
+        let requestCounter1 = 0;
+        let requestCounter2 = 0;
+
         // البحث في الحقل الأول (From)
         $("#search1").on("input", function () {
-        clearTimeout(debounceTimer1);
+            clearTimeout(debounceTimer1);
 
-        // مسح القيم القديمة إذا كتب يدويًا
-        $("[name='origin_city']").val('');
-        $("#origin_city_name").val('');
+            let query = $(this).val();
 
-        let query = $(this).val();
+            if ($("#origin_city_name").val() !== query) {
+                isOriginCitySelected = false;
+                $("[name='origin_city']").val('');
+                $("#origin_city_name").val('');
+            }
 
-        debounceTimer1 = setTimeout(() => {
-        if (query.length > 2) {
-        $.ajax({
-        url: searchCityUrl,
-        method: "GET",
-        data: { q: query },
-        success: function (response) {
-        $("#result1").empty().hide();
-        if (response.data && response.data.length > 0) {
-        response.data.forEach(element => {
-        $("#result1").append(
-        `<p data-city-code="${element.address.cityCode}" style="cursor:pointer; color:#4444ff;"
-            onmouseover="this.style.backgroundColor='#fff';" onmouseout="this.style.backgroundColor='transparent';">
-            ${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode}
-            (${element.address.cityCode} - ${element.name})
-        </p>`
-        );
+
+
+            if (query.length < 3 || isOriginCitySelected ) {
+                $("#result1").empty().hide();
+                return;
+            }
+
+            debounceTimer1 = setTimeout(() => {
+
+                requestCounter1++;
+                const currentRequest = requestCounter1;
+
+
+                    $.ajax({
+                        url: searchCityUrl,
+                        method: "GET",
+                        data: { q: query },
+                        success: function (response) {
+                            if (currentRequest !== requestCounter1 || isOriginCitySelected) return;
+                            $("#result1").empty().hide();
+                            if (response.data && response.data.length > 0) {
+                                response.data.forEach(element => {
+                                $("#result1").append(`<p data-city-code="${element.address.cityCode}" style="cursor:pointer; color:#4444ff;" onmouseover="this.style.backgroundColor='#fff';" onmouseout="this.style.backgroundColor='transparent';"> ${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`
+                                );
+                                });
+                                $("#result1").show();
+                            }
+                        }
+                    });
+
+            }, 100); // انتظار 300 مللي ثانية
         });
-        $("#result1").show();
-        }
-        }
-        });
-        } else {
-        $("#result1").hide();
-        }
-        }, 300); // انتظار 300 مللي ثانية
-        });
+
+
 
         // البحث في الحقل الثاني (To)
         $("#search2").on("input", function () {
             clearTimeout(debounceTimer2);
 
-            // مسح القيم القديمة إذا كتب يدويًا
-            $("[name='destination_city']").val('');
-            $("#destination_city_name").val('');
-
             let query = $(this).val();
 
+            if ($("#destination_city_name").val() !== query) {
+                isDestinationCitySelected = false;
+                $("[name='destination_city']").val('');
+                $("#destination_city_name").val('');
+            }
+
+
+            if (query.length < 3 || isDestinationCitySelected) {
+                $("#result2").empty().hide(); return;
+            }
+
             debounceTimer2 = setTimeout(() => {
-                if (query.length > 2) {
+                requestCounter2++;
+                const currentRequest = requestCounter2;
                 $.ajax({
                     url: searchCityUrl,
                     method: "GET",
                     data: { q: query },
                     success: function (response) {
-                    $("#result2").empty().hide();
-                    if (response.data && response.data.length > 0) {
-                    response.data.forEach(element => {
-                    $("#result2").append(
-                    `<p data-city-code="${element.address.cityCode}" style="cursor:pointer; color:#4444ff;"
-                        onmouseover="this.style.backgroundColor='#fff';" onmouseout="this.style.backgroundColor='transparent';">
-                        ${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode}
-                        (${element.address.cityCode} - ${element.name})
-                    </p>`
-                    );
-                    });
-                    $("#result2").show();
-                    }
+                        if (currentRequest !== requestCounter2 || isDestinationCitySelected) return;
+                        $("#result2").empty().hide();
+                            if (response.data && response.data.length > 0) {
+                                response.data.forEach(element => {
+                                    $("#result2").append(`<p data-city-code="${element.address.cityCode}" style="cursor:pointer; color:#4444ff;" onmouseover="this.style.backgroundColor='#fff';" onmouseout="this.style.backgroundColor='transparent';"> ${element.address.cityName}, ${element.address.countryName}, ${element.address.countryCode} (${element.address.cityCode} - ${element.name})</p>`);
+                                });
+                                $("#result2").show();
+                            }
                     }
                 });
-                } else {
-                    $("#result2").hide();
-                }
-            }, 300);
+
+            }, 100);
         });
 
         // عند اختيار المدينة من الحقول
@@ -1295,6 +1311,8 @@
             $("#origin_city_name").val(text);
             $("[name='origin_city']").val(code);
             $("#result1").empty().hide();
+
+            isOriginCitySelected = true;
         });
 
         $('body').on('click', '#result2 p', function () {
@@ -1304,6 +1322,8 @@
             $("#destination_city_name").val(text);
             $("[name='destination_city']").val(code);
             $("#result2").empty().hide();
+
+            isDestinationCitySelected = true;
         });
 
         $(document).click(function(event) {
