@@ -44,9 +44,9 @@ Route::get('/privacy_policy', function () {
 // Route::get('/newpayment', function () {
 //     return view('flights.new-payment');
 // });
-// Route::get('/newconfirm', function () {
-//     return view('emails.booking-confirmation');
-// });
+Route::get('/newconfirm', function () {
+    return view('emails.booking-confirmations');
+});
 
 Route::group([], function () {
     Route::get('/', [FlightController::class, 'index'])->name('index');

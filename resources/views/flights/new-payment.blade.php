@@ -972,8 +972,10 @@
                                     <div class="invalid-feedback">Enter valid month (1-12)</div>
                                 </div>
                                 <div class="col-6">
-                                    <input type="text" class="form-control" id="expiryYear" name="expiryYear"
-                                        placeholder="Year" required>
+                                    <select class="form-select" id="expiryYear" name="expiryYear" required>
+                                        <option value="">Year</option>
+                                        <!-- years will be dynamically populated using JavaScript -->
+                                    </select>
                                     <div class="invalid-feedback">Enter valid year</div>
                                 </div>
                             </div>
@@ -1440,7 +1442,7 @@
     const cardPatterns = {
     visa: {
     pattern: /^4[0-9]{12}(?:[0-9]{3})?$/,
-    length: [13, 16],
+    length: [16],
     cvvLength: 3,
     format: /(\d{1,4})/g
     },
@@ -1513,13 +1515,13 @@
 
         // تحديث رسالة الخطأ
         if (cardType === 'amex') {
-        $('#cardNumberFeedback').text('يرجى إدخال رقم بطاقة American Express صالح (15 رقم)');
+        $('#cardNumberFeedback').text('Please enter a valid American Express card number (15 digits).');
         } else if (cardType === 'visa') {
-        $('#cardNumberFeedback').text('يرجى إدخال رقم بطاقة Visa صالح (13 أو 16 رقم)');
+        $('#cardNumberFeedback').text('Please enter a valid Visa card number (16 digits).');
         } else if (cardType === 'mastercard') {
-        $('#cardNumberFeedback').text('يرجى إدخال رقم بطاقة Mastercard صالح (16 رقم)');
+        $('#cardNumberFeedback').text('Please enter a valid MasterCard card number (16 digits).');
         } else {
-        $('#cardNumberFeedback').text('يرجى إدخال رقم بطاقة صالح');
+        $('#cardNumberFeedback').text('Please enter a valid card number.');
         }
 
         // فقط إظهار الخطأ إذا تم تقديم النموذج أو تم إدخال قيمة ثم حذفها
