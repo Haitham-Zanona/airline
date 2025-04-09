@@ -84,6 +84,13 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
+        .booking-img {
+
+            width: 100px;
+            height: 100px;
+            margin: 0 15px;
+        }
+
         .flight-summary-toggle {
             border: none;
             background-color: transparent;
@@ -421,6 +428,7 @@
 
             .booking-title {
                 font-size: 14px;
+                margin-bottom: 5px;
 
             }
 
@@ -434,13 +442,20 @@
             }
 
             .booking-header {
-                /* display: flex; */
+                display: flex;
+                flex-direction: column;
                 /* justify-content: space-between; */
                 /* align-items: center; */
                 /* margin-bottom: 20px; */
                 /* padding-bottom: 10px; */
                 /* border-bottom: 1px solid var(--border-color); */
                 gap: 0;
+            }
+
+            .booking-img {
+                width: 20px;
+                height: 20px;
+                margin: 0 5px;
             }
 
             .header-dots {
@@ -612,8 +627,7 @@
                 <div class="booking-container">
                     <h3 class="section-title">Enter your booking details</h3>
                     <div class="d-flex align-items-center mb-4">
-                        <div class="mx-4"><img src="{{ asset('assets/images/airplane-pass.webp') }}" width="100"
-                                height="100" alt="">
+                        <div><img src="{{ asset('assets/images/airplane-pass.webp') }}" class="booking-img" alt="">
                         </div>
                         <div class="flight-route m-0">
                             {{-- @dd(session('flight_search')) --}}
@@ -654,8 +668,9 @@
                             </span>
                             <span>{{ $destinationCityName }} - {{ $destinationCountryName }}</span>
                             <div class="flight-date">
-                                {{ session('flight_search.departureDate') }} {{ session('flight_search.returnDate')
-                                ?? ''}}
+                                {{ session('flight_search.departureDate') }} @if (session('flight_search.returnDate'))
+                                - {{ session('flight_search.returnDate') }}
+                                @endif
                             </div>
                         </div>
 
@@ -698,7 +713,8 @@
                                 {{ $selectedFlight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
                                 @endif
                             </div>
-                            <div class="ms-auto">Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ??
+                            <div class="ms-auto" style="text-align: right;">Travel Class: <span class="fw-bold">{{
+                                    $flightData['cabin'] ??
                                     'Economy' }}</span></div>
                         </div><!-- airline-info -->
 
@@ -832,12 +848,12 @@
                         <h5 class="form-section-title">Contact Details (Booking details will be sent to)</h5>
                         <div id="contactForm">
                             <div class="row px-2">
-                                <div class="col-6 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="phone" class="form-label">Mobile Number</label>
                                     <input type="tel" id="phone" name="contact[phone]" class="form-control" required>
                                     <div class="invalid-feedback">Please enter a valid mobile number.</div>
                                 </div>
-                                <div class="col-6 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" name="contact[email]"
                                         placeholder="Email" required>
@@ -944,7 +960,7 @@
                             <h5 class="passengers-type-no">Passengers No:{{ $i + 1 }}</h5>
                             <div class="row mb-3">
                                 <input type="hidden" name="passengers[{{ $i }}][type]" value="CHILD">
-                                <div class="col-6 mb-3 mb-md-0">
+                                <div class="col-sm-6 mb-3 mb-md-0">
                                     <label for="title_{{ $i }}" class="form-label">Title</label>
                                     <select class="form-control form-select" id="title_{{ $i }}"
                                         name="passengers[{{ $i }}][title]" required>
@@ -955,7 +971,7 @@
                                         <option value="miss">Miss</option>
                                     </select>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-sm-6">
                                     <label for="firstName_{{ $i }}" class="form-label">First Name</label>
                                     <input type="text" class="form-control" id="firstName_{{ $i }}"
                                         name="passengers[{{ $i }}][firstName]" placeholder="e.g. Smith" required>
@@ -963,13 +979,13 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-6 mb-3 mb-md-0">
+                                <div class="col-sm-6 mb-3 mb-md-0">
                                     <label for="middleName_{{ $i }}" class="form-label">Middle Name</label>
                                     <input type="text" class="form-control" id="middleName_{{ $i }}"
                                         name="passengers[{{ $i }}][middleName]" placeholder="e.g. Doe" required>
                                     <div class="invalid-feedback">Please enter your middle name.</div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-sm-6">
                                     <label for="lastName_{{ $i }}" class="form-label">last Name</label>
                                     <input type="text" class="form-control" id="lastName_{{ $i }}"
                                         name="passengers[{{ $i }}][lastName]" placeholder="e.g. Smith" required>
@@ -978,7 +994,7 @@
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-4 mb-3 mb-md-0">
+                                <div class="col-sm-4 mb-3 mb-md-0">
                                     <label class="form-label" for="nationality_{{ $i }}">Nationality:</label>
                                     <select name="passengers[{{ $i }}][nationality]" class="form-control" required>
                                         <option value="">Select Nationality</option>
@@ -991,7 +1007,7 @@
                                     </select>
                                     <div class="invalid-feedback">Please select your nationality.</div>
                                 </div>
-                                <div class="col-4 mb-3 mb-md-0">
+                                <div class="col-sm-4 mb-3 mb-md-0">
                                     <label for="gender_{{ $i }}" class="form-label">Gender</label>
                                     <select class="form-select" name="passengers[{{ $i }}][gender]" id="gender"
                                         required>
@@ -1001,7 +1017,7 @@
                                     </select>
                                     <div class="invalid-feedback">Please select your gender.</div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-sm-4">
                                     <label for="dob_{{ $i }}" class="form-label">Date of birth</label>
                                     <input type="date" class="form-control" name="passengers[{{ $i }}][birthDate]"
                                         id="dob_{{ $i }}" required>
@@ -1024,7 +1040,7 @@
                     <h5 class="passengers-type-no">Passengers No:{{ $i + 1 }}</h5>
                     <div class="row mb-3">
                         <input type="hidden" name="passengers[{{ $i }}][type]" value="HELD_INFANT">
-                        <div class="col-6 mb-3 mb-md-0">
+                        <div class="col-sm-6 mb-3 mb-md-0">
                             <label for="title_{{ $i }}" class="form-label">Title</label>
                             <select class="form-control form-select" id="title_{{ $i }}"
                                 name="passengers[{{ $i }}][title]" required>
@@ -1035,7 +1051,7 @@
                                 <option value="miss">Miss</option>
                             </select>
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <label for="firstName_{{ $i }}" class="form-label">First Name</label>
                             <input type="text" class="form-control" id="firstName_{{ $i }}"
                                 name="passengers[{{ $i }}][firstName]" placeholder="e.g. Smith" required>
@@ -1043,13 +1059,13 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-6 mb-3 mb-md-0">
+                        <div class="col-sm-6 mb-3 mb-md-0">
                             <label for="middleName_{{ $i }}" class="form-label">Middle Name</label>
                             <input type="text" class="form-control" id="middleName_{{ $i }}"
                                 name="passengers[{{ $i }}][middleName]" placeholder="e.g. Doe" required>
                             <div class="invalid-feedback">Please enter your middle name.</div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <label for="lastName_{{ $i }}" class="form-label">last Name</label>
                             <input type="text" class="form-control" id="lastName_{{ $i }}"
                                 name="passengers[{{ $i }}][lastName]" placeholder="e.g. Smith" required>
@@ -1058,7 +1074,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-4 mb-3 mb-md-0">
+                        <div class="col-sm-4 mb-3 mb-md-0">
                             <label class="form-label" for="nationality_{{ $i }}">Nationality:</label>
                             <select name="passengers[{{ $i }}][nationality]" class="form-control" required>
                                 <option value="">Select Nationality</option>
@@ -1071,7 +1087,7 @@
                             </select>
                             <div class="invalid-feedback">Please select your nationality.</div>
                         </div>
-                        <div class="col-4 mb-3 mb-md-0">
+                        <div class="col-sm-4 mb-3 mb-md-0">
                             <label for="gender_{{ $i }}" class="form-label">Gender</label>
                             <select class="form-select" name="passengers[{{ $i }}][gender]" id="gender" required>
                                 <option value="">Select</option>
@@ -1080,7 +1096,7 @@
                             </select>
                             <div class="invalid-feedback">Please select your gender.</div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4">
                             <label for="dob_{{ $i }}" class="form-label">Date of birth</label>
                             <input type="date" class="form-control" name="passengers[{{ $i }}][birthDate]"
                                 id="dob_{{ $i }}" required>
@@ -1089,7 +1105,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <label for="associated_adult_{{ $i }}" class="form-label">Accompanying Adult</label>
                             <select class="form-control form-select" id="associated_adult_{{ $i }}"
                                 name="passengers[{{ $i }}][associatedAdult]" required>

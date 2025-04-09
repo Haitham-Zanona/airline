@@ -100,6 +100,17 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
+        .payment-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .payment-methods-icons {
+            display: flex;
+            justify-content: center;
+        }
+
         .section-title {
             font-size: 1.5rem;
             margin-bottom: 20px;
@@ -112,6 +123,12 @@
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 10px;
+        }
+
+        .booking-img {
+            width: 100px;
+            height: 100px;
+            margin: 0 15px;
         }
 
         .flight-icon {
@@ -448,6 +465,11 @@
             margin-bottom: 5px;
         }
 
+        .footer-contact-icons {
+            width: 30px;
+            height: 30px;
+        }
+
         .form-control.is-invalid {
             border-color: #dc3545;
             background-image: none;
@@ -482,7 +504,8 @@
             }
 
             .booking-header {
-                /* display: flex; */
+                display: flex;
+                flex-direction: column;
                 /* justify-content: space-between; */
                 /* align-items: center; */
                 /* margin-bottom: 20px; */
@@ -493,6 +516,17 @@
 
             .header-dots {
                 display: none;
+            }
+
+            .booking-img {
+                width: 20px;
+                height: 20px;
+                margin: 0 5px;
+            }
+
+            .payment-title {
+                display: flex;
+                flex-direction: column;
             }
 
             .footer .d-flex.flex-column.flex-md-row {
@@ -633,7 +667,7 @@
 <body>
     <div class="container mt-4">
         <div class="booking-header">
-            <h5 class="fw-bold">Complete your booking</h5>
+            <h5 class="fw-bold mb-2">Complete your booking</h5>
             <div class="booking-progress">
                 <span class="active">Flight Summary</span>
                 <span>•</span>
@@ -650,8 +684,7 @@
                 <div class="booking-container">
                     <h4 class="section-title mb-4">Enter your booking details</h4>
                     <div class="d-flex align-items-center mb-4">
-                        <div class="mx-4"><img src="{{ asset('assets/images/airplane-pass.webp') }}" width="100"
-                                height="100" alt="">
+                        <div><img src="{{ asset('assets/images/airplane-pass.webp') }}" class="booking-img" alt="">
                         </div>
                         <div class="flight-route m-0">
                             @php
@@ -689,9 +722,9 @@
                             </span>
                             <span>{{ $destinationCityName }} - {{ $destinationCountryName }}</span>
                             <div class="flight-date">
-                                {{ session('flight_search.departureDate') }} {{
-                                session('flight_search.returnDate')
-                                ?? ''}}
+                                {{ session('flight_search.departureDate') }} @if (session('flight_search.returnDate'))
+                                - {{ session('flight_search.returnDate') }}
+                                @endif
                             </div>
                         </div>
 
@@ -704,28 +737,7 @@
                     </button>
                     <div id="flightSummary" class="collapse show">
                         <div class="airline-info mb-3">
-                            {{-- <div class="airline-logo text-center d-flex align-items-center justify-content-center">
-                                <i class="fas fa-plane"></i>
-                            </div> --}}
-                            {{-- <div class="airline-logo ms-2">
-                                @php
-                                $airlineName = $selectedFlight['segments_info'][0]['airline_info']['name'] ??
-                                'UNKNOWN';
 
-
-                                $logoUrl = \App\Services\AirlineLogoService::getLogoUrl($airlineName);
-                                // dd($logoUrl);
-                                // dd($flight['segments_info'][0]['airline_info']['name']);
-                                $defaultLogo = \App\Services\AirlineLogoService::getDefaultLogo();
-                                @endphp
-
-                                @if($airlineName !== 'UNKNOWN')
-                                <img src="{{ $logoUrl }}" alt="{{ $airlineName }} Logo" class="airline-logo-img"
-                                    onerror="this.onerror=null; this.src='{{ $defaultLogo }}';">
-                                @else
-                                <span class="airline-name">{{ $airlineName }}</span>
-                                @endif
-                            </div> --}}
                             <div class="fw-bold">
                                 @if(isset($selectedFlight['segments_info'][0]['airline_info']['name']) &&
                                 $selectedFlight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
@@ -734,7 +746,8 @@
                                 {{ $selectedFlight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
                                 @endif
                             </div>
-                            <div class="ms-auto">Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ??
+                            <div class="ms-auto" style="text-align: right;">Travel Class: <span class="fw-bold">{{
+                                    $flightData['cabin'] ??
                                     'Economy' }}</span></div>
                         </div><!-- airline-info -->
 
@@ -888,9 +901,9 @@
         <form action="{{ route('flight.storePayment') }}" method="POST" id="paymentForm" novalidate>
             @csrf
             <div class="booking-container">
-                <div class="payment-title d-flex justify-content-between align-items-center">
+                <div class="payment-title">
                     <h5>Payment & Billing</h5>
-                    <div>
+                    <div class="payment-methods-icons">
                         <img src="{{ asset('assets/images/digicert.webp') }}" style="max-height: 50px;" alt="">
                         <img src="{{ asset('assets/images/godaddy.webp') }}" style="max-height: 50px;" alt="">
                         <img src="{{ asset('assets/images/pci.webp') }}" style="max-height: 50px;" alt="">

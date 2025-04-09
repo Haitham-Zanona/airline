@@ -730,7 +730,8 @@
                                 {{ $selectedFlight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
                                 @endif
                             </div>
-                            <div class="ms-auto">Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ??
+                            <div class="ms-auto" style="text-align: right;">Travel Class: <span class="fw-bold">{{
+                                    $flightData['cabin'] ??
                                     'Economy' }}</span></div>
                         </div><!-- airline-info -->
 

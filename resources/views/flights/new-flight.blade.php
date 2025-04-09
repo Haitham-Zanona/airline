@@ -466,11 +466,19 @@
             gap: 20%;
         }
 
+        .flight-seat {
+            padding: 10px 15px;
+        }
+
+
+
         .flight-footer {
             color: #666;
             padding: 10px 15px;
             /* border-top: 1px solid #eee; */
             font-size: 13px;
+            display: flex;
+            justify-content: start;
         }
 
         .stops-details-container {
@@ -799,13 +807,19 @@
 
             .flight-extra-info {
                 display: flex;
-                flex-direction: row;
+                flex-direction: column;
                 align-items: center;
                 gap: 0;
             }
 
             .flight-footer {
                 font-size: 12px;
+                text-align: right;
+            }
+
+            .flight-seat {
+                text-align: left;
+                margin-bottom: 5px;
             }
 
             .popup-content {
@@ -827,6 +841,12 @@
 
             .popup-details {
                 flex: 1;
+            }
+
+            .call-button {
+
+                font-size: 12px;
+
             }
 
             .flight-details-popup {
@@ -1385,7 +1405,8 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div>Travel Class: <span class="fw-bold">{{ $flightData['cabin'] ?? 'Economy' }}</span>
+                                <div style="text-align: right">Travel Class: <span class="fw-bold">{{
+                                        $flightData['cabin'] ?? 'Economy' }}</span>
                                 </div>
                             </div><!-- flight-header -->
 
@@ -1823,10 +1844,10 @@
 
                 <!-- Seats Remaining and Refund Status -->
                 <div class="flight-extra-info p-3">
-                    <div style="padding: 10px 15px;">{{ $flight['numberOfBookableSeats'] ?? '0' }} seats remaining
+                    <div class="flight-seat">{{ $flight['numberOfBookableSeats'] ?? '0' }} seats remaining
                     </div>
                     <!-- Flight Footer -->
-                    <div class="flight-footer d-flex justify-content-start">
+                    <div class="flight-footer">
                         <div class="me-4">
                             <i class="fas fa-ticket-alt me-1"></i> Last Ticket Date : {{ $flight['lastTicketingDate'] }}
                         </div>
@@ -2289,7 +2310,7 @@
         const totalResults = {{ $totalResults ?? 0 }}; // This will be replaced with the actual count
 
         // If we've displayed all flights, don't try to load more
-        if (displayedFlights >= totalResults) {
+        if (this.isLoading || displayedFlights >= this.lastLoadedCount) {
         return;
         }
 
@@ -2327,11 +2348,14 @@
         this.isLoading = false;
 
         if (response.html) {
-        // Append new flights to the container
-        $('#flight-results-container').append(response.html);
+            // Append new flights to the container
+            $('#flight-results-container').append(response.html);
 
-        // Initialize toggle buttons for the new flights
-        this.initializeToggleButtons();
+            // Initialize toggle buttons for the new flights
+            this.initializeToggleButtons();
+            if (response.totalResults !== undefined) {
+            this.totalResults = response.totalResults;
+            }
         }
         },
         error: () => {
