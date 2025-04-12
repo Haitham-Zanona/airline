@@ -105,6 +105,26 @@
             color: #000;
         }
 
+        .spinner {
+            position: absolute;
+            right: 35px;
+            top: 70%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ccc;
+            border-top-color: #4B45FF;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            z-index: 2;
+        }
+
+        @keyframes spin {
+            to {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
         /* Hero section */
         .hero {
             position: relative;
@@ -511,27 +531,35 @@
                         <h3 class="text-center form-header">Find your ticket Now</h3>
                         <div class="row city-row">
                             <div class="col-6">
-                                <label for="origin_city" class="form-label"><i class="fas fa-plane-departure me-2"></i>
-                                    From</label>
-                                <input type="text" id="search1" class="form-select"
-                                    placeholder="select cities from the list after typing" autocomplete="off" required>
-
-                                <input type="hidden" name="origin_city" value="">
-                                <input type="hidden" name="origin_city_name" id="origin_city_name">
-                                <div id="result1" style="width: 60%;"></div>
+                                <div style="position: relative;">
+                                    <label for="origin_city" class="form-label"><i
+                                            class="fas fa-plane-departure me-2"></i>
+                                        From</label>
+                                    <input type="text" id="search1" class="form-select"
+                                        placeholder="select cities from the list after typing" autocomplete="off"
+                                        required>
+                                    <div id="spinner1" class="spinner" style="display:none;"></div>
+                                    <input type="hidden" name="origin_city" value="">
+                                    <input type="hidden" name="origin_city_name" id="origin_city_name">
+                                    <div id="result1" style="width: 100%;"></div>
+                                </div>
                             </div>
                             <div class="col-6">
-                                <label for="destination_city" class="form-label"><i
-                                        class="fas fa-plane-arrival me-2"></i>
-                                    To</label>
-                                <input type="text" id="search2" placeholder="select cities from the list after typing"
-                                    autocomplete="off" class="form-select" required>
+                                <div style="position: relative;">
+                                    <label for="destination_city" class="form-label"><i
+                                            class="fas fa-plane-arrival me-2"></i>
+                                        To</label>
+                                    <input type="text" id="search2"
+                                        placeholder="select cities from the list after typing" autocomplete="off"
+                                        class="form-select" required>
+                                    <div id="spinner2" class="spinner" style="display:none;"></div>
+                                    <input type="hidden" name="destination_city" value="">
 
-                                <input type="hidden" name="destination_city" value="">
+                                    <input type="hidden" name="destination_city_name" id="destination_city_name">
+                                    <div id="result2" style="width: 100%;"></div>
 
-                                <input type="hidden" name="destination_city_name" id="destination_city_name">
-                                <div id="result2" style="width: 60%;"></div>
 
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -1097,11 +1125,15 @@
                 <div class="col-lg-3 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
                     <h5 class="text-secondary mb-3 fw-bold">Legal</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Important Guidelines</a>
+                        <li class="mb-2"><a href="{{ route('important_guideline') }}"
+                                class="text-decoration-none text-muted">Important Guidelines</a>
                         </li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Privacy policy</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Terms of service</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Cancellation Policy</a>
+                        <li class="mb-2"><a href="{{ route('privacy_policy') }}"
+                                class="text-decoration-none text-muted">Privacy policy</a></li>
+                        <li class="mb-2"><a href="{{ route('terms_conditions') }}"
+                                class="text-decoration-none text-muted">Terms of service</a></li>
+                        <li class="mb-2"><a href="{{ route('cancellation_policy') }}"
+                                class="text-decoration-none text-muted">Cancellation Policy</a>
                         </li>
                     </ul>
                 </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->
@@ -1260,6 +1292,7 @@
                 requestCounter1++;
                 const currentRequest = requestCounter1;
 
+                $("#spinner1").show();
 
                     $.ajax({
                         url: searchCityUrl,
@@ -1275,10 +1308,13 @@
                                 });
                                 $("#result1").show();
                             }
+                        },
+                        complete: function () {
+                            $("#spinner1").hide();
                         }
                     });
 
-            }, 100); // انتظار 300 مللي ثانية
+            }, 10);
         });
 
 
@@ -1303,6 +1339,9 @@
             debounceTimer2 = setTimeout(() => {
                 requestCounter2++;
                 const currentRequest = requestCounter2;
+
+                $("#spinner2").show();
+
                 $.ajax({
                     url: searchCityUrl,
                     method: "GET",
@@ -1316,10 +1355,13 @@
                                 });
                                 $("#result2").show();
                             }
+                    },
+                    complete: function () {
+                        $("#spinner2").hide();
                     }
                 });
 
-            }, 100);
+            }, 10);
         });
 
         // عند اختيار المدينة من الحقول

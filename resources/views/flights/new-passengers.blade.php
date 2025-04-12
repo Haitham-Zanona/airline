@@ -1320,11 +1320,15 @@
                 <div class="col-lg-3 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
                     <h5 class="text-secondary mb-3 fw-bold">Legal</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Important Guidelines</a>
+                        <li class="mb-2"><a href="{{ route('important_guideline') }}"
+                                class="text-decoration-none text-muted">Important Guidelines</a>
                         </li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Privacy policy</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Terms of service</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Cancellation Policy</a>
+                        <li class="mb-2"><a href="{{ route('privacy_policy') }}"
+                                class="text-decoration-none text-muted">Privacy policy</a></li>
+                        <li class="mb-2"><a href="{{ route('terms_conditions') }}"
+                                class="text-decoration-none text-muted">Terms of service</a></li>
+                        <li class="mb-2"><a href="{{ route('cancellation_policy') }}"
+                                class="text-decoration-none text-muted">Cancellation Policy</a>
                         </li>
                     </ul>
                 </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->
@@ -1648,13 +1652,25 @@
 
 
 
-       $(document).ready(function() {
-    // Function to validate a specific form
+       $(document).ready(function () {
+    // حساب العمر من تاريخ الميلاد
+    function getAge(birthDate) {
+        const today = new Date();
+        birthDate = new Date(birthDate);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    // التحقق من نموذج واحد
     function validateForm(formId) {
         let isValid = true;
         const form = $(`#${formId}`);
 
-        form.find('input[required], select[required]').each(function() {
+        form.find('input[required], select[required]').each(function () {
             if (!$(this).val()) {
                 $(this).addClass('is-invalid');
                 $(this).siblings('.invalid-feedback').show();
@@ -1665,18 +1681,48 @@
             }
         });
 
+        // التحقق من العمر في حال كان الفورم يحتوي على معلومات راكب
+        const birthDateInput = form.find('[name$="[birthDate]"]');
+        const typeInput = form.find('[name$="[type]"]');
+
+        if (birthDateInput.length && typeInput.length) {
+            const birthDate = birthDateInput.val();
+            const type = typeInput.val();
+            const age = getAge(birthDate);
+
+            let ageValid = true;
+            let errorMessage = '';
+
+            if (type === 'ADULT' && age < 12) {
+                ageValid = false;
+                errorMessage = 'Adult must be 12 years or older.';
+            } else if (type === 'CHILD' && (age < 2 || age >= 12)) {
+                ageValid = false;
+                errorMessage = 'Child must be between 2 and 11 years.';
+            } else if (type === 'HELD_INFANT' && age >= 2) {
+                ageValid = false;
+                errorMessage = 'Infant must be under 2 years old.';
+            }
+
+            if (!ageValid) {
+                birthDateInput.addClass('is-invalid');
+                birthDateInput.siblings('.invalid-feedback').text(errorMessage).show();
+                isValid = false;
+            }
+        }
+
         return isValid;
     }
 
-    // Handle form submission
-    $('form').on('submit', function(e) {
+    // عند إرسال النموذج
+    $('form').on('submit', function (e) {
         const isContactValid = validateForm('contactForm');
         const isPassengersValid = $('.passenger-form').toArray().every(form => validateForm(form.id));
 
         if (!isContactValid || !isPassengersValid) {
             e.preventDefault();
 
-            // Scroll to first error
+            // التمرير لأول خطأ
             const firstError = $('.is-invalid:first');
             if (firstError.length) {
                 $('html, body').animate({
@@ -1687,23 +1733,22 @@
         }
         return true;
     });
-});
-      document.addEventListener("DOMContentLoaded", function() {
-        var input = document.querySelector("#phone");
-        var iti = window.intlTelInput(input, {
+
+    // تهيئة رقم الهاتف
+    var input = document.querySelector("#phone");
+    var iti = window.intlTelInput(input, {
         separateDialCode: true,
         preferredCountries: ["us", "gb", "fr", "in"],
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-        });
+    });
 
-        // Make sure this happens before form submission
-        document.querySelector("form").addEventListener("submit", function() {
+    document.querySelector("form").addEventListener("submit", function () {
         if (iti) {
-        var fullNumber = iti.getNumber();
-        document.querySelector("#phone").value = fullNumber;
+            var fullNumber = iti.getNumber();
+            document.querySelector("#phone").value = fullNumber;
         }
-        });
-        });
+    });
+});
     </script>
 </body>
 

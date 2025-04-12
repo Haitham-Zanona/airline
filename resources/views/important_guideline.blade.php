@@ -4,31 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Important Guidelines</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-        }
-
         /* Header styles */
         header {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             background-color: rgba(255, 255, 255, 0.1);
             z-index: 100;
-
         }
 
         .navbar-toggler {
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: #f8f9fa;
             padding: 5px 10px;
             border-radius: 5px;
-            opacity: 0.5;
         }
 
         .navbar-toggler-icon {
@@ -55,94 +44,57 @@
         }
 
         .contact-info {
-            color: #4B45FF;
-            margin-bottom: 20px;
-            margin-right: 10px;
-        }
-
-        .nav-background {
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            color: #4444ff;
         }
 
         /*End Header Style*/
-
-        .hero-section {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 50vh;
-            background-image: url('{{ asset("assets/images/paris.webp") }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-        }
-
-        .hero-section::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.3);
-            z-index: 0;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 15px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .hero-title {
-            font-size: 3rem;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            color: white;
-            margin: 0 auto;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            /* These additional properties ensure the subtitle stays centered */
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
-
-        #map {
-            width: 100%;
-            height: 400px;
-        }
-
-        .footer {
-            background-color: white;
-            padding: 40px 0;
-            margin-top: 50px;
+        body {
+            background-color: #f8f9fa;
             font-family: Arial, sans-serif;
         }
 
-
-        .footer a:hover {
-            color: #6f42c1 !important;
+        .terms-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
 
-        .footer .btn-primary:hover {
-            opacity: 0.9;
+        .terms-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            margin-top: 1.5rem;
+        }
+
+        h1 {
+            color: #2d3142;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            color: #6246ea;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #333;
+            line-height: 1.6;
+            /* margin-bottom: 1.2rem; */
+            margin: 0;
+        }
+
+        a {
+            color: #6246ea;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
 
         .footer-contact-icons {
@@ -150,12 +102,15 @@
             height: 30px;
         }
 
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2rem;
+        @media (max-width: 767.98px) {
+            .nav-link {
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
             }
 
-
+            .nav-item:last-child .nav-link {
+                border-bottom: none;
+            }
 
             .footer .d-flex.flex-column.flex-md-row {
                 gap: 10px;
@@ -170,40 +125,78 @@
                 width: 20px;
                 height: 20px;
             }
-
-
         }
     </style>
 </head>
-
-<body>
-
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <header class="py-3">
-            <div class="container">
-                <!-- Desktop View -->
-                <div class="row align-items-center d-none d-md-flex">
-                    <div class="col-md-3">
-                        <div class="logo">LOGO</div>
+<header class="py-3">
+    <div class="container">
+        <!-- Desktop View -->
+        <div class="row align-items-center d-none d-md-flex">
+            <div class="col-md-3">
+                <div class="logo">LOGO</div>
+            </div>
+            <div class="col-md-6">
+                <ul class="nav justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('about_us') }}">About us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3 text-end">
+                <div class="contact-info d-flex align-items-center justify-content-end">
+                    <img src="{{ asset('assets/images/phone-call.webp') }}" width="40px" height="40px" alt="">
+                    <div class="text-start mx-2">
+                        <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
+                        <span class="fw-bold"><a href="tel:+1-111-111-1111"
+                                style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
+                        </span>
                     </div>
-                    <div class="col-md-6">
-                        <ul class="nav justify-content-center">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('index') }}">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('about_us') }}">About us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 text-end">
-                        <div class="contact-info d-flex align-items-center justify-content-end m-0">
-                            <img src="{{ asset('assets/images/phone-call.webp') }}" width="40px" height="40px" alt="">
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile View -->
+        <div class="d-md-none">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Logo on Left -->
+                <div class="logo">LOGO</div>
+
+                <!-- Menu Button on Right -->
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon d-flex align-items-center justify-content-center">
+                        <i class="fas fa-bars"></i>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Collapsible Content -->
+            <div class="collapse mt-3" id="navbarMobile">
+                <div class="bg-light p-3 rounded">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('index') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('about_us') }}">About us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
+                        </li>
+
+                    </ul>
+
+                    <!-- Contact Info in Menu -->
+                    <div class="contact-info-mobile mt-3 pt-3 border-top">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ asset('assets/images/phone-call.webp') }}" width="30px" height="30px" alt="">
                             <div class="text-start mx-2">
                                 <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!</p>
                                 <span class="fw-bold"><a href="tel:+1-111-111-1111"
@@ -213,114 +206,59 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Mobile View -->
-                <div class="d-md-none">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <!-- Logo on Left -->
-                        <div class="logo">LOGO</div>
-
-                        <!-- Menu Button on Right -->
-                        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon d-flex align-items-center justify-content-center">
-                                <i class="fas fa-bars"></i>
-                            </span>
-                        </button>
-                    </div>
-
-                    <!-- Collapsible Content -->
-                    <div class="collapse mt-3" id="navbarMobile">
-                        <div class="nav-background p-3">
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('index') }}">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('about_us') }}">About us</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('contact_us') }}">Contact us</a>
-                                </li>
-
-                            </ul>
-
-                            <!-- Contact Info in Menu -->
-                            <div class="contact-info-mobile mt-3 pt-3 border-top">
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/phone-call.webp') }}" width="30px" height="30px"
-                                        alt="">
-                                    <div class="text-start mx-2">
-                                        <p class="m-0" style="font-size: 12px;">Contact us 24/7 for book the best deal!
-                                        </p>
-                                        <span class="fw-bold"><a href="tel:+1-111-111-1111"
-                                                style="text-decoration: none; color: #4444ff;">+1-111-111-1111</a>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </header>
-
-        <div class="container text-center align-items-center">
-            <h1 class="hero-title">Contact Us</h1>
-
         </div>
-    </section>
-    <section class="py-5">
-        <div class="container">
+    </div>
+</header>
 
-            <div id="map"></div>
+<body>
+    <div class="terms-container">
+        <h1>Important Guidelines</h1>
 
+        <div class="terms-card">
+            <h2>1. Introduction</h2>
+            <p>Welcome to Fare Buddies LLC ("Company", "we", "our", "us")!</p>
+            <p>These Terms of Service ("Terms", "Terms of Service") govern your use of our website located at
+                farebuddies.com (together or individually "Service") operated by Fare Buddies LLC.</p>
+            <p>Our Privacy Policy also governs your use of our Service and explains how we collect, safeguard and
+                disclose information that results from your use of our web pages.</p>
+            <p>Your agreement with us includes these Terms and our Privacy Policy ("Agreements"). You acknowledge that
+                you have read and understood Agreements, and agree to be bound of them.</p>
+            <p>If you do not agree with (or cannot comply with) Agreements, then you may not use the Service, but please
+                let us know by emailing at <a href="mailto:info@farebuddies.com">info@farebuddies.com</a> so we can try
+                to find a solution. These Terms apply to all visitors, users and others who wish to access or use
+                Service.</p>
 
-            <div class="row my-5">
-                <div class="col-sm-4 col-xs-12 py-2">
-                    <h4>Administrative Office</h4>
-                    <div class="contact-text">
-                        <address>
-                            <b>OurAgentName</b>
-                            <p>123 Main St, <br>Anytown, <br>USA 12345</p>
-                        </address>
-                    </div><!-- contact-text -->
+            <h2>2. Communications</h2>
+            <p>By using our Service, you agree to subscribe to newsletters, marketing or promotional materials and other
+                information we may send. However, you may opt out of receiving any, or all, of these communications from
+                us by following the unsubscribe link or by emailing at <a
+                    href="mailto:info@farebuddies.com">info@farebuddies.com</a></p>
 
-                </div><!-- col-4 -->
-                <div class="col-sm-4 col-xs-12 py-2">
-                    <h4>Customer Support Center</h4>
-                    <div class="contact-text">
-                        <address>
-                            <b>OurAgentName</b>
-                            <p>123 Main St, <br>Anytown, <br>USA 12345</p>
-                        </address>
-                    </div><!-- contact-text -->
+            <h2>3. Purchases</h2>
+            <p>If you wish to purchase any product or service made available through Service ("Purchase"), you may be
+                asked to supply certain information relevant to your Purchase including but not limited to, your credit
+                or debit card number, the expiration date of your card, your billing address, and your shipping
+                information.</p>
+            <p>You represent and warrant that: (i) you have the legal right to use any card(s) or other payment
+                method(s) in connection with any Purchase; and that (ii) the information you supply to us is true,
+                correct and complete.</p>
+            <p>We may employ the use of third party services for the purpose of facilitating payment and the completion
+                of Purchases. By submitting your information, you grant us the right to provide the information to these
+                third parties subject to our Privacy Policy.</p>
+            <p>We reserve the right to refuse or cancel your order at any time for reasons including but not limited to:
+                product or service availability, errors in the description or price of the product or service, error in
+                your order or other reasons.</p>
+            <p>We reserve the right to refuse or cancel your order if fraud or an unauthorized or illegal transaction is
+                suspected.</p>
 
-                </div><!-- col-4 -->
-                <div class="col-sm-4 col-xs-12 py-2">
-                    <h4>&nbsp;</h4>
-                    <div class="contact-text">
-                        <address>
-                            <b>Email: </b>
-                            <a href="mailto:info@airline.com">info@airline.com</a>
-                            <br>
-                            <br>
-                            <b>24/7 Helpline: </b>
-                            <a href="tel:+213215153">+213215153</a>
-                        </address>
-                    </div><!-- contact-text -->
-
-                </div><!-- col-4 -->
-
-
-            </div>
-    </section>
-
-
-
-
-    <!-- Footer Section -->
+            <h2>4. Contests, Sweepstakes and Promotions</h2>
+            <p>Any contests, sweepstakes or other promotions (collectively, "Promotions") made available through Service
+                may be governed by rules that are separate from these Terms of Service. If you participate in any
+                Promotions, please review the applicable rules as well as our Privacy Policy. If the rules for a
+                Promotion conflict with these Terms of Service, Promotion rules will apply.</p>
+        </div>
+    </div>
     <footer class="footer pt-5 pb-3 bg-light">
 
         <!-- Main Footer Content -->
@@ -381,7 +319,8 @@
                         <li class="mb-2"><a href="{{ route('about_us') }}" class="text-decoration-none text-muted">About
                                 Us</a></li>
                         <li class="mb-2"><a href="{{ route('contact_us') }}"
-                                class="text-decoration-none text-muted">Contact Us</a></li>
+                                class="text-decoration-none text-muted">Contact
+                                Us</a></li>
                     </ul>
                 </div><!-- col-lg-2 col-md-6 mb-4 mb-md-0 -->
 
@@ -411,7 +350,7 @@
                         <li class="mb-2"><a href="tel:+" class="text-decoration-none text-muted"><img
                                     src="{{ asset('assets/images/phone-call-purple.webp') }}"
                                     class="footer-contact-icons" alt="">
-                                <span class="footer-contact-res">+1-111-111-1111</span></a>
+                                <span class="mx-2 footer-contact-res">+1-111-111-1111</span></a>
                         </li>
                         <li class="mb-2"><a href="mailto:" class="text-decoration-none text-muted"><svg fill="#7042c1"
                                     viewBox="0 0 1920 1920" xmlns="https://www.w3.org/2000/svg"
@@ -424,7 +363,7 @@
                                             fill-rule="evenodd"></path>
                                     </g>
                                 </svg>
-                                <span class="footer-contact-res">email@gmail.com</span></a></li>
+                                <span class="mx-2 footer-contact-res">email@gmail.com</span></a></li>
 
                     </ul>
                 </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->
@@ -511,27 +450,7 @@
         </div><!-- container -->
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async
-        defer>
-    </script>
-
-    <script>
-        function initMap() {
-                var location = { lat: 31.963158, lng: 35.930359 };
-                var map = new google.maps.Map(document.getElementById("map"), {
-                    zoom: 12,
-                    center: location
-                });
-
-                var marker = new google.maps.Marker({
-                    position: location,
-                    map: map,
-                    title: "Welcome to our office!"
-                });
-            }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

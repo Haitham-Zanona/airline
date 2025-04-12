@@ -374,11 +374,15 @@
                 <div class="col-lg-3 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
                     <h5 class="text-secondary mb-3 fw-bold">Legal</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Important Guidelines</a>
+                        <li class="mb-2"><a href="{{ route('important_guideline') }}"
+                                class="text-decoration-none text-muted">Important Guidelines</a>
                         </li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Privacy policy</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Terms of service</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Cancellation Policy</a>
+                        <li class="mb-2"><a href="{{ route('privacy_policy') }}"
+                                class="text-decoration-none text-muted">Privacy policy</a></li>
+                        <li class="mb-2"><a href="{{ route('terms_conditions') }}"
+                                class="text-decoration-none text-muted">Terms of service</a></li>
+                        <li class="mb-2"><a href="{{ route('cancellation_policy') }}"
+                                class="text-decoration-none text-muted">Cancellation Policy</a>
                         </li>
                     </ul>
                 </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->

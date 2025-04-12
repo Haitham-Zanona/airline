@@ -820,27 +820,27 @@
 
                                 <div class="arrival text-end">
                                     <?php
-                                                                        $lastSegmentIndex = count($selectedFlight['itineraries'][0]['segments'] ?? []) - 1;
-                                                                        $arrivalTime = $selectedFlight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
-                                                                        $datetime = \Carbon\Carbon::parse($arrivalTime);
+                                        $lastSegmentIndex = count($selectedFlight['itineraries'][0]['segments'] ?? []) - 1;
+                                        $arrivalTime = $selectedFlight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
+                                        $datetime = \Carbon\Carbon::parse($arrivalTime);
 
-                                                                        $destinationCity = session('flight_search.destination_city_name') ?? '';
-                                                                        $cityName = '';
-                                                                        $cityCode = '';
-                                                                        $countryName = '';
+                                        $destinationCity = session('flight_search.destination_city_name') ?? '';
+                                        $cityName = '';
+                                        $cityCode = '';
+                                        $countryName = '';
 
-                                                                        // Extract city name (text in parentheses)
-                                                                        if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false) {
-                                                                            preg_match('/\((.*?)\)/', $destinationCity, $matches);
-                                                                            $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
+                                        // Extract city name (text in parentheses)
+                                        if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false) {
+                                            preg_match('/\((.*?)\)/', $destinationCity, $matches);
+                                            $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
 
-                                                                            // استخراج اسم المدينة والبلد
-                                                                            $parts = explode(',', $destinationCity);
-                                                                            $cityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
-                                                                            $countryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
-                                                                        }
+                                            // استخراج اسم المدينة والبلد
+                                            $parts = explode(',', $destinationCity);
+                                            $cityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
+                                            $countryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
+                                        }
 
-                                                                    ?>
+                                    ?>
                                     <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
                                     <div class="airport-time">{{ $datetime->format('H:i')}}</div>
                                     <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}
@@ -984,7 +984,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="cvv">CVV/CVC *</label>
-                            <input type="text" class="form-control" id="cvv" name="cvv" placeholder="XXX" required>
+                            <input type="password" class="form-control" id="cvv" name="cvv" placeholder="XXX" required>
                             <div class="invalid-feedback">Please enter a valid CVV/CVC code (3-4 digits)</div>
                         </div>
                     </div>
@@ -1290,11 +1290,15 @@
                 <div class="col-lg-3 col-md-6 col-sm-3 mb-4 mb-md-0 p-sm-1">
                     <h5 class="text-secondary mb-3 fw-bold">Legal</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Important Guidelines</a>
+                        <li class="mb-2"><a href="{{ route('important_guideline') }}"
+                                class="text-decoration-none text-muted">Important Guidelines</a>
                         </li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Privacy policy</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Terms of service</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Cancellation Policy</a>
+                        <li class="mb-2"><a href="{{ route('privacy_policy') }}"
+                                class="text-decoration-none text-muted">Privacy policy</a></li>
+                        <li class="mb-2"><a href="{{ route('terms_conditions') }}"
+                                class="text-decoration-none text-muted">Terms of service</a></li>
+                        <li class="mb-2"><a href="{{ route('cancellation_policy') }}"
+                                class="text-decoration-none text-muted">Cancellation Policy</a>
                         </li>
                     </ul>
                 </div><!-- col-lg-3 col-md-6 mb-4 mb-md-0 -->

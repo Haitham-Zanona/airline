@@ -15,39 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/indext', function () {
-//     return view('indext');
-// });
-
-// Route::get('/flights/passengers', [FlightController::class, 'passengers'])->name('flights.passengers');
-// Route::get('/flights/payment', [FlightController::class, 'payment'])->name('flights.payment');
-// Route::get('/flights/confirm', [FlightController::class, 'confirm'])->name('process.confirm');
-
-Route::get('/indexs', function () {
-    return view('indexs');
-});
-Route::get('/terms&conditions', function () {
-    return view('terms&conditions');
-});
-Route::get('/privacy_policy', function () {
-    return view('privacy_policy');
-});
-// Route::get('/exploreplaces', function () {
-//     return view('explore-places');
-// });
-// Route::get('/newflight', function () {
-//     return view('flights.new-flight');
-// });
-// Route::get('/newpassenger', function () {
-//     return view('flights.new-passengers');
-// });
-// Route::get('/newpayment', function () {
-//     return view('flights.new-payment');
-// });
-Route::get('/newconfirm', function () {
-    return view('emails.booking-confirmations');
-});
-
 Route::group([], function () {
     Route::get('/', [FlightController::class, 'index'])->name('index');
 
@@ -60,6 +27,10 @@ Route::group([], function () {
     Route::post('/flight/store-payment', [FlightController::class, 'storePayment'])->name('flight.storePayment');
     Route::get('/flight/confirm', [FlightController::class, 'confirm'])->name('flight.confirm');
     Route::match(['get', 'post'], '/explore_places', [FlightController::class, 'explorePlaces'])->name('explore_places');
+    Route::match(['get', 'post'], '/terms&conditions', [FlightController::class, 'terms_conditions'])->name('terms_conditions');
+    Route::match(['get', 'post'], '/privacy_policy', [FlightController::class, 'privacy_policy'])->name('privacy_policy');
+    Route::match(['get', 'post'], '/important_guideline', [FlightController::class, 'important_guideline'])->name('important_guideline');
+    Route::match(['get', 'post'], '/cancellation_policy', [FlightController::class, 'cancellation_policy'])->name('cancellation_policy');
     Route::match(['get', 'post'], '/about_us', [FlightController::class, 'aboutUs'])->name('about_us');
     Route::match(['get', 'post'], '/contact_us', [FlightController::class, 'contactUs'])->name('contact_us');
     // Route::match(['get', 'post'], '/search_flight', [FlightController::class, 'search_flight'])->name('flight.search');
@@ -68,21 +39,8 @@ Route::group([], function () {
 
 });
 
-// Route::get('/confirmation', [FlightController::class, 'confirmation'])->name('confirmation');
-
-// Route::get('/', function () {
-//     return view('index');
-// });
-// Route::get('/flights/token', [FlightController::class, 'getToken']);
-// Route::get('/flight-offers', [FlightController::class, 'search'])->name('flight.offers');
-// Route::post('/flight-pricing', [FlightController::class, 'getPricing']);
-// Route::get('/flight-search', [FlightController::class, 'searchFlightOffers'])->name('flight.search');
 Route::get('tickets/download/{filename}', [TicketController::class, 'downloadPDF'])->name('tickets.download');
 
 Route::post('/generate-pdf', [TicketController::class, 'generatePDF'])->name('generate.pdf');
 
-Route::get('/send-mail', [FlightController::class, 'sendMail']);
-
 Route::post('/subscribe', [FlightController::class, 'subscribe'])->name('subscription');
-
-// Route::post('/process-payment', [FlightController::class, 'processPayment'])->name('process.payment');
