@@ -16,7 +16,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="background-color:#4B45FF; padding:20px; text-align:center;">
-                            <h1 style="color:#ffffff; font-size:24px; margin:0;">✈️ OurAgent - Exclusive Travel Offers
+                            <h1 style="color:#ffffff; font-size:24px; margin:0;"> OurAgent - Exclusive Travel Offers
                             </h1>
                         </td>
                     </tr>
@@ -43,7 +43,7 @@
                                             style="border:1px solid #ddd; border-radius:4px;">
                                             <tr>
                                                 <td style="padding:10px;">
-                                                    <h3 style="margin:0; color:#4B45FF;">🚀 Dubai</h3>
+                                                    <h3 style="margin:0; color:#4B45FF;">Dubai</h3>
                                                     <p style="margin:5px 0; font-size:13px; color:#333;">Starting at
                                                         $199
                                                     </p>
@@ -59,7 +59,7 @@
                                             style="border:1px solid #ddd; border-radius:4px;">
                                             <tr>
                                                 <td style="padding:10px;">
-                                                    <h3 style="margin:0; color:#4B45FF;">🌴Bali</h3>
+                                                    <h3 style="margin:0; color:#4B45FF;">Bali</h3>
                                                     <p style="margin:5px 0; font-size:13px; color:#333;">Starting at
                                                         $399
                                                     </p>
