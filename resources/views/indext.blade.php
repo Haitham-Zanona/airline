@@ -302,6 +302,12 @@
             height: 30px;
         }
 
+        #subscribeEmail {
+            display: inline-block;
+            margin: 0 25px;
+            width: 250px;
+        }
+
         @media (max-width: 767px) {
 
             /* .hero-header {
@@ -324,6 +330,11 @@
 
             .city-row {
                 margin-bottom: 3px;
+            }
+
+            #subscribeEmail {
+                margin: 0 15px;
+                width: 180px;
             }
 
             .footer .d-flex.flex-column.flex-md-row {
@@ -1044,8 +1055,7 @@
 
 
     <div class="d-flex justify-content-end mx-5 my-3 subscribe-section">
-        <input type="email" id="subscribeEmail" class="form-control d-inline-block mx-3" placeholder="Email Address"
-            style="width: 250px;">
+        <input type="email" id="subscribeEmail" class="form-control" placeholder="Email Address">
 
 
 

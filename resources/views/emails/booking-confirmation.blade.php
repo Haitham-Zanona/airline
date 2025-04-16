@@ -26,9 +26,7 @@
                                     <tbody>
                                         <tr>
                                             <td height="63" align="left" valign="middle"><a href="https://google.com/"
-                                                    target="_blank"><img
-                                                        src="{{ asset('assets/images/airplane-pass.webp') }}" alt=""
-                                                        style="width:50px" border="0"></a>
+                                                    target="_blank">OurAgent's Name</a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -40,16 +38,15 @@
                                         <tr>
                                             <td align="right"
                                                 style="line-height:15px;font-family:Arial,Helvetica,sans-serif;color:#143ca1;font-weight:bold;font-size:20px">
-                                                <img src="{{ asset('assets/images/phone-call-purple.webp') }}"
-                                                    width="50px"><a href="tel:+1-234-567-890" target="_blank"
+                                                <span>Phone: </span>
+                                                <a href="tel:+1-234-567-890" target="_blank"
                                                     style="text-decoration: none;">+1-234-567-89</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="right"
                                                 style="line-height:15px;font-family:Arial,Helvetica,sans-serif;color:#143ca1;font-weight:bold;font-size:20px">
-                                                <img src="{{ asset('assets/images/whatsapp.webp') }}" width="50px"
-                                                    alt=""><a href="https://wa.me/966501234567"
+                                                <span>WhatsApp: </span><a href="https://wa.me/966501234567"
                                                     style="text-decoration: none;">+1-667-383-5536</a>
                                             </td>
                                         </tr>
@@ -71,7 +68,7 @@
                     <!-- Header -->
                     <tr>
                         <td align="center" style="background-color: #e6f4ea; padding:15px;">
-                            <img src="{{ asset('assets/images/check-mark.png') }}" width="50" height="50"
+                            <img src="{{ asset('assets/images/check-mark.webp') }}" width="50" height="50"
                                 alt="Success Icon" style="display: block; margin-bottom: 15px;" />
                             <h2 style="color: #2e7d32; margin: 0; font-size: 24px;">Booking Confirmation</h2>
                             <p style="color: #4f4f4f; font-size: 14px; margin-top: 10px;">Thank you for booking with us.

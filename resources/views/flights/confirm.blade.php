@@ -530,7 +530,9 @@
         @media print {
 
             /* Hide elements you don't want to print */
-            .btn {
+            .btn,
+            .footer,
+            .ms-auto {
                 display: none !important;
             }
 
@@ -653,7 +655,7 @@
     <div class="container my-4">
         <div class="d-flex align-items-center mb-4">
             <div style="margin-right: 10px;">
-                <img src="{{ asset('assets/images/check-mark.png') }}" width="60px" height="60px" class="mr-1" alt="">
+                <img src="{{ asset('assets/images/check-mark.webp') }}" width="60px" height="60px" class="mr-1" alt="">
             </div>
             <div>
                 <h1 class="success-message mb-0">Your Booking Successfully Complete</h1>
@@ -1050,7 +1052,6 @@
         </div>
 
 
-
         <!-- Footer Section -->
         <footer class="footer pt-5 pb-3 bg-light">
 
@@ -1288,6 +1289,7 @@
     //     });
     // });
 
+
    document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.getElementById('download-btn');
 
@@ -1303,6 +1305,8 @@
     // Get the content to convert to PDF
     const contentElement = document.querySelector('.container.my-4');
 
+    contentElement.style.minHeight = document.body.scrollHeight + 'px';
+
     // Get booking reference for filename
     let bookingRef = document.querySelector('.reference-no .fw-bold')?.innerText || 'flight-ticket';
 
@@ -1315,7 +1319,7 @@
 
     // Use a more mobile-friendly approach with lower quality settings
     const options = {
-    scale: 1, // Lower scale for mobile
+    scale: window.innerWidth < 768 ? 1 : 2, // Lower scale for mobile
     useCORS: true,
     allowTaint: true,
     logging: false,
@@ -1356,6 +1360,7 @@
     });
     };
 
+    window.scrollTo(0, 0);
     // Small delay to allow UI to update before heavy processing
     setTimeout(generatePDF, 150);
     });
