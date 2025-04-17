@@ -68,7 +68,7 @@
                     <!-- Header -->
                     <tr>
                         <td align="center" style="background-color: #e6f4ea; padding:15px;">
-                            <img src="{{ asset('assets/images/check-mark.webp') }}" width="50" height="50"
+                            <img src="{{ asset('assets/images/check-mark.jpg') }}" width="50" height="50"
                                 alt="Success Icon" style="display: block; margin-bottom: 15px;" />
                             <h2 style="color: #2e7d32; margin: 0; font-size: 24px;">Booking Confirmation</h2>
                             <p style="color: #4f4f4f; font-size: 14px; margin-top: 10px;">Thank you for booking with us.
