@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>موقع حجز رحلات طيران</title>
+    <title>Booking Flight Results</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -168,18 +169,6 @@
             position: relative;
         }
 
-        .service-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #5d3e9e;
-            color: white;
-            border-radius: 12px;
-            padding: 5px 10px;
-            font-size: 14px;
-        }
-
-
 
         .container {
             max-width: 1200px;
@@ -262,8 +251,46 @@
             background-color: #6c3eff;
             color: white;
             border: none;
-            padding: 8px 15px;
+            padding: 10px 15px;
             border-radius: 4px;
+        }
+
+        .form-column {
+            position: relative;
+            height: 100%;
+
+        }
+
+        .form-label {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            color: #000 !important;
+            z-index: 1;
+            font-size: 12px;
+        }
+
+        .search-form .form-control,
+        .search-form .form-select {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            /* color: #4444ff; */
+            color: #000;
+            width: 100%;
+            padding: 20px 15px 5px;
+            font-size: 14px;
+        }
+
+        .traveler-btn {
+            background-color: #4B45FF;
+            color: #fff;
+            border: 1px solid #4B45FF;
+        }
+
+        .traveler-btn:hover {
+            color: #4B45FF;
+            background-color: #fff;
+            border: 1px solid #4B45FF;
         }
 
         .filter-section {
@@ -306,6 +333,35 @@
             /* Rotate the arrow 90 degrees when collapsed */
         }
 
+        .search-title {
+            display: none;
+            font-weight: bold;
+            margin-bottom: 15px;
+            cursor: pointer;
+            background-color: #6c3eff;
+            color: white;
+            position: relative;
+            padding: 15px;
+            border-radius: 5px;
+
+        }
+
+        .search-title::before {
+            content: '\25BC';
+            /* Unicode character for a down-pointing triangle */
+            position: absolute;
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+            /* Smooth transition for rotation */
+        }
+
+        .search-title.collapsed::before {
+            transform: translateY(-50%) rotate(-90deg);
+            /* Rotate the arrow 90 degrees when collapsed */
+        }
+
         .filter-option {
             margin-bottom: 10px;
         }
@@ -322,30 +378,6 @@
             font-size: 18px;
             font-weight: bold;
             color: #4444ff;
-        }
-
-        .pricing-tabs {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .pricing-tab {
-            padding: 10px;
-            flex: 1;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .pricing-tab.active {
-            border-bottom: 3px solid #6c3eff;
-            color: #6c3eff;
-        }
-
-        .pricing-price {
-            font-size: 12px;
-            color: #666;
         }
 
         .flight-card {
@@ -414,29 +446,34 @@
         .flight-time {
             font-size: 18px;
             font-weight: bold;
-            color: #333;
+            color: #000;
         }
 
         .flight-date {
-            font-size: 12px;
-            color: #666;
+            font-size: 13px;
+            color: #222;
+
+
         }
 
         .flight-airport {
-            font-size: 10px;
-            color: #666;
+            font-size: 13px;
+            color: #222;
             margin: 7px 0;
+
+
         }
 
         .flight-duration {
-            font-size: 12px;
-            color: #666;
+            font-size: 14px;
+            color: #000;
             text-align: center;
             margin: 7px 0;
+            font-weight: bold;
         }
 
         .flight-price {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             /* color: #28a745; */
             color: #333;
@@ -869,9 +906,8 @@
                 /* margin-top: 10px; */
             }
 
-            .filter-section .col-md-3 {
-                /* display: none; */
-                /* Hide the filter column by default */
+            .filter-section {
+                margin-top: 10px;
             }
 
             .filter-section .col-md-9 {
@@ -903,6 +939,38 @@
             .filter-title.collapsed::before {
                 transform: translateY(-50%) rotate(-90deg);
                 /* Rotate the arrow 90 degrees when collapsed */
+            }
+
+            .search-title {
+                display: block;
+
+                border: none;
+                padding: 8px 15px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-bottom: 15px;
+                /* Add margin to separate from content */
+            }
+
+            .search-title::before {
+                content: '\25BC';
+                /* Unicode character for a down-pointing triangle */
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                transition: transform 0.3s ease;
+                /* Smooth transition for rotation */
+            }
+
+            .search-title.collapsed::before {
+                transform: translateY(-50%) rotate(-90deg);
+                /* Rotate the arrow 90 degrees when collapsed */
+            }
+
+            .search-container {
+
+                padding: 10px 4%;
             }
 
             .filter-content {
@@ -1017,8 +1085,7 @@
 
 <body>
 
-    {{-- @dd($flightsArraySubset) --}}
-    {{-- @dd(session('flight_search')) --}}
+
     <!-- Popup -->
     <div class="popup-overlay" id="specialFarePopup">
         <div class="popup-container">
@@ -1028,7 +1095,7 @@
                     <div class="customer-service">
                         <img src="{{ asset('assets/images/pop-up-frame.webp') }}" alt="Customer Service Representative"
                             class="img-fluid">
-                        {{-- <div class="service-badge">24/7</div> --}}
+
                     </div>
                 </div>
                 <div class="popup-details">
@@ -1080,11 +1147,8 @@
             </div>
         </div>
     </div>
+    <x-contact-info />
 
-    {{-- @dd($flightOffers, $flightOffers[1]['itineraries'][1],) --}}
-    {{-- @dd($flightOffers, $flightOffers[0]['travelerPricings'][0]['fareDetailsBySegment'][0]['amenities'],
-    $flightOffers[0]['travelerPricings'][0]['fareDetailsBySegment'][1]['amenities'],
-    $flightOffers[1]['travelerPricings'][0]['fareDetailsBySegment'][0]['amenities']) --}}
     <!-- Header -->
     <header class="py-3">
         <div class="container">
@@ -1174,147 +1238,175 @@
     <section class="search-container">
 
 
+        <div class="search-title collapsed" data-bs-toggle="collapse" data-bs-target="#searchContent">
+            Search Form
+        </div>
+        <div class="search-form filter-content collapse" id="searchContent">
+            <form>
+                @csrf
+                <div class="radio-container">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tripType" id="oneWay" {{
+                            session('flight_search.tripType', 'oneWay' )=='oneWay' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="oneWay">ONE WAY</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tripType" id="roundTrip" {{
+                            session('flight_search.tripType')=='roundTrip' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="roundTrip">ROUND WAY</label>
+                    </div>
+                </div>
+                <div class="row flight-result-search">
+                    <div class="col-md-2 form-column">
+                        <div style="position: relative;">
+                            <label class="form-label p-0" for="origin_city"><i class="fas fa-plane-departure me-1"></i>
+                                From</label>
+                            <input type="text" id="search1" class="form-select" placeholder="Enter City Name"
+                                autocomplete="off" value="{{ session('flight_search.origin_city_name', '') }}" readonly>
+                        </div>
 
-        <form class="search-form">
-            @csrf
-            <div class="radio-container">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="tripType" id="oneWay" {{
-                        session('flight_search.tripType', 'oneWay' )=='oneWay' ? 'checked' : '' }}>
-                    <label class="form-check-label" for="oneWay">ONE WAY</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="tripType" id="roundTrip" {{
-                        session('flight_search.tripType')=='roundTrip' ? 'checked' : '' }}>
-                    <label class="form-check-label" for="roundTrip">ROUND WAY</label>
-                </div>
-            </div>
-            <div class="row flight-result-search">
-                <div class="col-md-2">
-                    <label for="origin_city"><i class="fas fa-plane-departure me-1"></i> From</label>
-                    <input type="text" id="search1" class="form-select" placeholder="Enter City Name" autocomplete="off"
-                        value="{{ session('flight_search.origin_city_name', '') }}" readonly>
-                    {{-- <input type="hidden" name="origin_city" value="">
-                    <input type="hidden" name="origin_city_name" id="origin_city_name">
-                    <div id="result1" style="width: 90%;"></div> --}}
-                </div>
-                <div class="col-md-2">
-                    <label for="destination_city"><i class="fas fa-plane-arrival me-1"></i> To</label>
-                    <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off" class="form-select"
-                        value="{{ session('flight_search.destination_city_name', '') }}" readonly>
-                    {{-- <input type="hidden" name="destination_city" value="">
-                    <input type="hidden" name="destination_city_name" id="destination_city_name">
-                    <div id="result2" style="width: 90%;"></div> --}}
-                </div>
 
-                <div class="col-md-2">
-                    <label for="departureDate"><i class="far fa-calendar-alt me-1"></i> Departure</label>
-                    <input type="date" id="departureDate" name="departureDate" class="form-control"
-                        value="{{ session('flight_search.departureDate', '') }}" readonly>
-                </div>
-                @if (session('flight_search.tripType')=='roundTrip')
-                <div class="col-md-2">
-                    <label for="returnDate"><i class="far fa-calendar-alt me-1"></i> Return</label>
-                    <input type="date" id="returnDate" name="returnDate" class="form-control"
-                        value="{{ session('flight_search.returnDate', '') }}" readonly>
-                </div>
-                @endif
+                    </div>
+                    <div class="col-md-2 form-column">
+                        <div style="position: relative;">
+                            <label class="form-label p-0" for="destination_city"><i
+                                    class="fas fa-plane-arrival me-1"></i>
+                                To</label>
+                            <input type="text" id="search2" placeholder="Enter City Name" autocomplete="off"
+                                class="form-select" value="{{ session('flight_search.destination_city_name', '') }}"
+                                readonly>
+                        </div>
 
-                <div class="col-md-2">
-                    <label><i class="fas fa-user me-1"></i> Class</label>
-                    <select id="cabin" name="cabin" class="form-select" disabled>
-                        <option value="ECONOMY" {{ session('flight_search.cabin')=='ECONOMY' ? 'selected' : '' }}>
-                            Economy</option>
-                        <option value="PREMIUM_ECONOMY" {{ session('flight_search.cabin')=='PREMIUM_ECONOMY'
-                            ? 'selected' : '' }}>Premium Economy</option>
-                        <option value="BUSINESS" {{ session('flight_search.cabin')=='BUSINESS' ? 'selected' : '' }}>
-                            Business</option>
-                        <option value="FIRST" {{ session('flight_search.cabin')=='FIRST' ? 'selected' : '' }}>First
-                            Class</option>
-                    </select>
-                </div>
-                <div class="col-md-1">
-                    <label for="travelers" class="px-2"><i class="fas fa-users me-1"></i> Pax</label>
-                    <div class="dropdown">
-                        <button class="form-control d-flex justify-content-between align-items-center dropdown-toggle"
-                            type="button" id="travelersDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span id="totalTravelers">{{ session('flight_search.total_travelers', 1) }}</span>
-                            {{-- <i class="fas fa-chevron-down"></i> --}}
-                        </button>
-                        <div class="dropdown-menu p-3" style="width: 300px;">
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <label class="form-label mb-0">Adults</label>
-                                    <div class="d-flex align-items-center">
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="adults" data-action="decrease" disabled>
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <span class="mx-3" id="adultsCount">{{ session('flight_search.adults', 1)
-                                            }}</span>
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="adults" data-action="increase" disabled>
-                                            <i class="fas fa-plus"></i>
-                                        </button>
+
+                    </div>
+
+                    <div class="col-md-2 form-column">
+                        <div style="position: relative;">
+                            <label class="form-label p-0" for="departureDate"><i class="far fa-calendar-alt me-1"></i>
+                                Departure</label>
+                            <input type="date" id="departureDate" name="departureDate" class="form-control"
+                                value="{{ session('flight_search.departureDate', '') }}" readonly>
+                        </div>
+
+                    </div>
+                    @if (session('flight_search.tripType')=='roundTrip')
+                    <div class="col-md-2 form-column">
+                        <div style="position: relative;">
+                            <label for="returnDate" class="form-label p-0"><i class="far fa-calendar-alt me-1"></i>
+                                Return</label>
+                            <input type="date" id="returnDate" name="returnDate" class="form-control"
+                                value="{{ session('flight_search.returnDate', '') }}" readonly>
+                        </div>
+
+                    </div>
+                    @endif
+
+                    <div class="col-md-2 form-column">
+                        <div style="position: relative;">
+                            <label class="form-label p-0"><i class="fas fa-user me-1"></i> Class</label>
+                            <select id="cabin" name="cabin" class="form-select" disabled>
+                                <option value="ECONOMY" {{ session('flight_search.cabin')=='ECONOMY' ? 'selected' : ''
+                                    }}>
+                                    Economy</option>
+                                <option value="PREMIUM_ECONOMY" {{ session('flight_search.cabin')=='PREMIUM_ECONOMY'
+                                    ? 'selected' : '' }}>Premium
+                                    Economy</option>
+                                <option value="BUSINESS" {{ session('flight_search.cabin')=='BUSINESS' ? 'selected' : ''
+                                    }}>
+                                    Business</option>
+                                <option value="FIRST" {{ session('flight_search.cabin')=='FIRST' ? 'selected' : '' }}>
+                                    First
+                                    Class</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="col-md-1 form-column">
+                        <div style="position: relative;">
+                            <label for="travelers" class="form-label p-0"><i class="fas fa-users me-1"></i> Pax</label>
+                            <div class="dropdown">
+                                <button
+                                    class="form-control d-flex justify-content-between align-items-center dropdown-toggle"
+                                    type="button" id="travelersDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span id="totalTravelers">{{ session('flight_search.total_travelers', 1) }}</span>
+                                    {{-- <i class="fas fa-chevron-down"></i> --}}
+                                </button>
+                                <div class="dropdown-menu p-3" style="width: 300px;">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label class="mb-0">Adults</label>
+                                            <div class="d-flex align-items-center">
+                                                <button type="button" class="btn btn-sm rounded-circle traveler-btn"
+                                                    data-type="adults" data-action="decrease" disabled>
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <span class="mx-3" id="adultsCount">{{ session('flight_search.adults',
+                                                    1)
+                                                    }}</span>
+                                                <button type="button" class="btn btn-sm rounded-circle traveler-btn"
+                                                    data-type="adults" data-action="increase" disabled>
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="adults" id="adultsInput"
+                                            value="{{ session('flight_search.adults', 1) }}">
                                     </div>
-                                </div>
-                                <input type="hidden" name="adults" id="adultsInput"
-                                    value="{{ session('flight_search.adults', 1) }}">
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <label class="form-label mb-0">Children</label>
-                                    <div class="d-flex align-items-center">
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="children" data-action="decrease" disabled>
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <span class="mx-3" id="childrenCount">{{ session('flight_search.children', 0)
-                                            }}</span>
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="children" data-action="increase" disabled>
-                                            <i class="fas fa-plus"></i>
-                                        </button>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label class="mb-0">Children</label>
+                                            <div class="d-flex align-items-center">
+                                                <button type="button" class="btn btn-sm rounded-circle traveler-btn"
+                                                    data-type="children" data-action="decrease" disabled>
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <span class="mx-3" id="childrenCount">{{
+                                                    session('flight_search.children',
+                                                    0)
+                                                    }}</span>
+                                                <button type="button" class="btn btn-sm rounded-circle traveler-btn"
+                                                    data-type="children" data-action="increase" disabled>
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="children" id="childrenInput"
+                                            value="{{ session('flight_search.children', 0) }}">
                                     </div>
-                                </div>
-                                <input type="hidden" name="children" id="childrenInput"
-                                    value="{{ session('flight_search.children', 0) }}">
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <label class="form-label mb-0">Infants</label>
-                                    <div class="d-flex align-items-center">
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="held_infants" data-action="decrease" disabled>
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <span class="mx-3" id="heldInfantsCount">{{
-                                            session('flight_search.held_infants', 0) }}</span>
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                            data-type="held_infants" data-action="increase" disabled>
-                                            <i class="fas fa-plus"></i>
-                                        </button>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label class="mb-0">Infants</label>
+                                            <div class="d-flex align-items-center">
+                                                <button type="button" class="btn btn-sm rounded-circle traveler-btn"
+                                                    data-type="held_infants" data-action="decrease" disabled>
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <span class="mx-3" id="heldInfantsCount">{{
+                                                    session('flight_search.held_infants', 0) }}</span>
+                                                <button type="button" class="btn btn-sm rounded-circle traveler-btn"
+                                                    data-type="held_infants" data-action="increase" disabled>
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="held_infants" id="heldInfantsInput"
+                                            value="{{ session('flight_search.held_infants', 0) }}">
                                     </div>
-                                </div>
-                                <input type="hidden" name="held_infants" id="heldInfantsInput"
-                                    value="{{ session('flight_search.held_infants', 0) }}">
-                            </div>
-                        </div><!-- dropdown-menu -->
-                    </div><!-- dropdown -->
-                </div>
-                <div
-                    class="{{ session('flight_search.tripType')=='roundTrip' ? 'col-md-1' : 'col-md-2' }} d-flex align-items-end">
-                    <button class="search-button w-100"><a href="{{ route('index') }}"
-                            style="text-decoration: none; color: #fff;">Modify search</a></button>
-                </div>
-            </div><!-- row -->
-        </form>
+                                </div><!-- dropdown-menu -->
+                            </div><!-- dropdown -->
+                        </div>
+
+                    </div>
+                    <div
+                        class="{{ session('flight_search.tripType')=='roundTrip' ? 'col-md-1' : 'col-md-2' }} d-flex align-items-end">
+                        <button class="search-button w-100"><a href="{{ route('index') }}"
+                                style="text-decoration: none; color: #fff;">Modify search</a></button>
+                    </div>
+                </div><!-- row -->
+            </form>
+        </div>
+
 
 
     </section>
@@ -1954,10 +2046,7 @@
         </div>
         </div><!-- col-md-9 -->
         </div><!-- row -->
-        {{-- </div>
-        </div> --}}
-        <!-- Show More Button -->
-        {{-- <button class="show-more-btn">Show more</button> --}}
+
     </section>
 
     <!-- Footer Section -->

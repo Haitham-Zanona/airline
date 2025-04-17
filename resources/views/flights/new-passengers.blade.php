@@ -4,15 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete your booking</title>
+    <title>Booking Flight Passengers</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <!-- Custom CSS -->
     <style>
@@ -249,6 +252,10 @@
             background-color: #fff;
         }
 
+        #flightSummary {
+            padding: 15px;
+        }
+
         .form-section {
             background-color: #fff;
             border-radius: 8px;
@@ -282,6 +289,62 @@
             padding: 10px 15px;
             font-size: 14px;
             margin-bottom: 15px;
+        }
+
+        .flatpickr-calendar {
+            border-radius: 12px;
+            border: 1px solid #4B45FF;
+            background: #fff;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .flatpickr-day.today:not(.selected):not(.inRange):not(.startRange):not(.endRange) {
+            border: 1px solid #4B45FF;
+            background: #F5F5FF;
+            color: #4B45FF;
+            font-weight: bold;
+        }
+
+        .flatpickr-day.today:hover {
+            background: #DAD6FF;
+            color: white;
+            border-radius: 6px;
+        }
+
+        .flatpickr-day:hover {
+            background: #E8E6FF;
+            color: #4B45FF;
+            border-radius: 6px;
+        }
+
+        .flatpickr-day.selected {
+            background: #4B45FF;
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .flatpickr-weekday {
+            color: #4B45FF;
+            font-weight: 600;
+        }
+
+        .flatpickr-monthDropdown-month {
+            color: #4B45FF;
+        }
+
+        .flatpickr-months .flatpickr-month {
+            color: #fff;
+            background: #4B45FF;
+            font-weight: bold;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            color: #fff;
+            fill: #fff;
+            top: -5px;
         }
 
         .btn-primary {
@@ -511,18 +574,9 @@
         }
     </style>
 </head>
-{{-- @dd(session('flight_search')) --}}
 
-{{-- At the top of the view file --}}
-@if($errors->any())
-<div class="alert alert-danger">
-    <ul>
-        @foreach($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
+
+<x-contact-info />
 <!-- Header -->
 <header class="py-3">
     <div class="container">
@@ -640,25 +694,27 @@
                                 $countryName = '';
 
                                 // Extract city name (text in parentheses)
-                                if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-                                preg_match('/\((.*?)\)/', $originCity, $matches);
-                                $originAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
+                                if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false)
+                                {
+                                    preg_match('/\((.*?)\)/', $originCity, $matches);
+                                    $originAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
 
-                                // استخراج اسم المدينة والبلد
-                                $originParts = explode(',', $originCity);
-                                $originCityName = isset($originParts[0]) ? trim($originParts[0]) : ''; // اسم المدينة
-                                $originCountryName = isset($originParts[1]) ? trim($originParts[1]) : ''; // اسم البلد
+                                    // استخراج اسم المدينة والبلد
+                                    $originParts = explode(',', $originCity);
+                                    $originCityName = isset($originParts[0]) ? trim($originParts[0]) : ''; // اسم المدينة
+                                    $originCountryName = isset($originParts[1]) ? trim($originParts[1]) : ''; // اسم البلد
                                 }
 
                                 // Extract city name (text in parentheses)
-                                if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false) {
-                                preg_match('/\((.*?)\)/', $destinationCity, $matches);
-                                $destinationAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
+                                if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false)
+                                {
+                                    preg_match('/\((.*?)\)/', $destinationCity, $matches);
+                                    $destinationAirportCode = isset($matches[1]) ? trim($matches[1]) : '';
 
-                                // استخراج اسم المدينة والبلد
-                                $parts = explode(',', $destinationCity);
-                                $destinationCityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
-                                $destinationCountryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
+                                    // استخراج اسم المدينة والبلد
+                                    $parts = explode(',', $destinationCity);
+                                    $destinationCityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
+                                    $destinationCountryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
                                 }
                             ?>
 
@@ -676,149 +732,129 @@
 
 
                     </div>
-                    <button class="flight-summary-toggle" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#flightSummary">
-                        Flight Summary
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div id="flightSummary" class="collapse show">
 
-                        <div class="airline-info mb-3">
-                            {{-- <div class="airline-logo text-center d-flex align-items-center justify-content-center">
-                                <i class="fas fa-plane"></i>
-                            </div> --}}
-                            {{-- <div class="airline-logo ms-2">
-                                @php
-                                $airlineName = $selectedFlight['segments_info'][0]['airline_info']['name'] ?? 'UNKNOWN';
-
-
-                                $logoUrl = \App\Services\AirlineLogoService::getLogoUrl($airlineName);
-                                // dd($logoUrl);
-                                // dd($flight['segments_info'][0]['airline_info']['name']);
-                                $defaultLogo = \App\Services\AirlineLogoService::getDefaultLogo();
-                                @endphp
-
-                                @if($airlineName !== 'UNKNOWN')
-                                <img src="{{ $logoUrl }}" alt="{{ $airlineName }} Logo" class="airline-logo-img"
-                                    onerror="this.onerror=null; this.src='{{ $defaultLogo }}';">
-                                @else
-                                <span class="airline-name">{{ $airlineName }}</span>
-                                @endif
-                            </div> --}}
-                            <div class="fw-bold">
-                                @if(isset($selectedFlight['segments_info'][0]['airline_info']['name']) &&
-                                $selectedFlight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN')
-                                {{ $selectedFlight['segments_info'][0]['airline_info']['name'] }}
-                                @else
-                                {{ $selectedFlight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
-                                @endif
-                            </div>
-                            <div class="ms-auto" style="text-align: right;">Travel Class: <span class="fw-bold">{{
-                                    $flightData['cabin'] ??
-                                    'Economy' }}</span></div>
-                        </div><!-- airline-info -->
-
-                        <div class="flight-details mb-4">
-                            <div class="flight-segment">
-                                <div class="departure">
-                                    {{-- @dd(session('flight_search')) --}}
-                                    <?php
-                                        $departureTime = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
-                                        $datetime = \Carbon\Carbon::parse($departureTime);
-
-                                        $originCity = session('flight_search.origin_city_name');
-                                        $cityName = '';
-                                        $cityCode = '';
-                                        $countryName = '';
-
-                                        // Extract city name (text in parentheses)
-                                        if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false) {
-                                            preg_match('/\((.*?)\)/', $originCity, $matches);
-                                            $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
-
-                                            // استخراج اسم المدينة والبلد
-                                            $parts = explode(',', $originCity);
-                                            $cityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
-                                            $countryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
-                                        }
-
-                                        // Extract city code (after comma)
-                                        // if (strpos($originCity, ',') !== false) {
-                                        //     $parts = explode(',', $originCity);
-                                        //     $cityCode = isset($parts[1]) ? trim($parts[1]) : '';
-                                        // }
-                                    ?>
-                                    <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
-                                    <div class="airport-time">{{ $datetime->translatedFormat('H:i') }}</div>
-                                    <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                    <div class="airport-name">{{ $airportCode }}</div>
-                                    <div class="airport-terminal">Terminal {{
-                                        $selectedFlight['itineraries'][0]['segments'][0]['departure']['terminal'] ?? ''
-                                        }}
-                                    </div>
-                                </div>
-
-                                <div class="flight-duration text-center">
-                                    <?php
-                                        if(isset($selectedFlight['itineraries'][0]['duration'])) {
-                                            $duration = $selectedFlight['itineraries'][0]['duration'];
-                                            // Convert PT2H30M format to 2h 30m
-                                            $duration = str_replace('PT', '', $duration);
-                                            $duration = str_replace('H', 'h ', $duration);
-                                            $duration = str_replace('M', 'm', $duration);
-                                        } else {
-                                            $duration = '';
-                                        }
-
-                                        $outboundStops = isset($selectedFlight['outbound_stops_text']) ? $selectedFlight['outbound_stops_text'] :
-                                                        (isset($selectedFlight['itineraries'][0]['segments']) ? (count($selectedFlight['itineraries'][0]['segments']) - 1) : '0');
-                                    ?>
-                                    <div>{{ $duration }}</div>
-                                    <div><i class="fas fa-plane"></i></div>
-                                    <div>@if($outboundStops > 0)
-                                        <div>{{ $outboundStops }} stop(s)</div>
-
-                                        @else
-                                        Direct Flight
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="arrival text-end">
-                                    <?php
-                                        $lastSegmentIndex = count($selectedFlight['itineraries'][0]['segments'] ?? []) - 1;
-                                        $arrivalTime = $selectedFlight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
-                                        $datetime = \Carbon\Carbon::parse($arrivalTime);
-
-                                        $destinationCity = session('flight_search.destination_city_name');
-                                        $cityName = '';
-                                        $cityCode = '';
-                                        $countryName = '';
-
-                                        // Extract city name (text in parentheses)
-                                        if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false) {
-                                            preg_match('/\((.*?)\)/', $destinationCity, $matches);
-                                            $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
-
-                                            // استخراج اسم المدينة والبلد
-                                            $parts = explode(',', $destinationCity);
-                                            $cityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
-                                            $countryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
-                                        }
-
-                                    ?>
-                                    <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
-                                    <div class="airport-time">{{ $datetime->format('H:i')}}</div>
-                                    <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
-                                    <div class="airport-name">{{ $airportCode }}</div>
-                                    <div class="airport-terminal">Terminal {{
-                                        $selectedFlight['itineraries'][0]['segments'][1]['arrival']['terminal'] ?? '' }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- flight-details -->
-                    </div><!-- collapse show -->
                 </div><!-- booking-container -->
+                <button class="flight-summary-toggle collapsible-header" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flightSummary">
+                    <h5 class="m-0">Flight Summary</h5>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="flightSummary" class="collapse">
+
+                    <div class="airline-info mb-3">
+
+                        <div class="fw-bold">
+                            @if(
+                            isset($selectedFlight['segments_info'][0]['airline_info']['name']) &&
+                            $selectedFlight['segments_info'][0]['airline_info']['name'] !== 'UNKNOWN'
+                            )
+                            {{ $selectedFlight['segments_info'][0]['airline_info']['name'] }}
+                            @else
+                            {{ $selectedFlight['validatingAirlineCodes'][0] ?? 'Unknown Airline' }}
+                            @endif
+                        </div>
+                        <div class="ms-auto" style="text-align: right;">Travel Class: <span class="fw-bold">{{
+                                $flightData['cabin'] ??
+                                'Economy' }}</span></div>
+                    </div><!-- airline-info -->
+
+                    <div class="flight-details mb-4">
+                        <div class="flight-segment">
+                            <div class="departure">
+
+                                <?php
+                                    $departureTime = $selectedFlight['itineraries'][0]['segments'][0]['departure']['at'] ?? '';
+                                    $datetime = \Carbon\Carbon::parse($departureTime);
+
+                                    $originCity = session('flight_search.origin_city_name');
+                                    $cityName = '';
+                                    $cityCode = '';
+                                    $countryName = '';
+
+                                    // Extract city name (text in parentheses)
+                                    if (strpos($originCity, '(') !== false && strpos($originCity, ')') !== false)
+                                    {
+                                        preg_match('/\((.*?)\)/', $originCity, $matches);
+                                        $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
+
+                                        // Extract city and country name
+                                        $parts = explode(',', $originCity);
+                                        $cityName = isset($parts[0]) ? trim($parts[0]) : '';
+                                        $countryName = isset($parts[1]) ? trim($parts[1]) : '';
+                                    }
+                                ?>
+                                <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
+                                <div class="airport-time">{{ $datetime->translatedFormat('H:i') }}</div>
+                                <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
+                                <div class="airport-name">{{ $airportCode }}</div>
+                                <div class="airport-terminal">Terminal {{
+                                    $selectedFlight['itineraries'][0]['segments'][0]['departure']['terminal'] ?? ''
+                                    }}
+                                </div>
+                            </div>
+
+                            <div class="flight-duration text-center">
+                                <?php
+                                    if (isset($selectedFlight['itineraries'][0]['duration']))
+                                    {
+                                        $duration = $selectedFlight['itineraries'][0]['duration'];
+                                        // Convert PT2H30M format to 2h 30m
+                                        $duration = str_replace('PT', '', $duration);
+                                        $duration = str_replace('H', 'h ', $duration);
+                                        $duration = str_replace('M', 'm', $duration);
+                                    } else
+                                    {
+                                        $duration = '';
+                                    }
+
+                                    $outboundStops = isset($selectedFlight['outbound_stops_text']) ? $selectedFlight['outbound_stops_text'] :
+                                        (isset($selectedFlight['itineraries'][0]['segments']) ? (count($selectedFlight['itineraries'][0]['segments']) - 1) : '0');
+                                                    ?>
+                                <div>{{ $duration }}</div>
+                                <div><i class="fas fa-plane"></i></div>
+                                <div>@if($outboundStops > 0)
+                                    <div>{{ $outboundStops }} stop(s)</div>
+
+                                    @else
+                                    Direct Flight
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="arrival text-end">
+                                <?php
+                                    $lastSegmentIndex = count($selectedFlight['itineraries'][0]['segments'] ?? []) - 1;
+                                    $arrivalTime = $selectedFlight['itineraries'][0]['segments'][$lastSegmentIndex]['arrival']['at'] ?? '';
+                                    $datetime = \Carbon\Carbon::parse($arrivalTime);
+
+                                    $destinationCity = session('flight_search.destination_city_name');
+                                    $cityName = '';
+                                    $cityCode = '';
+                                    $countryName = '';
+
+                                    // Extract city name (text in parentheses)
+                                    if (strpos($destinationCity, '(') !== false && strpos($destinationCity, ')') !== false)
+                                    {
+                                        preg_match('/\((.*?)\)/', $destinationCity, $matches);
+                                        $airportCode = isset($matches[1]) ? trim($matches[1]) : '';
+
+                                        // استخراج اسم المدينة والبلد
+                                        $parts = explode(',', $destinationCity);
+                                        $cityName = isset($parts[0]) ? trim($parts[0]) : ''; // اسم المدينة
+                                        $countryName = isset($parts[1]) ? trim($parts[1]) : ''; // اسم البلد
+                                    }
+                                ?>
+                                <div class="airport-code">{{ $cityName }} - {{ $countryName }}</div>
+                                <div class="airport-time">{{ $datetime->format('H:i')}}</div>
+                                <div class="airport-date">{{ $datetime->translatedFormat('d, D M Y') }}</div>
+                                <div class="airport-name">{{ $airportCode }}</div>
+                                <div class="airport-terminal">Terminal {{
+                                    $selectedFlight['itineraries'][0]['segments'][1]['arrival']['terminal'] ?? '' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- flight-details -->
+                </div><!-- collapse show -->
 
                 <!-- Important Guidelines Section -->
                 <div class="collapsible-section">
@@ -826,7 +862,7 @@
                         <h5 class="mb-0">Important Guidelines</h5>
                         <i class="fas fa-chevron-down"></i>
                     </div>
-                    <div id="guidelinesContent" class="collapse show collapsible-content">
+                    <div id="guidelinesContent" class="collapse collapsible-content">
                         <p>We are making it a requirement for passengers to follow certain guidelines. For more
                             stringent and strict rules, please refer to a complete guide for passengers before booking a
                             flight.</p>
@@ -941,8 +977,9 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="dob_{{ $i }}" class="form-label">Date of birth</label>
-                                        <input type="date" class="form-control" name="passengers[{{ $i }}][birthDate]"
-                                            id="dob_{{ $i }}" required>
+                                        <input type="text" class="birthdate form-control"
+                                            name="passengers[{{ $i }}][birthDate]" id="dob_{{ $i }}"
+                                            placeholder="mm/dd/yyyy" required>
                                         <div class="invalid-feedback">Please enter your date of birth.</div>
                                     </div>
                                 </div>
@@ -954,9 +991,10 @@
                         <!-- Children Details form  -->
                         @if (session('flight_search.children') > 0)
                         <h5 class="form-section-title passengers-title">Children Details</h5>
-                        @for($i = session('flight_search.adults', 1); $i < session('flight_search.adults', 1) +
-                            session('flight_search.children', 0); $i++) <div class="passenger-form"
-                            id="passengerForm_{{ $i }}">
+                        @for(
+                        $i = session('flight_search.adults', 1);
+                        $i < session('flight_search.adults', 1) + session('flight_search.children', 0); $i++ ) <div
+                            class="passenger-form" id="passengerForm_{{ $i }}">
                             <h5 class="passengers-type-no">Passengers No:{{ $i + 1 }}</h5>
                             <div class="row mb-3">
                                 <input type="hidden" name="passengers[{{ $i }}][type]" value="CHILD">
@@ -1019,8 +1057,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="dob_{{ $i }}" class="form-label">Date of birth</label>
-                                    <input type="date" class="form-control" name="passengers[{{ $i }}][birthDate]"
-                                        id="dob_{{ $i }}" required>
+                                    <input type="text" class="birthdate form-control"
+                                        name="passengers[{{ $i }}][birthDate]" id="dob_{{ $i }}"
+                                        placeholder="mm/dd/yyyy" required>
                                     <div class="invalid-feedback">Please enter your date of birth.</div>
                                 </div>
                             </div>
@@ -1033,9 +1072,10 @@
                 <!-- Infants Details form  -->
                 @if (session('flight_search.held_infants') > 0)
                 <h5 class="form-section-title passengers-title">Infants Details</h5>
-                @for($i = session('flight_search.adults', 1) + session('flight_search.children', 0);
+                @for(
+                $i = session('flight_search.adults', 1) + session('flight_search.children', 0);
                 $i < session('flight_search.adults', 1) + session('flight_search.children', 0) +
-                    session('flight_search.held_infants', 0); $i++) <div class="passenger-form"
+                    session('flight_search.held_infants', 0); $i++ ) <div class="passenger-form"
                     id="passengerForm_{{ $i }}">
                     <h5 class="passengers-type-no">Passengers No:{{ $i + 1 }}</h5>
                     <div class="row mb-3">
@@ -1098,8 +1138,8 @@
                         </div>
                         <div class="col-sm-4">
                             <label for="dob_{{ $i }}" class="form-label">Date of birth</label>
-                            <input type="date" class="form-control" name="passengers[{{ $i }}][birthDate]"
-                                id="dob_{{ $i }}" required>
+                            <input type="text" class="birthdate form-control" name="passengers[{{ $i }}][birthDate]"
+                                id="dob_{{ $i }}" placeholder="mm/dd/yyyy" required>
                             <div class="invalid-feedback">Please enter your date of birth.</div>
                         </div>
                     </div>
@@ -1113,7 +1153,7 @@
                                     Passenger
                                     No
                                     {{
-                                    $j+1 }}
+                                    $j + 1 }}
                                     </option>
                                     @endfor
                             </select>
@@ -1152,8 +1192,10 @@
                     @php
                     // Filter adult travelers
                     $adultTravelers = [];
-                    foreach ($selectedFlight['travelerPricings'] as $traveler) {
-                    if ($traveler['travelerType'] == 'ADULT') {
+                    foreach ($selectedFlight['travelerPricings'] as $traveler)
+                    {
+                    if ($traveler['travelerType'] == 'ADULT')
+                    {
                     $adultTravelers[] = $traveler;
                     // dd($adultTravelers);
                     }
@@ -1177,8 +1219,10 @@
                     @php
                     // Filter child travelers
                     $childTravelers = [];
-                    foreach ($selectedFlight['travelerPricings'] as $traveler) {
-                    if ($traveler['travelerType'] == 'CHILD') {
+                    foreach ($selectedFlight['travelerPricings'] as $traveler)
+                    {
+                    if ($traveler['travelerType'] == 'CHILD')
+                    {
                     $childTravelers[] = $traveler;
                     }
                     }
@@ -1202,8 +1246,10 @@
                     @php
                     // Filter infant travelers
                     $infantTravelers = [];
-                    foreach ($selectedFlight['travelerPricings'] as $traveler) {
-                    if ($traveler['travelerType'] == 'HELD_INFANT') {
+                    foreach ($selectedFlight['travelerPricings'] as $traveler)
+                    {
+                    if ($traveler['travelerType'] == 'HELD_INFANT')
+                    {
                     $infantTravelers[] = $traveler;
                     }
                     }
@@ -1445,215 +1491,23 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        //     $(document).ready(function() {
-    //     // Existing code for form validation
-    // // دالة التحقق من صحة نموذج معين
-    // function validateForm(formId) {
-    // let isValid = true;
-    // const form = $(`#${formId}`);
-
-    // form.find('input, select').each(function() {
-    // if ($(this).prop('required') && !$(this).val()) {
-    // $(this).addClass('is-invalid');
-    // $(this).siblings('.invalid-feedback').show();
-    // isValid = false;
-    // } else {
-    // $(this).removeClass('is-invalid');
-    // $(this).siblings('.invalid-feedback').hide();
-    // }
-    // });
-
-    // // التحقق من صحة البريد الإلكتروني
-    // const emailInput = form.find('input[type="email"]');
-    // if (emailInput.length) {
-    // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailPattern.test(emailInput.val())) {
-    // emailInput.addClass('is-invalid');
-    // emailInput.siblings('.invalid-feedback').show();
-    // isValid = false;
-    // }
-    // }
-
-    // // التحقق من صحة رقم الهاتف
-    // const phoneInput = form.find('input[type="tel"]');
-    // if (phoneInput.length) {
-    // const phonePattern = /^\d{9,15}$/;
-    // if (!phonePattern.test(phoneInput.val())) {
-    // phoneInput.addClass('is-invalid');
-    // phoneInput.siblings('.invalid-feedback').show();
-    // isValid = false;
-    // }
-    // }
-
-    // return isValid;
-    // }
-
-    //     // New function to validate all passenger forms
-    //     function validateAllPassengerForms() {
-    //     let isValid = true;
-    //     $('.passenger-form').each(function() {
-    //     const formId = $(this).attr('id');
-    //     if (!validateForm(formId)) {
-    //     isValid = false;
-    //     }
-    //     });
-    //     return isValid;
-    //     }
-
-    //     // Remove validation class on input change
-    //     $('input, select').on('change', function() {
-    //     $(this).removeClass('is-invalid');
-    //     $(this).siblings('.invalid-feedback').hide();
-    //     });
-
-    //     // Handle proceed to payment button
-    //    $('#proceedToPayment').on('click', function(e) {
-    // // Don't prevent default form submission immediately
-
-    // // Validate contact form
-    //     const isContactValid = validateForm('contactForm');
-    //     // Validate all passenger forms
-    //     const isPassengersValid = validateAllPassengerForms();
-
-    //     if (isContactValid && isPassengersValid) {
-    //     // Form is valid, allow it to submit naturally
-    //     return true;
-    //     } else {
-    //     // Prevent form submission if validation fails
-    //     e.preventDefault();
-
-    //     // Scroll to the first error
-    //     $('html, body').animate({
-    //     scrollTop: $('.is-invalid:first').offset().top - 100
-    //     }, 200);
-    //     return false;
-    //     }
-    //     });
-
-    //     // Toggle no expiration date
-    //     $('#noExpiration').on('change', function() {
-    //     if ($(this).is(':checked')) {
-    //     $('#passportExpiry').prop('disabled', true).prop('required', false);
-    //     } else {
-    //     $('#passportExpiry').prop('disabled', false).prop('required', true);
-    //     }
-    //     });
-
-    //     // Add passenger button (just a placeholder behavior)
-    //     $('#addPassenger').on('click', function() {
-    //     alert('Add another passenger functionality would be added here.');
-    //     });
-
-    //     // // NEW CODE: Handle fare summary section toggles
-    //     // // Add unique IDs to each fare detail content section
-    //     // $('.fare-summary .fare-details').each(function(index) {
-    //     // $(this).attr('id', 'fareDetails' + index);
-    //     // });
-
-    //     // // Group fare details that belong together
-    //     // const baseFareDetails = $('.fare-summary .fare-details').eq(0);
-    //     // const taxesFeeDetails = $('.fare-summary .fare-details').eq(1).add($('.fare-summary .fare-details').eq(2));
-    //     // const otherServicesDetails = $('.fare-summary .fare-details').eq(3);
-
-    //     // // Set up click handlers for each section
-    //     // $('.fare-summary .fare-title').eq(0).on('click', function() {
-    //     // baseFareDetails.slideToggle();
-    //     // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-    //     // });
-
-    //     // $('.fare-summary .fare-title').eq(1).on('click', function() {
-    //     // taxesFeeDetails.slideToggle();
-    //     // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-    //     // });
-
-    //     // $('.fare-summary .fare-title').eq(2).on('click', function() {
-    //     // otherServicesDetails.slideToggle();
-    //     // $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-    //     // });
-
-    //     // // Make the titles look clickable with pointer cursor
-    //     // $('.fare-summary .fare-title').css('cursor', 'pointer');
-    //      });
-
-//     $(document).ready(function() {
-//     // Function to validate a specific form
-//     function validateForm(formId) {
-//     let isValid = true;
-//     const form = $(`#${formId}`);
-
-//     form.find('input, select').each(function() {
-//     if ($(this).prop('required') && !$(this).val()) {
-//     $(this).addClass('is-invalid');
-//     $(this).siblings('.invalid-feedback').show();
-//     isValid = false;
-//     } else {
-//     $(this).removeClass('is-invalid');
-//     $(this).siblings('.invalid-feedback').hide();
-//     }
-//     });
-
-//     // Email validation
-//     const emailInput = form.find('input[type="email"]');
-//     if (emailInput.length && emailInput.val()) {
-//     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     if (!emailPattern.test(emailInput.val())) {
-//     emailInput.addClass('is-invalid');
-//     emailInput.siblings('.invalid-feedback').show();
-//     isValid = false;
-//     }
-//     }
-
-//     // Phone validation
-//     const phoneInput = form.find('input[type="tel"]');
-//     if (phoneInput.length && phoneInput.val()) {
-//     // Simple validation - adjust as needed
-//     if (phoneInput.val().length < 6) {
-//         phoneInput.addClass('is-invalid');
-//         phoneInput.siblings('.invalid-feedback').show();
-//         isValid=false;
-//      }
-//     }
-//     return isValid;
-//  }
-//  // Function to validate all passenger forms
-//  function validateAllPassengerForms() {
-//          let isValid=true;
-//          $('.passenger-form').each(function() {
-//             const formId=$(this).attr('id');
-//             if (!validateForm(formId)) { isValid=false; } });
-//             return isValid;
-//         }
-//         // Remove validation class on input change
-//         $('input, select').on('change', function() {
-//              $(this).removeClass('is-invalid');
-//         $(this).siblings('.invalid-feedback').hide();
-//      });
-//      // Handle form submission
-//       $('form').on('submit', function(e) {
-//         //Validate contact form
-//         const isContactValid=validateForm('contactForm');
-//         // Validate all passenger forms
-//         const isPassengersValid=validateAllPassengerForms();
-//         if (!isContactValid || !isPassengersValid) { e.preventDefault();
-//             //Scroll to the first error
-//             $('html, body').animate({
-//                 scrollTop: $('.is-invalid:first').offset().top - 100
-//             }, 200);
-//         return false;
-//     }
-//     // If validation passes, allow the form to submit naturally
-//         return true;
-//     });
-// });
-
-
-
-       $(document).ready(function () {
-    // حساب العمر من تاريخ الميلاد
+        $(document).ready(function () {
+            flatpickr(".birthdate", {
+            dateFormat: "Y-m-d",
+            maxDate: "today",
+            disableMobile: true,
+            altInput: true,
+            altFormat: "F j, Y",
+            defaultDate: "2000-01-01",
+            yearRange: [1900, new Date().getFullYear()],
+            });
+    // Calculate the age from birthdate
     function getAge(birthDate) {
         const today = new Date();
         birthDate = new Date(birthDate);
@@ -1665,7 +1519,7 @@
         return age;
     }
 
-    // التحقق من نموذج واحد
+    // Validate one form
     function validateForm(formId) {
         let isValid = true;
         const form = $(`#${formId}`);
@@ -1681,7 +1535,8 @@
             }
         });
 
-        // التحقق من العمر في حال كان الفورم يحتوي على معلومات راكب
+
+        // Validate age if the form contains passenger information
         const birthDateInput = form.find('[name$="[birthDate]"]');
         const typeInput = form.find('[name$="[type]"]');
 
@@ -1714,7 +1569,8 @@
         return isValid;
     }
 
-    // عند إرسال النموذج
+
+    //When you submit the form
     $('form').on('submit', function (e) {
         const isContactValid = validateForm('contactForm');
         const isPassengersValid = $('.passenger-form').toArray().every(form => validateForm(form.id));
@@ -1722,7 +1578,8 @@
         if (!isContactValid || !isPassengersValid) {
             e.preventDefault();
 
-            // التمرير لأول خطأ
+
+            // passing the first invalid form
             const firstError = $('.is-invalid:first');
             if (firstError.length) {
                 $('html, body').animate({
@@ -1734,7 +1591,8 @@
         return true;
     });
 
-    // تهيئة رقم الهاتف
+
+    // validate phone number
     var input = document.querySelector("#phone");
     var iti = window.intlTelInput(input, {
         separateDialCode: true,
@@ -1748,6 +1606,8 @@
             document.querySelector("#phone").value = fullNumber;
         }
     });
+
+
 });
     </script>
 </body>

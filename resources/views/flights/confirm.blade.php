@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Booking Confirmation</title>
+    <title>Booking Flight Confirmation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <style>
         :root {
             --primary-color: #6742c9;
@@ -566,6 +567,7 @@
 {{-- @dd(session('flight_search')) --}}
 
 <body>
+    <x-contact-info />
     <!-- Header -->
     <header class="py-3">
         <div class="container">
@@ -721,7 +723,12 @@
 
                 <!-- Flight Summary -->
                 <div class="card mb-4 p-4">
-                    <div id="flightSummary" class="">
+                    <button class="flight-summary-toggle" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flightSummary">
+                        Flight Summary
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="flightSummary" class="collapse show">
                         <div class="airline-info mb-3">
 
                             <div class="fw-bold">

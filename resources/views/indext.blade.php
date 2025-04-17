@@ -9,6 +9,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <!-- Custom CSS -->
     <style>
         /* Custom styles that can't be achieved with Bootstrap classes */
@@ -65,7 +71,7 @@
         }
 
         .nav-background {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
@@ -76,7 +82,7 @@
         #result2 {
             position: absolute;
             width: 20%;
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.9);
             /* border: 1px solid #ccc; */
             border-radius: 5px;
             max-height: 250px;
@@ -101,7 +107,7 @@
 
         #result1 p:hover,
         #result2 p:hover {
-            background: #f1f1f1;
+            background: #9793f6;
             color: #000;
         }
 
@@ -125,13 +131,125 @@
             }
         }
 
+        .traveler-btn {
+            background-color: #4B45FF;
+            color: #fff;
+            border: 1px solid #4B45FF;
+        }
+
+        .traveler-btn:hover {
+            color: #4B45FF;
+            background-color: #fff;
+            border: 1px solid #4B45FF;
+        }
+
+        /* disable former cursor and create a new one */
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: brightness(0) invert(1);
+        }
+
+        input[type="text"].form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+            background-position: right 0.75rem center !important;
+            background-size: 16px 12px !important;
+        }
+
+        /* Calender Background*/
+
+
+        /* Top title  (Month & Year) */
+        .flatpickr-months .flatpickr-month {
+            background-color: #4B45FF;
+            font-weight: bold;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .flatpickr-current-month {
+            color: #fff;
+        }
+
+        /* Current Day */
+        .flatpickr-day.today {
+            border: 1px solid #4B45FF;
+            color: #4B45FF;
+        }
+
+        /* Selected day */
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange {
+            background-color: #4B45FF;
+            color: white;
+        }
+
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            color: #fff;
+            fill: #fff;
+            top: -5px;
+        }
+
+        /* Days of a week */
+        .flatpickr-weekday {
+            color: #4B45FF;
+            font-weight: 600;
+        }
+
+        .flatpickr-day.today:hover {
+            background-color: #4B45FF;
+            color: white;
+        }
+
+        .flatpickr-calendar {
+            border-radius: 12px;
+            border: 1px solid #4B45FF;
+            background: #fff;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .flatpickr-day.today:not(.selected):not(.inRange):not(.startRange):not(.endRange) {
+            border: 1px solid #4B45FF;
+            background: #F5F5FF;
+            color: #4B45FF;
+            font-weight: bold;
+        }
+
+        .flatpickr-day.today:hover {
+            background: #DAD6FF;
+            color: white;
+            border-radius: 6px;
+        }
+
+        .flatpickr-day:hover {
+            background: #E8E6FF;
+            color: #4B45FF;
+            border-radius: 6px;
+        }
+
+        .flatpickr-day.selected {
+            background: #4B45FF;
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+
+
+        /* Change select cursor style Class/cabin */
+        #cabin.form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+            background-position: right 0.75rem center !important;
+            background-size: 16px 12px !important;
+        }
+
         /* Hero section */
         .hero {
             position: relative;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2)), url('assets/images/hero-background.webp');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1)), url('assets/images/hero-background.webp');
             background-size: cover;
             background-position: center;
-            height: 100vh;
+            height: 90vh;
             width: 100%;
             color: white;
         }
@@ -150,14 +268,45 @@
         }
 
         .city-row {
-            margin-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .form-column {
+            position: relative;
+            /* width: 100%; */
+            /* margin: 10px; */
+            height: 100%;
+        }
+
+        .form-label {
+            position: absolute;
+            top: 10px;
+            left: 15px;
         }
 
         .search-form .form-control,
         .search-form .form-select {
             background-color: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #4444ff;
+            /* color: #4444ff; */
+            color: #fff;
+            width: 100%;
+            padding: 30px 15px 10px;
+        }
+
+        option {
+            background-color: white;
+            color: #4b45ff;
+        }
+
+        .search-form .form-select::placeholder,
+        .search-form .form-control::placeholder {
+            color: #fff;
+        }
+
+        .submit-button {
+            display: flex;
+            justify-content: center;
         }
 
         .search-btn {
@@ -165,6 +314,8 @@
             border-color: #4444ff;
             border-radius: 25px;
             transition: background-color 0.3s;
+            justify-content: center;
+            padding: 10px 100px;
         }
 
         .search-btn:hover {
@@ -176,7 +327,7 @@
 
         /* Reviews section */
         .reviews {
-            margin-top: -50px;
+            margin-top: -100px;
             position: relative;
         }
 
@@ -310,14 +461,10 @@
 
         @media (max-width: 767px) {
 
-            /* .hero-header {
-                font-size: 24px;
+            .reviews {
+                margin-top: -50px;
             }
 
-
-
-
-        } */
             .search-form {
                 height: 60%;
                 padding: 10px;
@@ -325,12 +472,12 @@
 
             .form-header {
                 /* font-size: 14px; */
-                margin-bottom: 5px;
+                margin-bottom: 10px;
             }
 
-            .city-row {
-                margin-bottom: 3px;
-            }
+            /* .city-row {
+                margin-bottom: 8px;
+            } */
 
             #subscribeEmail {
                 margin: 0 15px;
@@ -352,28 +499,7 @@
             }
         }
 
-        /* .footer-links h5 {
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
 
-        .footer-links ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: #6c757d;
-            text-decoration: none;
-        }
-
-        .footer-links a:hover {
-            color: #6f42c1;
-        } */
 
         .social-icons {
             margin-right: 15px;
@@ -444,7 +570,7 @@
 
 <body>
 
-
+    <x-contact-info />
     <section class="hero d-flex align-items-center">
         <header class="py-3">
             <div class="container">
@@ -533,15 +659,15 @@
 
         <div class="hero-content container">
             <div class="row align-items-center">
-                <div class="col-lg-6 mb-4 mb-lg-0 text-center text-lg-start">
+                <div class="col-lg-8 mb-2 mb-lg-0 text-center text-lg-start">
                     <h1 class="display-4 fw-bold hero-header">Transforming Travel,<br>One Trip at a Time</h1>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <form action="{{ route('flight.search') }}" method="POST" class="search-form">
                         @csrf
                         <h3 class="text-center form-header">Find your ticket Now</h3>
                         <div class="row city-row">
-                            <div class="col-6">
+                            <div class="col-6 form-column">
                                 <div style="position: relative;">
                                     <label for="origin_city" class="form-label"><i
                                             class="fas fa-plane-departure me-2"></i>
@@ -555,7 +681,7 @@
                                     <div id="result1" style="width: 100%;"></div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 form-column">
                                 <div style="position: relative;">
                                     <label for="destination_city" class="form-label"><i
                                             class="fas fa-plane-arrival me-2"></i>
@@ -573,110 +699,124 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <label for="departureDate" class="form-label"><i class="far fa-calendar-alt me-2"></i>
-                                    Check-In</label>
-                                <input type="date" id="departureDate" name="departureDate" class="form-control"
-                                    required>
+                        <div class="row city-row">
+                            <div class="col-6 form-column">
+                                <div style="position: relative;">
+                                    <label for="departureDate" class="form-label"><i
+                                            class="far fa-calendar-alt me-2"></i>
+                                        Check-In</label>
+
+                                    <input type="text" id="departureDate" name="departureDate"
+                                        class="form-control booking-date" placeholder="mm/dd/yyyy" required>
+                                </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 form-column">
                                 <div id="returnDateContainer" style="display:none;">
-                                    <label for="returnDate" class="form-label"><i class="far fa-calendar-alt me-2"></i>
-                                        Check-Out</label>
-                                    <input type="date" id="returnDate" name="returnDate" class="form-control">
+                                    <div style="position: relative;">
+                                        <label for="returnDate" class="form-label"><i
+                                                class="far fa-calendar-alt me-2"></i>
+                                            Check-Out</label>
+
+                                        <input type="text" id="returnDate" name="returnDate"
+                                            class="form-control booking-date" placeholder="mm/dd/yyyy">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row city-row">
 
-                            <div class="col-6">
-                                <label for="travelers" class="form-label"><i class="fas fa-user me-2"></i>
-                                    Tickets</label>
-                                <div class="dropdown">
-                                    <button
-                                        class="form-control d-flex justify-content-between align-items-center dropdown-toggle "
-                                        type="button" id="travelersDropdown" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <span id="totalTravelers">Traveler</span>
-                                        <i class="fas fa-chevron-down"></i>
-                                    </button>
-                                    <div class="dropdown-menu p-3 " style="width: 300px;">
-                                        <div class="mb-3" id="adults">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <label class="form-label mb-0">Adults</label>
-                                                <div class="d-flex align-items-center">
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                                        data-type="adults" data-action="decrease">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
-                                                    <span class="mx-3" id="adultsCount">1</span>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                                        data-type="adults" data-action="increase">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
+                            <div class="col-6 form-column">
+                                <div style="position: relative;">
+                                    <label for="travelers" class="form-label"><i class="fas fa-user me-2"></i>
+                                        Tickets</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="form-control d-flex justify-content-between align-items-center dropdown-toggle "
+                                            type="button" id="travelersDropdown" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <span id="totalTravelers" style="color: #fff;">Traveler</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <div class="dropdown-menu p-3 " style="width: 300px;">
+                                            <div class="mb-3" id="adults">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <label class="passengers-label mb-0">Adults</label>
+                                                    <div class="d-flex align-items-center">
+                                                        <button type="button"
+                                                            class="btn btn-sm rounded-circle traveler-btn"
+                                                            data-type="adults" data-action="decrease">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                        <span class="mx-3" id="adultsCount">1</span>
+                                                        <button type="button"
+                                                            class="btn btn-sm rounded-circle traveler-btn"
+                                                            data-type="adults" data-action="increase">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
+                                                <input type="hidden" name="adults" id="adultsInput" value="1">
                                             </div>
-                                            <input type="hidden" name="adults" id="adultsInput" value="1">
-                                        </div>
-                                        <div class="mb-3" id="children">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <label class="form-label mb-0">Children</label>
-                                                <div class="d-flex align-items-center">
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                                        data-type="children" data-action="decrease">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
-                                                    <span class="mx-3" id="childrenCount">0</span>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                                        data-type="children" data-action="increase">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
+                                            <div class="mb-3" id="children">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <label class="passengers-label mb-0">Children</label>
+                                                    <div class="d-flex align-items-center">
+                                                        <button type="button"
+                                                            class="btn btn-sm rounded-circle traveler-btn"
+                                                            data-type="children" data-action="decrease">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                        <span class="mx-3" id="childrenCount">0</span>
+                                                        <button type="button"
+                                                            class="btn btn-sm rounded-circle traveler-btn"
+                                                            data-type="children" data-action="increase">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
+                                                <input type="hidden" name="children" id="childrenInput" value="0">
                                             </div>
-                                            <input type="hidden" name="children" id="childrenInput" value="0">
-                                        </div>
 
-                                        <div class="mb-3" id="heldInfants">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <label class="form-label mb-0">Infants</label>
-                                                <div class="d-flex align-items-center">
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                                        data-type="held_infants" data-action="decrease">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
-                                                    <span class="mx-3" id="heldInfantsCount">0</span>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-circle traveler-btn"
-                                                        data-type="held_infants" data-action="increase">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
+                                            <div class="mb-3" id="heldInfants">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <label class="passengers-label mb-0">Infants</label>
+                                                    <div class="d-flex align-items-center">
+                                                        <button type="button"
+                                                            class="btn btn-sm rounded-circle traveler-btn"
+                                                            data-type="held_infants" data-action="decrease">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                        <span class="mx-3" id="heldInfantsCount">0</span>
+                                                        <button type="button"
+                                                            class="btn btn-sm rounded-circle traveler-btn"
+                                                            data-type="held_infants" data-action="increase">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
+                                                <input type="hidden" name="held_infants" id="heldInfantsInput"
+                                                    value="0">
                                             </div>
-                                            <input type="hidden" name="held_infants" id="heldInfantsInput" value="0">
-                                        </div>
-                                    </div><!-- dropdown-menu -->
-                                </div><!-- dropdown -->
+                                        </div><!-- dropdown-menu -->
+                                    </div><!-- dropdown -->
+                                </div>
                             </div><!-- col-md-6 -->
 
-                            <div class="col-6">
-                                <label for="class" class="form-label"><i class="fas fa-ticket-alt me-2"></i>
-                                    Class</label>
-                                <select id="cabin" name="cabin" class="form-select">
-                                    <option value="ECONOMY">Economy</option>
-                                    <option value="PREMIUM_ECONOMY">Premium Economy</option>
-                                    <option value="BUSINESS">Business</option>
-                                    <option value="FIRST">First Class</option>
-                                </select>
+                            <div class="col-6 form-column">
+                                <div style="position: relative;">
+                                    <label for="class" class="form-label"><i class="fas fa-ticket-alt me-2"></i>
+                                        Class</label>
+                                    <select id="cabin" name="cabin" class="form-select">
+                                        <option value="ECONOMY">Economy</option>
+                                        <option value="PREMIUM_ECONOMY">Premium Economy</option>
+                                        <option value="BUSINESS">Business</option>
+                                        <option value="FIRST">First Class</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="city-row">
                             <div class="d-flex gap-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" id="oneWay" name="tripType"
@@ -690,7 +830,10 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 search-btn">Book Now</button>
+                        <div class="submit-button">
+                            <button type="submit" class="btn btn-primary search-btn">Book Now</button>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -1256,7 +1399,7 @@
     </footer>
 
 
-
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <!-- Bootstrap JavaScript with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -1621,6 +1764,13 @@
         }, 3000);
         }
 
+        });
+
+        flatpickr(".booking-date", {
+        dateFormat: "Y-m-d",
+        // locale: "ar",
+        minDate: "today",
+        disableMobile: true // يجبر عرض flatpickr بدلاً من التقويم الافتراضي في الجوال
         });
 
         });

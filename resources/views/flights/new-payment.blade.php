@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment</title>
+    <title>Booking Flight Payment</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <style>
         :root {
             --primary-color: #6742c9;
@@ -578,7 +579,7 @@
         }
     </style>
 </head>
-{{-- @dd(session('flight_search')) --}}
+
 <!-- Header -->
 <header class="py-3">
     <div class="container">
@@ -662,9 +663,10 @@
         </div>
     </div>
 </header>
-{{-- @dd($selectedFlight) --}}
+
 
 <body>
+    <x-contact-info />
     <div class="container mt-4">
         <div class="booking-header">
             <h5 class="fw-bold mb-2">Complete your booking</h5>
@@ -735,7 +737,7 @@
                         Flight Summary
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                    <div id="flightSummary" class="collapse show">
+                    <div id="flightSummary" class="collapse">
                         <div class="airline-info mb-3">
 
                             <div class="fw-bold">
@@ -1013,7 +1015,7 @@
 
                 <div class="policy-content" id="policyContent">
                     <div class="policy-text">
-                        <p>At GlobGoer, we understand that plans can change unexpectedly. We strive to provide a
+                        <p>At OurAgent, we understand that plans can change unexpectedly. We strive to provide a
                             flexible and
                             customer-friendly cancellation and refund policy for flight bookings. Please review
                             the following policy
